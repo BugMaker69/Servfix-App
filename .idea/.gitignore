@@ -1,0 +1,31 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+local.properties
+build/
+*.tmp
+deploymentTargetDropDown.xml
+
+# Build files and directories
+build/
+*.iml
+.gradle/
+local.properties
+
+# IDE files and directories
+.idea/
+.navigation/
+captures/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# User-specific files
+api_keys.txt
+credentials.json
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
