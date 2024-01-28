@@ -23,6 +23,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.graduationproject.ui.OtpScreen
+import com.example.graduationproject.ui.OtpTextField
 import com.example.graduationproject.ui.ServixScreens
 import com.example.graduationproject.ui.theme.GraduationProjectTheme
 import kotlinx.coroutines.delay
@@ -42,12 +44,14 @@ class MainActivity : ComponentActivity() {
                     Column(
                         Modifier
                             .fillMaxSize()
-                            .padding(16.dp)
                     ) {
-                        ServixApp()
+                       ServixApp()
+                     //   OtpScreen(LocalContext.current)
+                    //    OtpTextField()
                     }
                 }
             }
         }
     }
+
 }

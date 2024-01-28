@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "871387824314",
+    "project_id": "servfix-cd3fd",
+    "storage_bucket": "servfix-cd3fd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:871387824314:android:ca4423183529890f05c283",
+        "android_client_info": {
+          "package_name": "com.example.graduationproject"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDBxa0RIIkJp2JrczOmMb2TDZiey1JRjQU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
