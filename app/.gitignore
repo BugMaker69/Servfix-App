@@ -1,1 +1,38 @@
 /build
+
+*.iml
+.gradle
+/local.properties
+/.idea
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+# Build files and directories
+build/
+.gradle/
+
+# IDE files and directories
+.idea/
+.navigation/
+captures/
+
+# Operating system files
+Thumbs.db
+
+# User-specific files
+api_keys.txt
+credentials.json
+
+# Temporary files
+*.tmp
+*.bak
+*.swp

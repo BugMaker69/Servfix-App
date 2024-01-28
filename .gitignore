@@ -13,3 +13,24 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Build files and directories
+build/
+.gradle/
+
+# IDE files and directories
+.idea/
+.navigation/
+captures/
+
+# Operating system files
+Thumbs.db
+
+# User-specific files
+api_keys.txt
+credentials.json
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
