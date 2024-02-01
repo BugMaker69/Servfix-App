@@ -32,6 +32,7 @@ fun CustomTextField(
     fieldName: Int,
     fieldValue: String,
     onValueChange: (String) -> Unit,
+    isError :Boolean =false,
     isValidField: (String) -> Boolean = { true },
     keyboardOptions: KeyboardOptions = KeyboardOptions(),
     visualTransformation: VisualTransformation = VisualTransformation.None,
@@ -42,13 +43,15 @@ fun CustomTextField(
         modifier = modifier.fillMaxWidth(),
         value = fieldValue,
         onValueChange = onValueChange,
+        isError = isError,
         placeholder = { Text(stringResource(id = fieldName)) },
         label = { Text(stringResource(id = fieldName)) },
         keyboardOptions = keyboardOptions,
 
         supportingText = {
             if (
-                !isValidField(fieldValue)
+                isError
+//                !isValidField(fieldValue)
             ) {
                 Text(
                     text = stringResource(id = R.string.invalid) + " " + stringResource(id = fieldName),

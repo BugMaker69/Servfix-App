@@ -54,8 +54,8 @@ fun ServixApp(
                 onLoginClick = {},
                 onSignupClick = {
                     navController.navigate(ServixScreens.Signup.name) {
-                        popUpTo(ServixScreens.Login.name) { inclusive = true }
-                        launchSingleTop = true
+//                        popUpTo(ServixScreens.Login.name) { inclusive = true }
+//                        launchSingleTop = true
                     }
                 },
                 onForgetPasswordClick = {}
@@ -63,11 +63,11 @@ fun ServixApp(
         }
         composable(ServixScreens.Signup.name) {
             Signup(
-                onSignupClick = {},
+//                onSignupClick = {},
                 onLoginClick = {
                     navController.navigate(ServixScreens.Login.name) {
-                        popUpTo(ServixScreens.Signup.name) { inclusive = true }
-                        launchSingleTop = true
+//                        popUpTo(ServixScreens.Signup.name) { inclusive = true }
+//                        launchSingleTop = true
                     }
                 })
         }

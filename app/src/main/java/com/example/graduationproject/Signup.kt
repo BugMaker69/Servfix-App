@@ -29,6 +29,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -44,13 +46,20 @@ import kotlinx.coroutines.flow.MutableStateFlow
 @Composable
 fun Signup(
     modifier: Modifier = Modifier,
-    onSignupClick: () -> Unit,
     onLoginClick: () -> Unit,
     userViewModel: UserViewModel = viewModel()
 ) {
     var press by remember { mutableStateOf(false) }
     var pressC by remember { mutableStateOf(false) }
 
+
+    val usernameFocusRequester = remember { FocusRequester() }
+    val cityFocusRequester = remember { FocusRequester() }
+    val addressFocusRequester = remember { FocusRequester() }
+    val emailFocusRequester = remember { FocusRequester() }
+    val phoneNumberFocusRequester = remember { FocusRequester() }
+    val passwordFocusRequester = remember { FocusRequester() }
+    val confirmPasswordFocusRequester = remember { FocusRequester() }
 
     Column(
         modifier = Modifier
@@ -72,38 +81,56 @@ fun Signup(
             )
         }
         CustomTextField(
+            modifier = Modifier.focusRequester(usernameFocusRequester),
             fieldName = R.string.username,
             fieldValue = userViewModel.userName,
             onValueChange = { userViewModel.onUserNameChanged(it) },
-            isValidField = { userViewModel.validateFullName(it) }
+            isError = userViewModel.userNameError,
         )
         CustomTextField(
+            modifier = Modifier.focusRequester(cityFocusRequester),
+
             fieldName = R.string.city,
             fieldValue = userViewModel.city,
             onValueChange = { userViewModel.onCityChanged(it) },
-        )
+            isError = userViewModel.cityError,
+
+            )
         CustomTextField(
+            modifier = Modifier.focusRequester(addressFocusRequester),
+
             fieldName = R.string.address,
             fieldValue = userViewModel.address,
             onValueChange = { userViewModel.onAddressChanged(it) },
-        )
+            isError = userViewModel.addressError,
+
+            )
         CustomTextField(
+            modifier = Modifier.focusRequester(emailFocusRequester),
+
             fieldName = R.string.email,
             fieldValue = userViewModel.emailN,
             onValueChange = { userViewModel.onEmailChangedN(it) },
-            isValidField = { userViewModel.validateEmail(it) }
-        )
+            isError = userViewModel.emailNError,
+
+            )
         CustomTextField(
+            modifier = Modifier.focusRequester(phoneNumberFocusRequester),
+
             fieldName = R.string.phone,
             fieldValue = userViewModel.phone,
             onValueChange = { userViewModel.onPhoneChanged(it) },
-            isValidField = { userViewModel.validatePhoneNumber(it) }
-        )
+            isError = userViewModel.phoneError,
+
+            )
         CustomTextField(
+            modifier = Modifier.focusRequester(passwordFocusRequester),
+
             fieldName = R.string.password,
             fieldValue = userViewModel.passwordN,
             onValueChange = { userViewModel.onPasswordChangedN(it) },
-            isValidField = { userViewModel.validatePassword(it) },
+            isError = userViewModel.passwordNError,
+
             trailingIcon = {
                 IconButton(onClick = { press = !press }) {
                     Icon(
@@ -116,13 +143,13 @@ fun Signup(
             visualTransformation = if (press) PasswordVisualTransformation() else VisualTransformation.None
         )
         CustomTextField(
+            modifier = Modifier.focusRequester(confirmPasswordFocusRequester),
+
             fieldName = R.string.conf_pass,
             fieldValue = userViewModel.passwordConf,
             onValueChange = { userViewModel.passwordConfChanged(it) },
-            isValidField = {
-                (userViewModel.passwordN == userViewModel.passwordConf)
-                        && (userViewModel.validatePassword(userViewModel.passwordN))
-            },
+            isError = userViewModel.passwordConfError,
+
             trailingIcon = {
                 IconButton(onClick = { pressC = !pressC }) {
                     Icon(
@@ -139,7 +166,24 @@ fun Signup(
                 .fillMaxWidth()
                 .padding(top = 8.dp),
             text = R.string.next,
-            onClick = onSignupClick,
+            onClick = {
+                userViewModel.onSignupClick()
+                if (userViewModel.userNameError) {
+                    usernameFocusRequester.requestFocus()
+                } else if (userViewModel.cityError) {
+                    cityFocusRequester.requestFocus()
+                } else if (userViewModel.addressError) {
+                    addressFocusRequester.requestFocus()
+                } else if (userViewModel.emailNError) {
+                    emailFocusRequester.requestFocus()
+                } else if (userViewModel.phoneError) {
+                    phoneNumberFocusRequester.requestFocus()
+                } else if (userViewModel.passwordNError) {
+                    passwordFocusRequester.requestFocus()
+                } else if (userViewModel.passwordConfError) {
+                    confirmPasswordFocusRequester.requestFocus()
+                }
+            },
             indication = rememberRipple(),
             backgroundColor = DarkBlue,
             contentColor = Color.White,

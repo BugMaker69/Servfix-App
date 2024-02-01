@@ -12,14 +12,13 @@ class UserViewModel : ViewModel() {
     var email by mutableStateOf("")
     var password by mutableStateOf("")
 
-    fun onEmailChanged(email1: String){
+    fun onEmailChanged(email1: String) {
         email = email1.trim()
     }
 
-    fun onPasswordChanged(password1: String){
+    fun onPasswordChanged(password1: String) {
         password = password1.trim()
     }
-
 
 
     //  SIGNUP
@@ -31,33 +30,51 @@ class UserViewModel : ViewModel() {
     var passwordN by mutableStateOf("")
     var passwordConf by mutableStateOf("")
 
-    fun onUserNameChanged(userName1: String){
+
+    var userNameError by mutableStateOf(false)
+    var cityError by mutableStateOf(false)
+    var addressError by mutableStateOf(false)
+    var emailNError by mutableStateOf(false)
+    var phoneError by mutableStateOf(false)
+    var passwordNError by mutableStateOf(false)
+    var passwordConfError by mutableStateOf(false)
+
+
+    fun onUserNameChanged(userName1: String) {
         userName = userName1
+        userNameError = !userName1.matches(fullnameregex)
     }
 
-    fun onCityChanged(city1: String){
+    fun onCityChanged(city1: String) {
         city = city1.trim()
+        cityError = city1.isEmpty()
     }
 
-    fun onAddressChanged(address1: String){
+    fun onAddressChanged(address1: String) {
         address = address1
+        addressError = address1.isEmpty()
     }
 
-    fun onEmailChangedN(email1: String){
+    fun onEmailChangedN(email1: String) {
         emailN = email1.trim()
+        emailNError = !email1.matches(Emailregex)
     }
 
-    fun onPhoneChanged(phone1: String){
-        if (phone1.length<12)
+    fun onPhoneChanged(phone1: String) {
+        if (phone1.length < 12) {
             phone = phone1.trim()
+            phoneError = !phone1.matches(phoneNumberregex)
+        }
     }
 
-    fun onPasswordChangedN(password1: String){
+    fun onPasswordChangedN(password1: String) {
         passwordN = password1.trim()
+        passwordNError = !password1.matches(passwordregex)
     }
 
-    fun passwordConfChanged(passwordConf1: String){
+    fun passwordConfChanged(passwordConf1: String) {
         passwordConf = passwordConf1.trim()
+        passwordConfError = (passwordConf1 != passwordN) || (!passwordConf1.matches(passwordregex))
     }
 
     val phoneNumberregex = "^01[0|1|2|5]\\d{8}$".toRegex()
@@ -66,21 +83,31 @@ class UserViewModel : ViewModel() {
     val passwordregex = "^(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$".toRegex()
 
 
-    fun validatePhoneNumber(phoneNumber: String): Boolean {
-        return phoneNumberregex.matches(phoneNumber)
-    }
-
-    fun validateEmail(email: String): Boolean {
-        return Emailregex.matches(email)
-    }
-
-
-    fun validateFullName(fullName: String): Boolean {
-        return fullnameregex.matches(fullName)
-    }
-
-    fun validatePassword(password: String): Boolean {
-        return passwordregex.matches(password)
+    fun onSignupClick() {
+        if (!userName.matches(fullnameregex)) {
+            userNameError = true
+        }
+        if (city.isEmpty()) {
+            cityError = true
+        }
+        if (address.isEmpty()) {
+            addressError = true
+        }
+        if (!email.matches(Emailregex)) {
+            emailNError = true
+        }
+        if (!phone.matches(phoneNumberregex)) {
+            phoneError = true
+        }
+        if (!passwordN.matches(passwordregex)) {
+            passwordNError = true
+        }
+        if (passwordConf != passwordN || !passwordConf.matches(passwordregex)) {
+            passwordConfError = true
+        }
+        if (!userNameError && !cityError && !addressError && !emailNError && !phoneError && !passwordNError && !passwordConfError) {
+            // Handle the signup response
+        }
     }
 
 }
