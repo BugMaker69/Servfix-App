@@ -40,6 +40,33 @@ class UserViewModel : ViewModel() {
     var passwordConfError by mutableStateOf(false)
 
 
+    val isPasswordFocused = mutableStateOf(false)
+    val isUsernameFocused = mutableStateOf(false)
+    val isPhoneNumberFocused = mutableStateOf(false)
+    val isEmailFocused = mutableStateOf(false)
+
+    val passwordRequirements = listOf(
+        R.string.password_requirement_length to { s: String -> s.length >= 8 },
+        R.string.password_requirement_capital to { s: String -> s.any { it.isUpperCase() } },
+        R.string.password_requirement_special to { s: String -> s.any { !it.isLetterOrDigit() } }
+    )
+
+    val usernameRequirements = listOf(
+        R.string.username_requirement_words to { s: String ->
+            s.split(" ")
+                .filter { it.all { c -> c.isLetter() || c.isWhitespace() } && it.length >= 4 }.size >= 2
+        })
+
+    val phoneNumberRequirements = listOf(
+        R.string.phone_requirement_start to { s: String -> s.matches("^01[0|1|2|5]\$".toRegex()) },
+        R.string.phone_requirement_length to { s: String -> s.length == 11 }
+    )
+
+    val emailRequirements = listOf(
+        R.string.email_requirement_format to { s: String -> s.matches("^[a-zA-Z]{4,}.*@.*\\.[a-zA-Z]+".toRegex()) }
+    )
+
+
     fun onUserNameChanged(userName1: String) {
         userName = userName1
         userNameError = !userName1.matches(fullnameregex)
@@ -81,6 +108,8 @@ class UserViewModel : ViewModel() {
     val Emailregex = "^[a-zA-Z]{4,}.*@.*\\.[a-zA-Z]+".toRegex()
     val fullnameregex = "^[a-zA-Z]{4,} [a-zA-Z]{4,}".toRegex()
     val passwordregex = "^(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$".toRegex()
+//    val passwordregex = "^(?=.*[A-Z])(?=.*\\d)(?=.*[^A-Za-z0-9\\s\\t\\n\\r])[A-Za-z\\d[^A-Za-z0-9\\s\\t\\n\\r]]{8,}$"
+//        .toRegex()
 
 
     fun onSignupClick() {

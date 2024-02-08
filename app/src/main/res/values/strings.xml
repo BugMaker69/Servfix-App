@@ -19,4 +19,18 @@
     <string name="next">Next</string>
     <string name="invalid">Invalid</string>
 
+
+    <string name="password_requirement_length">At least 8 characters</string>
+    <string name="password_requirement_capital">One capital letter</string>
+    <string name="password_requirement_special">One special character</string>
+
+    <string name="username_requirement_words">At least 2 words each with at least 4 characters</string>
+
+    <string name="phone_requirement_start">Must start with 010, 011, 012, or 015</string>
+    <string name="phone_requirement_length">Must be exactly 11 digits</string>
+
+<!--“Starts with 4 letters, followed by ‘@’, then ‘.’, and ends with letters.”-->
+    <string name="email_requirement_format">A string that starts with at least 4 alphabetic characters, followed by any characters, then an @ symbol, then any characters, a period, and ends with one or more alphabetic characters.</string>
+
+
 </resources>

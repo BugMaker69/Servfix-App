@@ -1,6 +1,5 @@
 package com.example.graduationproject
 
-import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -31,16 +30,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.graduationproject.ui.theme.DarkBlue
-import kotlinx.coroutines.flow.MutableStateFlow
 
 
 @Composable
@@ -81,11 +79,20 @@ fun Signup(
             )
         }
         CustomTextField(
-            modifier = Modifier.focusRequester(usernameFocusRequester),
+            modifier = Modifier
+                .focusRequester(usernameFocusRequester)
+                .onFocusChanged { focusState ->
+                    userViewModel.isUsernameFocused.value = focusState.isFocused
+                },
             fieldName = R.string.username,
             fieldValue = userViewModel.userName,
             onValueChange = { userViewModel.onUserNameChanged(it) },
             isError = userViewModel.userNameError,
+        )
+        DisplayRequirements(
+            isFieldFocused = userViewModel.isUsernameFocused.value,
+            requirements = userViewModel.usernameRequirements,
+            fieldValue = userViewModel.userName
         )
         CustomTextField(
             modifier = Modifier.focusRequester(cityFocusRequester),
@@ -106,7 +113,11 @@ fun Signup(
 
             )
         CustomTextField(
-            modifier = Modifier.focusRequester(emailFocusRequester),
+            modifier = Modifier
+                .focusRequester(emailFocusRequester)
+                .onFocusChanged { focusState ->
+                    userViewModel.isEmailFocused.value = focusState.isFocused
+                },
 
             fieldName = R.string.email,
             fieldValue = userViewModel.emailN,
@@ -114,8 +125,17 @@ fun Signup(
             isError = userViewModel.emailNError,
 
             )
+        DisplayRequirements(
+            isFieldFocused = userViewModel.isEmailFocused.value,
+            requirements = userViewModel.emailRequirements,
+            fieldValue = userViewModel.emailN
+        )
         CustomTextField(
-            modifier = Modifier.focusRequester(phoneNumberFocusRequester),
+            modifier = Modifier
+                .focusRequester(phoneNumberFocusRequester)
+                .onFocusChanged { focusState ->
+                    userViewModel.isPhoneNumberFocused.value = focusState.isFocused
+                },
 
             fieldName = R.string.phone,
             fieldValue = userViewModel.phone,
@@ -123,8 +143,20 @@ fun Signup(
             isError = userViewModel.phoneError,
 
             )
+
+        DisplayRequirements(
+            isFieldFocused = userViewModel.isPhoneNumberFocused.value,
+            requirements = userViewModel.phoneNumberRequirements,
+            fieldValue = userViewModel.phone
+        )
+
         CustomTextField(
-            modifier = Modifier.focusRequester(passwordFocusRequester),
+            modifier = Modifier
+                .focusRequester(passwordFocusRequester)
+                .onFocusChanged { focusState ->
+                    userViewModel.isPasswordFocused.value = focusState.isFocused
+
+                },
 
             fieldName = R.string.password,
             fieldValue = userViewModel.passwordN,
@@ -141,6 +173,11 @@ fun Signup(
                 }
             },
             visualTransformation = if (press) PasswordVisualTransformation() else VisualTransformation.None
+        )
+        DisplayRequirements(
+            isFieldFocused = userViewModel.isPasswordFocused.value,
+            requirements = userViewModel.passwordRequirements,
+            fieldValue = userViewModel.passwordN
         )
         CustomTextField(
             modifier = Modifier.focusRequester(confirmPasswordFocusRequester),

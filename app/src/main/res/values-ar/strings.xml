@@ -21,4 +21,19 @@
 
     <string name="invalid">غير صحيح</string>
 
+
+    <string name="password_requirement_length">على الأقل 8 أحرف</string>
+    <string name="password_requirement_capital">حرف كبير واحد على الأقل</string>
+    <string name="password_requirement_special">حرف خاص واحد على الأقل</string>
+
+    <string name="username_requirement_words">على الأقل كلمتين كل منهما يحتوي على 4 أحرف على الأقل</string>
+
+    <string name="phone_requirement_start">يجب أن يبدأ بـ 010 أو 011 أو 012 أو 015</string>
+    <string name="phone_requirement_length">يجب أن يكون طوله 11 رقمًا بالضبط</string>
+
+    <string name="email_requirement_format">سلسلة تبدأ بـ 4 أحرف أبجدية على الأقل، تليها أي أحرف، ثم رمز @، ثم أي أحرف، ثم نقطة، وتنتهي بحرف أبجدي واحد أو أكثر.</string>
+
+
+
+
 </resources>
