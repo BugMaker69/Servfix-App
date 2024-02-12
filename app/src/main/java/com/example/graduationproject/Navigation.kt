@@ -9,6 +9,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -43,33 +44,70 @@ fun ServixApp(
         }
     }
 
-
-
+    val viewModel: UserViewModel = viewModel()
     NavHost(
         navController = navController,
         startDestination = ServixScreens.Login.name,
     ) {
+
         composable(ServixScreens.Login.name) {
             Login(
                 onLoginClick = {},
                 onSignupClick = {
-                    navController.navigate(ServixScreens.Signup.name) {
-//                        popUpTo(ServixScreens.Login.name) { inclusive = true }
-//                        launchSingleTop = true
-                    }
+                    navController.navigate(ServixScreens.FirstSignup.name)
                 },
-                onForgetPasswordClick = {}
+                onForgetPasswordClick = {
+                    navController.navigate(ServixScreens.ForgotPassword.name)
+                }
             )
         }
-        composable(ServixScreens.Signup.name) {
-            Signup(
-//                onSignupClick = {},
+        composable(ServixScreens.FirstSignup.name) {
+            com.example.graduationproject.test.SignupFirstScreen(
                 onLoginClick = {
-                    navController.navigate(ServixScreens.Login.name) {
-//                        popUpTo(ServixScreens.Signup.name) { inclusive = true }
-//                        launchSingleTop = true
-                    }
-                })
+                    navController.navigate(ServixScreens.Login.name)
+                },
+                onNextClick = {
+                    navController.navigate(ServixScreens.SecondSignup.name)
+                },
+                userViewModel = viewModel
+            )
         }
+        composable(ServixScreens.SecondSignup.name) {
+            SignupSecondScreen(
+                onBackClick = {
+                    navController.navigate(ServixScreens.FirstSignup.name)
+                },
+                userViewModel = viewModel,
+                onFinishClick = {
+                    navController.navigate(ServixScreens.Login.name)
+                }
+            )
+        }
+        composable(ServixScreens.ForgotPassword.name) {
+            FirstScreenOnForgotPasswordChange(
+                onSendClick = {},
+                onLoginClick = {
+                    navController.navigate(ServixScreens.Login.name)
+                }
+            )
+        }
+        composable(ServixScreens.ResetPassword.name) {
+            ResetPassword(
+                onResetClick = {
+                    navController.navigate(ServixScreens.AfterPassword.name)
+                }
+            )
+        }
+        composable(ServixScreens.AfterPassword.name) {
+            AfterPasswordChange(
+                onBackToLoginClick = {
+                    navController.navigate(ServixScreens.Login.name)
+                }
+            )
+        }
+
+
     }
+
+
 }

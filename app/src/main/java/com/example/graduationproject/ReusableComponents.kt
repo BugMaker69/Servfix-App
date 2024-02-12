@@ -20,9 +20,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -33,6 +36,7 @@ fun CustomTextField(
     fieldValue: String,
     onValueChange: (String) -> Unit,
     isError :Boolean =false,
+    readOnly:Boolean = false,
     isValidField: (String) -> Boolean = { true },
     keyboardOptions: KeyboardOptions = KeyboardOptions(),
     visualTransformation: VisualTransformation = VisualTransformation.None,
@@ -60,6 +64,7 @@ fun CustomTextField(
                 )
             }
         },
+        readOnly = readOnly,
         singleLine = true,
         maxLines = 1,
         visualTransformation = visualTransformation,
@@ -77,6 +82,7 @@ fun CustomButtonAndText(
     shape: Shape = RoundedCornerShape(4.dp),
     backgroundColor: Color = Color.Transparent,
     contentColor: Color = Color.LightGray,
+    style : TextStyle = TextStyle(),
     alignment: Alignment = Alignment.Center
 ) {
     val interactionSource = remember { MutableInteractionSource() }
@@ -95,6 +101,7 @@ fun CustomButtonAndText(
         Text(
             text = stringResource(id = text),
             color = contentColor,
+            style = style
         )
     }
 }

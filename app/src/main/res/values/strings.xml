@@ -5,6 +5,21 @@
     <string name="password">Password</string>
     <string name="forgot_password">Forgot password?</string>
 
+    <string name="send_code">Send Code</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="new_password">New Password</string>
+    <string name="password_changed">Password Changed</string>
+    <string name="password_changed_succ">Your Password has been Changed Successfully</string>
+    <string name="back_login">Back To Login</string>
+
+    <string name="enter_phone">Don’t Worry! It Happens. Please Enter The Phone Number Associated With Your Account.</string>
+    <string name="remember_pass">Remember Password?</string>
+    <string name="enter_pass_rem">Please type something you’ll remember</string>
+
+    <string name="congratulations">Congratulations!</string>
+    <string name="redirected">You\'ll be redirected to the login screen now</string>
+
+
     <string name="login">Log in</string>
     <string name="signup">Sign up</string>
 
@@ -16,6 +31,8 @@
     <string name="address">Address</string>
     <string name="phone">Phone number</string>
     <string name="conf_pass">Confirm password</string>
+    <string name="back">Back</string>
+    <string name="finish">Finish</string>
     <string name="next">Next</string>
     <string name="invalid">Invalid</string>
 
@@ -29,8 +46,39 @@
     <string name="phone_requirement_start">Must start with 010, 011, 012, or 015</string>
     <string name="phone_requirement_length">Must be exactly 11 digits</string>
 
-<!--“Starts with 4 letters, followed by ‘@’, then ‘.’, and ends with letters.”-->
+    <!--“Starts with 4 letters, followed by ‘@’, then ‘.’, and ends with letters.”-->
     <string name="email_requirement_format">A string that starts with at least 4 alphabetic characters, followed by any characters, then an @ symbol, then any characters, a period, and ends with one or more alphabetic characters.</string>
+
+
+    <string-array name="egypt_governorates">
+        <item>Alexandria</item>
+        <item>Aswan</item>
+        <item>Asyut</item>
+        <item>Beheira</item>
+        <item>Beni Suef</item>
+        <item>Cairo</item>
+        <item>Dakahlia</item>
+        <item>Damietta</item>
+        <item>Faiyum</item>
+        <item>Gharbia</item>
+        <item>Giza</item>
+        <item>Ismailia</item>
+        <item>Kafr El Sheikh</item>
+        <item>Luxor</item>
+        <item>Matruh</item>
+        <item>Minya</item>
+        <item>Monufia</item>
+        <item>New Valley</item>
+        <item>North Sinai</item>
+        <item>Port Said</item>
+        <item>Qalyubia</item>
+        <item>Qena</item>
+        <item>Red Sea</item>
+        <item>Sharqia</item>
+        <item>Sohag</item>
+        <item>South Sinai</item>
+        <item>Suez</item>
+    </string-array>
 
 
 </resources>

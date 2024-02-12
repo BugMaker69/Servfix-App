@@ -6,6 +6,22 @@
     <string name="password">كلمة المرور</string>
     <string name="forgot_password">هل نسيت كلمة المرور؟</string>
 
+    <string name="send_code">إرسال الرمز</string>
+    <string name="reset_password">إعادة تعيين كلمة المرور</string>
+    <string name="new_password">كلمة السر الجديدة</string>
+    <string name="password_changed">تم تغيير كلمة السر</string>
+    <string name="password_changed_succ">تم تغيير كلمة السر الخاصة بك بنجاح</string>
+    <string name="back_login">العودة لتسجيل الدخول</string>
+
+    <string name="enter_phone">لا تقلق! يحدث ذلك. الرجاء إدخال رقم الهاتف المرتبط بحسابك.</string>
+    <string name="remember_pass">تذكر كلمة المرور؟</string>
+    <string name="enter_pass_rem">الرجاء كتابة شيء ستتذكره</string>
+
+    <string name="congratulations">تهانينا!</string>
+    <string name="redirected">سوف يتم إعادة توجيهك إلى شاشة الدخول الآن</string>
+
+
+
     <string name="login">تسجيل الدخول</string>
     <string name="signup">سجل</string>
 
@@ -17,6 +33,8 @@
     <string name="address">عنوان</string>
     <string name="phone">رقم الهاتف</string>
     <string name="conf_pass">تأكيد كلمة المرور</string>
+    <string name="back">السابق</string>
+    <string name="finish">انتهاء</string>
     <string name="next">التالى</string>
 
     <string name="invalid">غير صحيح</string>
@@ -34,6 +52,35 @@
     <string name="email_requirement_format">سلسلة تبدأ بـ 4 أحرف أبجدية على الأقل، تليها أي أحرف، ثم رمز @، ثم أي أحرف، ثم نقطة، وتنتهي بحرف أبجدي واحد أو أكثر.</string>
 
 
+    <string-array name="egypt_governorates">
+        <item>الإسكندرية</item>
+        <item>أسوان</item>
+        <item>أسيوط</item>
+        <item>البحيرة</item>
+        <item>بني سويف</item>
+        <item>القاهرة</item>
+        <item>الدقهلية</item>
+        <item>دمياط</item>
+        <item>الفيوم</item>
+        <item>الغربية</item>
+        <item>الجيزة</item>
+        <item>الإسماعيلية</item>
+        <item>كفر الشيخ</item>
+        <item>الأقصر</item>
+        <item>مطروح</item>
+        <item>المنيا</item>
+        <item>المنوفية</item>
+        <item>الوادي الجديد</item>
+        <item>شمال سيناء</item>
+        <item>بورسعيد</item>
+        <item>القليوبية</item>
+        <item>قنا</item>
+        <item>البحر الأحمر</item>
+        <item>الشرقية</item>
+        <item>سوهاج</item>
+        <item>جنوب سيناء</item>
+        <item>السويس</item>
+    </string-array>
 
 
 </resources>

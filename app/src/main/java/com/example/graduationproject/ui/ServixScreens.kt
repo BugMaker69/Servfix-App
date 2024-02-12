@@ -1,5 +1,5 @@
 package com.example.graduationproject.ui
 
 enum class ServixScreens {
-    Login, Signup
+    Login, FirstSignup, SecondSignup , ForgotPassword , ResetPassword , AfterPassword
 }

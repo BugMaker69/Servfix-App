@@ -3,6 +3,7 @@ package com.example.graduationproject
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.geometry.Size
 import androidx.lifecycle.ViewModel
 
 
@@ -21,14 +22,54 @@ class UserViewModel : ViewModel() {
     }
 
 
+    //  Forget Password
+
+    var phoneChange by mutableStateOf("")
+    var newPassword by mutableStateOf("")
+    var newPasswordConf by mutableStateOf("")
+
+    var newPasswordNError by mutableStateOf(false)
+    var newPasswordConfError by mutableStateOf(false)
+
+    val isNewPasswordFocused = mutableStateOf(false)
+
+    fun onNewPhoneChanged(phone1: String) {
+        if (phone1.length < 12) {
+            phoneChange = phone1.trim()
+            phoneError = !phone1.matches(phoneNumberregex)
+        }
+    }
+
+    fun onNewPasswordChanged(password1: String) {
+        newPassword = password1.trim()
+        newPasswordNError = !password1.matches(passwordregex)
+    }
+
+    fun newPasswordConfChanged(passwordConf1: String) {
+        newPasswordConf = passwordConf1.trim()
+        newPasswordConfError =
+            (passwordConf1 != newPassword) || (!passwordConf1.matches(passwordregex))
+    }
+
+
     //  SIGNUP
     var userName by mutableStateOf("")
-    var city by mutableStateOf("")
+
+    //    var city by mutableStateOf("")
     var address by mutableStateOf("")
     var emailN by mutableStateOf("")
     var phone by mutableStateOf("")
     var passwordN by mutableStateOf("")
     var passwordConf by mutableStateOf("")
+
+    var eyeIconPress by mutableStateOf(false)
+    var eyeIconPressC by mutableStateOf(false)
+
+    //  DropdownMenu Of City Inside SignUp
+    var expanded by mutableStateOf(false)
+    var selectedCityIndex by mutableStateOf(-1)
+    var selectedCityValue by mutableStateOf("")
+    var textfieldSize by mutableStateOf(Size.Zero)
 
 
     var userNameError by mutableStateOf(false)
@@ -58,7 +99,7 @@ class UserViewModel : ViewModel() {
         })
 
     val phoneNumberRequirements = listOf(
-        R.string.phone_requirement_start to { s: String -> s.matches("^01[0|1|2|5]\$".toRegex()) },
+        R.string.phone_requirement_start to { s: String -> s.matches("^01[0|1|2|5][0-9]*\$".toRegex()) },
         R.string.phone_requirement_length to { s: String -> s.length == 11 }
     )
 
@@ -72,10 +113,10 @@ class UserViewModel : ViewModel() {
         userNameError = !userName1.matches(fullnameregex)
     }
 
-    fun onCityChanged(city1: String) {
-        city = city1.trim()
-        cityError = city1.isEmpty()
-    }
+//    fun onCityChanged(city1: String) {
+//        city = city1.trim()
+//        cityError = city1.isEmpty()
+//    }
 
     fun onAddressChanged(address1: String) {
         address = address1
@@ -112,21 +153,30 @@ class UserViewModel : ViewModel() {
 //        .toRegex()
 
 
-    fun onSignupClick() {
+    fun onNextFirstSignupClick() {
         if (!userName.matches(fullnameregex)) {
             userNameError = true
         }
-        if (city.isEmpty()) {
+        if (selectedCityValue.isEmpty() && selectedCityIndex == -1) {
             cityError = true
         }
         if (address.isEmpty()) {
             addressError = true
         }
-        if (!email.matches(Emailregex)) {
-            emailNError = true
-        }
+
         if (!phone.matches(phoneNumberregex)) {
             phoneError = true
+        }
+
+//        if (!userNameError && !cityError && !addressError && !emailNError && !phoneError && !passwordNError && !passwordConfError) {
+//            // Handle the signup response
+//        }
+    }
+
+    fun onNextSecondSignupClick() {
+
+        if (!email.matches(Emailregex)) {
+            emailNError = true
         }
         if (!passwordN.matches(passwordregex)) {
             passwordNError = true
@@ -134,9 +184,8 @@ class UserViewModel : ViewModel() {
         if (passwordConf != passwordN || !passwordConf.matches(passwordregex)) {
             passwordConfError = true
         }
-        if (!userNameError && !cityError && !addressError && !emailNError && !phoneError && !passwordNError && !passwordConfError) {
-            // Handle the signup response
-        }
+
     }
+
 
 }
