@@ -62,7 +62,7 @@ fun ServixApp(
             )
         }
         composable(ServixScreens.FirstSignup.name) {
-            com.example.graduationproject.test.SignupFirstScreen(
+            SignupFirstScreen(
                 onLoginClick = {
                     navController.navigate(ServixScreens.Login.name)
                 },

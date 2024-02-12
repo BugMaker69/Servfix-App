@@ -200,6 +200,7 @@ fun SignupFirstScreen(
                     } else if (userViewModel.phoneError) {
                         phoneNumberFocusRequester.requestFocus()
                     }
+                    if(!userViewModel.userNameError && !userViewModel.cityError && !userViewModel.addressError && !userViewModel.phoneError  )
                     onNextClick()
                 },
                 indication = rememberRipple(),
@@ -367,6 +368,7 @@ fun SignupSecondScreen(
                     } else if (userViewModel.passwordConfError) {
                         confirmPasswordFocusRequester.requestFocus()
                     }
+                    if(!userViewModel.emailNError && !userViewModel.passwordNError && !userViewModel.passwordConfError)
                     onFinishClick()
                 },
                 contentColor = Color.White,
