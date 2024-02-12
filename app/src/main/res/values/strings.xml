@@ -34,7 +34,14 @@
     <string name="back">Back</string>
     <string name="finish">Finish</string>
     <string name="next">Next</string>
+    <string name="send">Send</string>
     <string name="invalid">Invalid</string>
+    <string name="Enter_Verification_Code" >Enter Verification Code</string>
+    <string name="Resend_Code" >Resend the code again ? </string>
+    <string name="Send_Otp_Info" >We have sent the code to your mobile number please check SMS
+</string>
+
+
 
 
     <string name="password_requirement_length">At least 8 characters</string>

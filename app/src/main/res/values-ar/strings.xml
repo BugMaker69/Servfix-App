@@ -38,6 +38,13 @@
     <string name="next">التالى</string>
 
     <string name="invalid">غير صحيح</string>
+    <string name="Enter_Verification_Code" >ادخل كود التحقق  </string>
+    <string name="Resend_Code" >اعد ارسال الكود ؟</string>
+    <string name="Send_Otp_Info" >لقد تم ارسال الكود الى الرقم </string>
+    <string name="send">ارسال</string>
+
+
+
 
 
     <string name="password_requirement_length">على الأقل 8 أحرف</string>

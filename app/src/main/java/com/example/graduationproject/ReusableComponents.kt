@@ -20,10 +20,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -35,8 +35,6 @@ fun CustomTextField(
     fieldName: Int,
     fieldValue: String,
     onValueChange: (String) -> Unit,
-    isError :Boolean =false,
-    readOnly:Boolean = false,
     isValidField: (String) -> Boolean = { true },
     keyboardOptions: KeyboardOptions = KeyboardOptions(),
     visualTransformation: VisualTransformation = VisualTransformation.None,
@@ -47,15 +45,13 @@ fun CustomTextField(
         modifier = modifier.fillMaxWidth(),
         value = fieldValue,
         onValueChange = onValueChange,
-        isError = isError,
         placeholder = { Text(stringResource(id = fieldName)) },
         label = { Text(stringResource(id = fieldName)) },
         keyboardOptions = keyboardOptions,
 
         supportingText = {
             if (
-                isError
-//                !isValidField(fieldValue)
+                !isValidField(fieldValue)
             ) {
                 Text(
                     text = stringResource(id = R.string.invalid) + " " + stringResource(id = fieldName),
@@ -64,7 +60,6 @@ fun CustomTextField(
                 )
             }
         },
-        readOnly = readOnly,
         singleLine = true,
         maxLines = 1,
         visualTransformation = visualTransformation,
@@ -78,11 +73,12 @@ fun CustomButtonAndText(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
     text: Int,
+    fontWeight: FontWeight=FontWeight.Normal,
+    fontSize:Int=15,
     indication: Indication? = null,
     shape: Shape = RoundedCornerShape(4.dp),
     backgroundColor: Color = Color.Transparent,
     contentColor: Color = Color.LightGray,
-    style : TextStyle = TextStyle(),
     alignment: Alignment = Alignment.Center
 ) {
     val interactionSource = remember { MutableInteractionSource() }
@@ -101,7 +97,8 @@ fun CustomButtonAndText(
         Text(
             text = stringResource(id = text),
             color = contentColor,
-            style = style
+            fontSize = fontSize.sp,
+          fontWeight = fontWeight
         )
     }
 }
@@ -110,5 +107,5 @@ fun CustomButtonAndText(
 @Composable
 @Preview
 fun CustomTextPreview() {
-    CustomButtonAndText(onClick = {}, text = R.string.invalid)
+    CustomButtonAndText(onClick = {}, text = R.string.invalid, fontSize = 10)
 }
