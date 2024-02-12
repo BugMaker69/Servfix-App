@@ -55,6 +55,10 @@ import com.example.graduationproject.ui.theme.GrayBlue
 import com.example.graduationproject.ui.theme.LightBlue
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthProvider
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun OtpScreen(
@@ -166,11 +170,11 @@ val context= LocalContext.current
                     otpViewModel.mAuth,
                     context as Activity,
                 )
-                if (otpViewModel.sucsess) {
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        onLoginClick()
-                    }, 4000)
+                CoroutineScope(Dispatchers.Main).launch {
+                    delay(4000)
+                    onLoginClick()
                 }
+
 
 
             }
