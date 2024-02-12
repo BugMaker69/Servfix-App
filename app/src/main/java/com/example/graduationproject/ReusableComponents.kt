@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.VisualTransformation
@@ -35,7 +36,9 @@ fun CustomTextField(
     fieldName: Int,
     fieldValue: String,
     onValueChange: (String) -> Unit,
-    isValidField: (String) -> Boolean = { true },
+    isError :Boolean =false,
+    readOnly:Boolean = false,
+//    isValidField: (String) -> Boolean = { true },
     keyboardOptions: KeyboardOptions = KeyboardOptions(),
     visualTransformation: VisualTransformation = VisualTransformation.None,
     trailingIcon: @Composable() (() -> Unit)? = { },
@@ -51,7 +54,8 @@ fun CustomTextField(
 
         supportingText = {
             if (
-                !isValidField(fieldValue)
+                isError
+//                !isValidField(fieldValue)
             ) {
                 Text(
                     text = stringResource(id = R.string.invalid) + " " + stringResource(id = fieldName),
@@ -62,6 +66,7 @@ fun CustomTextField(
         },
         singleLine = true,
         maxLines = 1,
+        readOnly = readOnly,
         visualTransformation = visualTransformation,
         trailingIcon = trailingIcon
     )
@@ -79,6 +84,7 @@ fun CustomButtonAndText(
     shape: Shape = RoundedCornerShape(4.dp),
     backgroundColor: Color = Color.Transparent,
     contentColor: Color = Color.LightGray,
+    style : TextStyle = TextStyle(),
     alignment: Alignment = Alignment.Center
 ) {
     val interactionSource = remember { MutableInteractionSource() }
@@ -97,6 +103,7 @@ fun CustomButtonAndText(
         Text(
             text = stringResource(id = text),
             color = contentColor,
+            style=style,
             fontSize = fontSize.sp,
           fontWeight = fontWeight
         )
