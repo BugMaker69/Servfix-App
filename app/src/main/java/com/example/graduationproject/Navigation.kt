@@ -60,7 +60,7 @@ fun ServixApp(
                     navController.navigate(ServixScreens.FirstSignup.name + "/{phoneNum}")
                 },
                 onForgetPasswordClick = {
-                    navController.navigate(ServixScreens.ForgotPassword.name)
+                    navController.navigate(ServixScreens.ForgotPassword.name+ "/{phoneNum}")
                 }
             )
         }
@@ -96,9 +96,17 @@ fun ServixApp(
                 }
             )
         }
-        composable(ServixScreens.ForgotPassword.name) {
+        composable(
+            ServixScreens.ForgotPassword.name + "/{phoneNum}",
+            arguments = listOf(navArgument("phoneNum") {
+                type = NavType.StringType
+            })
+        ) {
             FirstScreenOnForgotPasswordChange(
-                onSendClick = {},
+                onSendClick = {
+                    navController.navigate(ServixScreens.Otp.name + "/${it.arguments?.getString("phoneNum")}")
+
+                },
                 onLoginClick = {
                     navController.navigate(ServixScreens.Login.name)
                 }
