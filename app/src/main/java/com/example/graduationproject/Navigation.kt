@@ -87,13 +87,12 @@ fun ServixApp(
         ) {
             SignupSecondScreen(
                 onBackClick = {
-                    Log.d("HEELLOO", "ServixApp: 55555 ")
 
-                    navController.navigate(ServixScreens.FirstSignup.name + "/$it")
+                    navController.navigate(ServixScreens.FirstSignup.name + "/${it.arguments?.getString("phoneNum")}")
                 },
+
                 onFinishClick = {
-                    Log.d("HEELLOO", "ServixApp: ")
-                    navController.navigate(ServixScreens.Otp.name +"/$it")
+                    navController.navigate(ServixScreens.Otp.name + "/${it.arguments?.getString("phoneNum")}")
                 }
             )
         }
