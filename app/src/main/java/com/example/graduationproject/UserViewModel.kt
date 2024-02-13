@@ -111,16 +111,16 @@ class UserViewModel(
         R.string.email_requirement_format to { s: String -> s.matches("^[a-zA-Z]{4,}.*@.*\\.[a-zA-Z]+".toRegex()) }
     )
 
-
-    init {
-        val x = savedStateHandle.get<String>("phoneNum") ?: "empty"
-        Log.d("haha", "onnnn")
-        getPhoneNum(x)
-    }
-
-    fun getPhoneNum(x: String) {
-        phone = "+2$x"
-    }
+//
+//    init {
+//        val x = savedStateHandle.get<String>("phoneNum") ?: "empty"
+//        Log.d("haha", "onnnn")
+//        getPhoneNum(x)
+//    }
+//0101
+//    fun getPhoneNum(x: String) {
+//        phone = "+2$x"
+//    }
 
     fun onUserNameChanged(userName1: String) {
         userName = userName1
