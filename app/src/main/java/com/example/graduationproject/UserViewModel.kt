@@ -189,7 +189,7 @@ class UserViewModel(
 
     fun onNextSecondSignupClick() {
 
-        if (!email.matches(Emailregex)) {
+        if (!emailN.matches(Emailregex)) {
             emailNError = true
         }
         if (!passwordN.matches(passwordregex)) {

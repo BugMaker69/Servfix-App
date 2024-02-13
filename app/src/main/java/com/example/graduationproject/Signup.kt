@@ -51,7 +51,7 @@ import com.example.graduationproject.ui.theme.DarkBlue
 fun SignupFirstScreen(
     modifier: Modifier = Modifier,
     onLoginClick: () -> Unit,
-    onNextClick: () -> Unit,
+    onNextClick: (String) -> Unit,
 ) {
     val userViewModel: UserViewModel = viewModel()
 
@@ -200,7 +200,7 @@ fun SignupFirstScreen(
                         phoneNumberFocusRequester.requestFocus()
                     }
                     if(!userViewModel.userNameError && !userViewModel.cityError && !userViewModel.addressError && !userViewModel.phoneError  )
-                        onNextClick()
+                        onNextClick(userViewModel.phone)
                 },
                 indication = rememberRipple(),
                 backgroundColor = DarkBlue,
@@ -226,7 +226,7 @@ fun SignupFirstScreen(
 fun SignupSecondScreen(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
-    onFinishClick: (String) -> Unit,
+    onFinishClick: () -> Unit,
 ) {
     val userViewModel: UserViewModel = viewModel()
 
@@ -371,7 +371,7 @@ fun SignupSecondScreen(
                         confirmPasswordFocusRequester.requestFocus()
                     }
                     if(!userViewModel.emailNError && !userViewModel.passwordNError && !userViewModel.passwordConfError)
-                        onFinishClick(userViewModel.phone)
+                        onFinishClick()
                     Log.d("WHYYYYY", "SignupSecondScreen: ERRORR3")
 
                 },
