@@ -95,16 +95,16 @@ val context= LocalContext.current
             text = R.string.Enter_Verification_Code, contentColor = Color.Black,
             fontSize = 30, fontWeight = FontWeight.ExtraBold
         )
-//        CustomButtonAndText(
-//            modifier = Modifier.padding(horizontal = 30.dp),
-//            text = R.string.Send_Otp_Info,
-//            contentColor = Color.Black,
-//            fontSize = 18,
-//            fontWeight = FontWeight.Normal
-//        )
+        CustomButtonAndText(
+            modifier = Modifier.padding(horizontal = 30.dp),
+            text = R.string.Send_Otp_Info,
+            contentColor = Color.Black,
+            fontSize = 18,
+            fontWeight = FontWeight.Normal
+        )
 
         Text(
-            text = stringResource(R.string.Send_Otp_Info, otpViewModel.phoneNumber),
+            text = otpViewModel.phoneNumber,
             modifier = Modifier
                 .padding(horizontal = 20.dp)
                 .align(alignment = Alignment.End)

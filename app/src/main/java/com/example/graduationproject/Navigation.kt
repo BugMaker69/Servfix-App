@@ -1,9 +1,11 @@
 package com.example.graduationproject
 
+import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -16,6 +18,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.graduationproject.ui.OnBoardingScreen
 import com.example.graduationproject.ui.OtpScreen
 import com.example.graduationproject.ui.ServixScreens
 import com.example.graduationproject.ui.TestScreen
@@ -46,13 +49,28 @@ fun ServixApp(
             exitProcess(0)
         }
     }
+    val sharedPreferences = context.getSharedPreferences("onBoarding", Context.MODE_PRIVATE)
+    val isFirstLaunch = sharedPreferences.getBoolean("isFirstLaunch", true)
+    LaunchedEffect(Unit) {
+        if (isFirstLaunch) {
+            navController.navigate(ServixScreens.OnBoarding.name) {
+                popUpTo(ServixScreens.OnBoarding.name) { inclusive = true }
+                launchSingleTop = true
+            }
+            sharedPreferences.edit().putBoolean("isFirstLaunch", false).apply()
 
 
+        }
+    }
     NavHost(
         navController = navController,
-        startDestination = ServixScreens.Login.name,
+        startDestination = if (isFirstLaunch) ServixScreens.OnBoarding.name else ServixScreens.Login.name
     ) {
-
+composable(ServixScreens.OnBoarding.name){
+    OnBoardingScreen {
+        navController.navigate(ServixScreens.Login.name)
+    }
+}
         composable(ServixScreens.Login.name) {
             Login(
                 onLoginClick = {},
@@ -75,6 +93,7 @@ fun ServixApp(
                     navController.navigate(ServixScreens.Login.name)
                 },
                 onNextClick = {
+
                     navController.navigate(ServixScreens.SecondSignup.name + "/$it")
                 },
             )
@@ -146,7 +165,6 @@ fun ServixApp(
 
 
 }
-
 
 
 //NavHost(

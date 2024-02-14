@@ -68,7 +68,11 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.7.7")
     //lottie animation
     implementation("com.airbnb.android:lottie-compose:6.3.0")
+
+
     implementation("androidx.navigation:navigation-testing:2.7.7")
+
+
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
@@ -84,4 +88,7 @@ dependencies {
     // Add the dependency for the Firebase Authentication library
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation("com.google.firebase:firebase-auth")
+    //splash
+    implementation ("androidx.core:core-splashscreen:1.0.1")
+
 }
