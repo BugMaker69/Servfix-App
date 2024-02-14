@@ -38,8 +38,7 @@
     <string name="invalid">Invalid</string>
     <string name="Enter_Verification_Code" >Enter Verification Code</string>
     <string name="Resend_Code" >Resend the code again ? </string>
-    <string name="Send_Otp_Info" >We have sent the code to your mobile number please check SMS
-</string>
+    <string name="Send_Otp_Info" >We have sent the code to your mobile number %1$s, please check SMS</string>
 
 
 
