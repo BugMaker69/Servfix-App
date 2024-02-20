@@ -1,5 +1,6 @@
 package com.example.graduationproject
 
+import android.app.Activity
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -7,54 +8,34 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.geometry.Size
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.google.firebase.FirebaseException
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.PhoneAuthCredential
+import com.google.firebase.auth.PhoneAuthOptions
+import com.google.firebase.auth.PhoneAuthProvider
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 
 class UserViewModel(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-
+    lateinit var callbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks
+    var verificationID by mutableStateOf("")
+    var mAuth: FirebaseAuth = FirebaseAuth.getInstance();
+    var otpText by mutableStateOf("")
+    var sucsess by mutableStateOf(false)
+    var failed by mutableStateOf(false)
+    var mobileAnimation by mutableStateOf(true)
+    val countdownTime = MutableStateFlow(70)
+    val resendEnabled = MutableStateFlow(true)
     // LOGIN
     var email by mutableStateOf("")
     var password by mutableStateOf("")
-
-    fun onEmailChanged(email1: String) {
-        email = email1.trim()
-    }
-
-    fun onPasswordChanged(password1: String) {
-        password = password1.trim()
-    }
-
-
-    //  Forget Password
-
-    var phoneChange by mutableStateOf("")
-    var newPassword by mutableStateOf("")
-    var newPasswordConf by mutableStateOf("")
-
-    var newPasswordNError by mutableStateOf(false)
-    var newPasswordConfError by mutableStateOf(false)
-
-    val isNewPasswordFocused = mutableStateOf(false)
-
-    fun onNewPhoneChanged(phone1: String) {
-        if (phone1.length < 12) {
-            phoneChange = phone1.trim()
-            phoneError = !phone1.matches(phoneNumberregex)
-        }
-    }
-
-    fun onNewPasswordChanged(password1: String) {
-        newPassword = password1.trim()
-        newPasswordNError = !password1.matches(passwordregex)
-    }
-
-    fun newPasswordConfChanged(passwordConf1: String) {
-        newPasswordConf = passwordConf1.trim()
-        newPasswordConfError =
-            (passwordConf1 != newPassword) || (!passwordConf1.matches(passwordregex))
-    }
-
 
     //  SIGNUP
     var userName by mutableStateOf("")
@@ -90,6 +71,101 @@ class UserViewModel(
     val isPhoneNumberFocused = mutableStateOf(false)
     val isEmailFocused = mutableStateOf(false)
 
+
+    //  Forget Password
+
+    var phoneChange by mutableStateOf("")
+    var newPassword by mutableStateOf("")
+    var newPasswordConf by mutableStateOf("")
+
+    var newPasswordNError by mutableStateOf(false)
+    var newPasswordConfError by mutableStateOf(false)
+    val isNewPasswordFocused = mutableStateOf(false)
+
+
+
+
+    fun startCountdown() {
+        // If the resend button is enabled, start the countdown
+        if (resendEnabled.value) {
+            resendEnabled.value = false
+            countdownTime.value = 70
+
+            // Launch a new coroutine in viewModelScope
+            viewModelScope.launch {
+                while (countdownTime.value > 0) {
+                    delay(1000L)
+                    countdownTime.value--
+                }
+                resendEnabled.value = true
+            }
+        }
+    }
+    fun updateOtpText(newText: String) {
+        if (newText.length <= 6) {
+            otpText = newText
+        }
+    }
+
+    fun signInWithPhoneAuthCredential(
+        credential: PhoneAuthCredential= PhoneAuthProvider.getCredential(verificationID,otpText),
+        auth: FirebaseAuth=mAuth,
+        activity: Activity,
+    ) {
+        auth.signInWithCredential(credential)
+            .addOnCompleteListener(activity) { task ->
+
+                if (task.isSuccessful) {
+
+                    mobileAnimation=false
+                    failed=false
+                    sucsess=true
+
+
+                    //   Toast.makeText(context, "Verification successful..", Toast.LENGTH_SHORT).show()
+                } else {
+                    // Sign in failed, display a message
+                    if (task.exception is FirebaseAuthInvalidCredentialsException) {
+                        mobileAnimation=false
+                        sucsess=false
+                        failed=true
+                        Log.d("haha", "error: ")
+
+
+                    }
+                }
+            }
+    }
+
+    fun onEmailChanged(email1: String) {
+        email = email1.trim()
+    }
+
+    fun onPasswordChanged(password1: String) {
+        password = password1.trim()
+    }
+
+
+    fun onNewPhoneChanged(phone1: String) {
+        if (phone1.length < 12) {
+            phoneChange = phone1.trim()
+            phoneError = !phone1.matches(phoneNumberregex)
+        }
+    }
+
+    fun onNewPasswordChanged(password1: String) {
+        newPassword = password1.trim()
+        newPasswordNError = !password1.matches(passwordregex)
+    }
+
+    fun newPasswordConfChanged(passwordConf1: String) {
+        newPasswordConf = passwordConf1.trim()
+        newPasswordConfError =
+            (passwordConf1 != newPassword) || (!passwordConf1.matches(passwordregex))
+    }
+
+
+
     val passwordRequirements = listOf(
         R.string.password_requirement_length to { s: String -> s.length >= 8 },
         R.string.password_requirement_capital to { s: String -> s.any { it.isUpperCase() } },
@@ -111,16 +187,6 @@ class UserViewModel(
         R.string.email_requirement_format to { s: String -> s.matches("^[a-zA-Z]{4,}.*@.*\\.[a-zA-Z]+".toRegex()) }
     )
 
-//
-//    init {
-//        val x = savedStateHandle.get<String>("phoneNum") ?: "empty"
-//        Log.d("haha", "onnnn")
-//        getPhoneNum(x)
-//    }
-//0101
-//    fun getPhoneNum(x: String) {
-//        phone = "+2$x"
-//    }
 
     fun onUserNameChanged(userName1: String) {
         userName = userName1
@@ -183,6 +249,7 @@ class UserViewModel(
             phoneError = true
         }
 
+
 //        if (!userNameError && !cityError && !addressError && !emailNError && !phoneError && !passwordNError && !passwordConfError) {
 //            // Handle the signup response
 //        }
@@ -199,8 +266,51 @@ class UserViewModel(
         if (passwordConf != passwordN || !passwordConf.matches(passwordregex)) {
             passwordConfError = true
         }
+        callbackmaker()
 
     }
+
+       private fun callbackmaker(){
+            callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+                override fun onVerificationCompleted(p0: PhoneAuthCredential) {
+
+                }
+
+                override fun onVerificationFailed(p0: FirebaseException) {
+
+                }
+
+                override fun onCodeSent(
+                    verificationId: String,
+                    p1: PhoneAuthProvider.ForceResendingToken
+                ) {
+                    super.onCodeSent(verificationId, p1)
+                    Log.d("OtpViewModel", "checkk")
+
+                    verificationID = verificationId
+                    Log.d("yalo", "onCodeSent:$verificationId and $verificationID ")
+                }
+            }
+        }
+    fun sendVerificationCode(
+        number: String?="+2"+phone,
+        auth: FirebaseAuth?=mAuth,
+        activity: Activity?,
+        callbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks?
+    ) {
+        if (number != null && auth != null && activity != null && callbacks != null) {
+            val options = PhoneAuthOptions.newBuilder(auth)
+                .setPhoneNumber(number)
+                .setTimeout(60L, TimeUnit.SECONDS)
+                .setActivity(activity)
+                .setCallbacks(callbacks)
+                .build()
+            PhoneAuthProvider.verifyPhoneNumber(options)
+        } else {
+            Log.d("soon", "sendVerificationCode: ")
+        }
+    }
+
 
 
 }

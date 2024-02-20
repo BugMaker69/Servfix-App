@@ -29,11 +29,9 @@ class MainActivity : ComponentActivity() {
                             .fillMaxSize()
                     ) {
                        ServixApp()
-                        //OnBoardingScreen(){
 
                         }
-                     //   OtpScreen(LocalContext.current)
-                    //    OtpTextField()
+
                     }
                 }
             }
