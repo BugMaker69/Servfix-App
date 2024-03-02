@@ -91,11 +91,13 @@ fun Login(
                 fieldName = R.string.email,
                 fieldValue = userViewModel.email,
                 onValueChange = { userViewModel.onEmailChanged(it) },
+                isError = userViewModel.emailError
             )
             CustomTextField(
                 fieldName = R.string.password,
                 fieldValue = userViewModel.password,
                 onValueChange = { userViewModel.onPasswordChanged(it) },
+                isError = userViewModel.passwordError,
                 trailingIcon = {
                     IconButton(onClick = { press = !press }) {
                         Icon(
@@ -134,12 +136,13 @@ fun LoginBottomPart(
     onSignupClick: () -> Unit,
     onLoginClick: () -> Unit,
 ) {
+    val userViewModel: UserViewModel = viewModel()
 
     CustomButtonAndText(
         Modifier.fillMaxWidth(),
         text = R.string.login,
         indication = rememberRipple(),
-        onClick = onLoginClick,
+        onClick = { onLoginClick() },
         backgroundColor = DarkBlue,
         contentColor = Color.White,
         shape = RoundedCornerShape(36.dp)

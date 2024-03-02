@@ -45,6 +45,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.graduationproject.ui.theme.DarkBlue
 
 @Composable
@@ -64,7 +65,7 @@ fun SignupFirstScreen(
     val phoneNumberFocusRequester = remember { FocusRequester() }
 
     Column(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
             .padding(4.dp)
             .verticalScroll(rememberScrollState()),
@@ -72,26 +73,26 @@ fun SignupFirstScreen(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Box(modifier = modifier.padding(top = 16.dp), contentAlignment = Alignment.TopCenter) {
+        Box(modifier = Modifier.padding(top = 16.dp), contentAlignment = Alignment.TopCenter) {
 
             Image(
                 painter = painterResource(id = R.drawable.servix_logo),
                 contentDescription = "",
                 contentScale = ContentScale.Crop,
-                modifier = modifier.size(100.dp),
+                modifier = Modifier.size(100.dp),
                 alignment = Alignment.TopCenter,
             )
         }
 
         Column(
-            modifier = modifier
+            modifier = Modifier
                 .verticalScroll(rememberScrollState())
                 .weight(2f),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             CustomTextField(
-                modifier = modifier
+                modifier = Modifier
                     .focusRequester(usernameFocusRequester)
                     .onFocusChanged { focusState ->
                         userViewModel.isUsernameFocused.value = focusState.isFocused
@@ -108,7 +109,7 @@ fun SignupFirstScreen(
             )
 
             CustomTextField(
-                modifier = modifier
+                modifier = Modifier
                     .focusRequester(phoneNumberFocusRequester)
                     .onFocusChanged { focusState ->
                         userViewModel.isPhoneNumberFocused.value = focusState.isFocused
@@ -128,7 +129,7 @@ fun SignupFirstScreen(
             )
 
             CustomTextField(
-                modifier = modifier.focusRequester(addressFocusRequester),
+                modifier = Modifier.focusRequester(addressFocusRequester),
 
                 fieldName = R.string.address,
                 fieldValue = userViewModel.address,
@@ -138,7 +139,7 @@ fun SignupFirstScreen(
                 )
 
             CustomTextField(
-                modifier = modifier
+                modifier = Modifier
                     .focusRequester(cityFocusRequester)
                     .onGloballyPositioned { coordinates ->
                         userViewModel.textfieldSize = coordinates.size.toSize()
@@ -164,7 +165,7 @@ fun SignupFirstScreen(
             DropdownMenu(
                 expanded = userViewModel.expanded,
                 onDismissRequest = { userViewModel.expanded = false },
-                modifier = modifier
+                modifier = Modifier
                     .width(with(LocalDensity.current) { userViewModel.textfieldSize.width.toDp() })
 
             ) {
@@ -184,7 +185,7 @@ fun SignupFirstScreen(
             }
 
             CustomButtonAndText(
-                modifier
+                Modifier
                     .fillMaxWidth()
                     .padding(top = 8.dp),
                 text = R.string.next,
@@ -212,7 +213,7 @@ fun SignupFirstScreen(
             )
         }
         Divider(thickness = 3.dp, color = Color.Gray)
-        Spacer(modifier = modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(16.dp))
         Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.Center) {
             CustomButtonAndText(text = R.string.have_account)
             CustomButtonAndText(
@@ -239,7 +240,7 @@ fun SignupSecondScreen(
     val confirmPasswordFocusRequester = remember { FocusRequester() }
 
     Column(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
             .padding(4.dp)
             .verticalScroll(rememberScrollState()),
@@ -248,18 +249,18 @@ fun SignupSecondScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        Box(modifier = modifier.padding(top = 16.dp), contentAlignment = Alignment.TopCenter) {
+        Box(modifier = Modifier.padding(top = 16.dp), contentAlignment = Alignment.TopCenter) {
             Image(
                 painter = painterResource(id = R.drawable.servix_logo),
                 contentDescription = "",
                 contentScale = ContentScale.Crop,
-                modifier = modifier.size(100.dp),
+                modifier = Modifier.size(100.dp),
                 alignment = Alignment.TopCenter,
             )
         }
 
         Column(
-            modifier = modifier
+            modifier = Modifier
                 .verticalScroll(rememberScrollState())
                 .weight(2f),
             verticalArrangement = Arrangement.Center,
@@ -268,10 +269,10 @@ fun SignupSecondScreen(
 
 
             CustomTextField(
-                modifier = modifier
+                modifier = Modifier
                     .focusRequester(emailFocusRequester)
                     .onFocusChanged { focusState ->
-                        userViewModel.isEmailFocused.value = focusState.isFocused
+                        userViewModel.isEmailNFocused.value = focusState.isFocused
                     },
 
                 fieldName = R.string.email,
@@ -281,16 +282,16 @@ fun SignupSecondScreen(
 
                 )
             DisplayRequirements(
-                isFieldFocused = userViewModel.isEmailFocused.value,
+                isFieldFocused = userViewModel.isEmailNFocused.value,
                 requirements = userViewModel.emailRequirements,
                 fieldValue = userViewModel.emailN
             )
 
             CustomTextField(
-                modifier = modifier
+                modifier = Modifier
                     .focusRequester(passwordFocusRequester)
                     .onFocusChanged { focusState ->
-                        userViewModel.isPasswordFocused.value = focusState.isFocused
+                        userViewModel.isPasswordNFocused.value = focusState.isFocused
 
                     },
 
@@ -313,13 +314,13 @@ fun SignupSecondScreen(
                 visualTransformation = if (userViewModel.eyeIconPress) PasswordVisualTransformation() else VisualTransformation.None
             )
             DisplayRequirements(
-                isFieldFocused = userViewModel.isPasswordFocused.value,
+                isFieldFocused = userViewModel.isPasswordNFocused.value,
                 requirements = userViewModel.passwordRequirements,
                 fieldValue = userViewModel.passwordN
             )
 
             CustomTextField(
-                modifier = modifier.focusRequester(confirmPasswordFocusRequester),
+                modifier = Modifier.focusRequester(confirmPasswordFocusRequester),
 
                 fieldName = R.string.conf_pass,
                 fieldValue = userViewModel.passwordConf,
@@ -344,23 +345,23 @@ fun SignupSecondScreen(
 
 
         Divider(thickness = 3.dp, color = Color.Gray)
-        Spacer(modifier = modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(16.dp))
         Row(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .padding(4.dp),
             verticalAlignment = Alignment.Bottom,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             CustomButtonAndText(
-                modifier = modifier.fillMaxWidth(.25f),
+                modifier = Modifier.fillMaxWidth(.25f),
                 text = R.string.back,
                 onClick = onBackClick,
                 contentColor = DarkBlue,
                 backgroundColor = Color.LightGray
             )
             CustomButtonAndText(
-                modifier = modifier.fillMaxWidth(.75f),
+                modifier = Modifier.fillMaxWidth(.75f),
                 text = R.string.finish,
                 onClick = {
                     Log.d("WHYYYYY", "SignupSecondScreen: ERRORR1")
