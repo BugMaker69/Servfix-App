@@ -68,10 +68,7 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.7.7")
     //lottie animation
     implementation("com.airbnb.android:lottie-compose:6.3.0")
-
-
     implementation("androidx.navigation:navigation-testing:2.7.7")
-
 
 
     testImplementation("junit:junit:4.13.2")

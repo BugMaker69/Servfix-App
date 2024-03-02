@@ -2,7 +2,8 @@ package com.example.graduationproject.ui
 
 enum class ServixScreens {
 
-    OnBoarding, Login,
+    OnBoarding,
+    Login,
     FirstSignup,
     SecondSignup,
     ForgotPassword,

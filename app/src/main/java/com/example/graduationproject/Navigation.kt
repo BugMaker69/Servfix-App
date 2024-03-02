@@ -1,8 +1,6 @@
 package com.example.graduationproject
 
-import android.content.Context
-import android.util.Log
-import android.widget.Toast
+import android.content.Context import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -12,12 +10,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.example.graduationproject.ui.OnBoardingScreen
 import com.example.graduationproject.ui.OtpScreen
 import com.example.graduationproject.ui.ServixScreens
@@ -30,6 +27,7 @@ import kotlin.system.exitProcess
 fun ServixApp(
     navController: NavHostController = rememberNavController()
 ) {
+    val userSigningLoging: UserViewModel = viewModel()
 
     var isBackPressedOnce by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
@@ -66,64 +64,56 @@ fun ServixApp(
         navController = navController,
         startDestination = if (isFirstLaunch) ServixScreens.OnBoarding.name else ServixScreens.Login.name
     ) {
-composable(ServixScreens.OnBoarding.name){
-    OnBoardingScreen {
-        navController.navigate(ServixScreens.Login.name)
-    }
-}
+        composable(ServixScreens.OnBoarding.name) {
+            OnBoardingScreen {
+                navController.navigate(ServixScreens.Login.name)
+            }
+        }
         composable(ServixScreens.Login.name) {
             Login(
                 onLoginClick = {},
                 onSignupClick = {
-                    navController.navigate(ServixScreens.FirstSignup.name + "/{phoneNum}")
+                    navController.navigate(ServixScreens.FirstSignup.name )
                 },
                 onForgetPasswordClick = {
-                    navController.navigate(ServixScreens.ForgotPassword.name+ "/{phoneNum}")
+                    navController.navigate(ServixScreens.ForgotPassword.name )
                 }
             )
         }
         composable(
-            ServixScreens.FirstSignup.name + "/{phoneNum}",
-            arguments = listOf(navArgument("phoneNum") {
-                type = NavType.StringType
-            })
-        ) {
+            ServixScreens.FirstSignup.name)
+        {
             SignupFirstScreen(
+                userSigningLoging,
                 onLoginClick = {
                     navController.navigate(ServixScreens.Login.name)
                 },
                 onNextClick = {
 
-                    navController.navigate(ServixScreens.SecondSignup.name + "/$it")
+                    navController.navigate(ServixScreens.SecondSignup.name)
                 },
             )
         }
         composable(
-            ServixScreens.SecondSignup.name + "/{phoneNum}",
-            arguments = listOf(navArgument("phoneNum") {
-                type = NavType.StringType
-            })
+            ServixScreens.SecondSignup.name
         ) {
-            SignupSecondScreen(
+            SignupSecondScreen(userSigningLoging,
                 onBackClick = {
 
-                    navController.navigate(ServixScreens.FirstSignup.name + "/${it.arguments?.getString("phoneNum")}")
+                    navController.navigate(ServixScreens.FirstSignup.name)
                 },
 
                 onFinishClick = {
-                    navController.navigate(ServixScreens.Otp.name + "/${it.arguments?.getString("phoneNum")}")
+                    navController.navigate(ServixScreens.Otp.name )
                 }
             )
         }
         composable(
-            ServixScreens.ForgotPassword.name + "/{phoneNum}",
-            arguments = listOf(navArgument("phoneNum") {
-                type = NavType.StringType
-            })
-        ) {
+            ServixScreens.ForgotPassword.name ,
+            ) {
             FirstScreenOnForgotPasswordChange(
                 onSendClick = {
-                    navController.navigate(ServixScreens.Otp.name + "/${it.arguments?.getString("phoneNum")}")
+                    navController.navigate(ServixScreens.Otp.name )
 
                 },
                 onLoginClick = {
@@ -147,12 +137,8 @@ composable(ServixScreens.OnBoarding.name){
         }
 
         composable(
-            ServixScreens.Otp.name + "/{phoneNum}",
-            arguments = listOf(navArgument("phoneNum") {
-                type = NavType.StringType
-            })
-        ) {
-            OtpScreen() {
+            ServixScreens.Otp.name) {
+            OtpScreen(userSigningLoging) {
                 navController.navigate(ServixScreens.Test.name)
             }
         }
@@ -162,56 +148,4 @@ composable(ServixScreens.OnBoarding.name){
         }
 
     }
-
-
 }
-
-
-//NavHost(
-//navController = navController,
-//startDestination = ServixScreens.Login.name,
-//) {
-//    composable(ServixScreens.Login.name)
-//    {
-//        Login(
-//            onLoginClick = {
-//            },
-//            onSignupClick = {
-//                navController.navigate(ServixScreens.Signup.name+"/{phoneNum}") {
-//                    popUpTo(ServixScreens.Login.name) { inclusive = true }
-//                    launchSingleTop = true
-//                }
-//            },
-//            onForgetPasswordClick = {}
-//        )
-//    }
-//    composable(ServixScreens.Signup.name + "/{phoneNum}",
-//        arguments = listOf(navArgument("phoneNum") {
-//            type = NavType.StringType
-//        })
-//    ) {
-//        Signup(
-//            onSignupClick = {
-//                navController.navigate(ServixScreens.Otp.name + "/$it")
-//            },
-//            onLoginClick = {
-//                navController.navigate(ServixScreens.Login.name) {
-//                    popUpTo(ServixScreens.Signup.name) { inclusive = true }
-//                    launchSingleTop = true
-//                }
-//            })
-//    }
-//    composable(ServixScreens.Otp.name + "/{phoneNum}",
-//        arguments = listOf(navArgument("phoneNum") {
-//            type = NavType.StringType
-//        })
-//    ) {
-//        OtpScreen(){
-//            navController.navigate(ServixScreens.Test.name)
-//        }
-//    }
-//    composable(ServixScreens.Test.name){
-//        TestScreen()
-//    }
-//}
-//}

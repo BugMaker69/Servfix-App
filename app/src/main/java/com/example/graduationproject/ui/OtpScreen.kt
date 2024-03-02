@@ -1,9 +1,8 @@
 package com.example.graduationproject.ui
 
 import android.app.Activity
-import android.content.Context
-import android.os.Handler
-import android.os.Looper
+
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,14 +20,9 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.currentCompositionLocalContext
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,18 +33,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.graduationproject.CustomButtonAndText
-import com.example.graduationproject.OtpViewModel
 import com.example.graduationproject.R
+import com.example.graduationproject.UserViewModel
 import com.example.graduationproject.ui.theme.DarkBlue
-import com.example.graduationproject.ui.theme.GraduationProjectTheme
 import com.example.graduationproject.ui.theme.GrayBlue
 import com.example.graduationproject.ui.theme.LightBlue
 import com.google.firebase.auth.PhoneAuthCredential
@@ -61,16 +52,16 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun OtpScreen(
-     onLoginClick: () -> Unit
+fun OtpScreen(userViewModel: UserViewModel,
+    onLoginClick: () -> Unit
 ) {
-    val otpViewModel: OtpViewModel = viewModel()
-val context= LocalContext.current
-    //do you think we shouldn't do that here ?
-    otpViewModel.callbackmaker()
-    val countdownTime by otpViewModel.countdownTime.collectAsState()
-    val resendEnabled by otpViewModel.resendEnabled.collectAsState()
-
+    val context = LocalContext.current
+    val countdownTime by userViewModel.countdownTime.collectAsState()
+    val resendEnabled by userViewModel.resendEnabled.collectAsState()
+    Log.d(
+        "yalla2",
+        "OtpScreen: verificationid:${userViewModel.verificationID},otptext:${userViewModel.otpText},auth:${userViewModel.mAuth},phone:${userViewModel.phone}"
+    )
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -80,13 +71,13 @@ val context= LocalContext.current
 
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if (otpViewModel.sucsess) {
+        if (userViewModel.sucsess) {
             SucessAniamtion()
         }
-        if (otpViewModel.mobileAnimation) {
+        if (userViewModel.mobileAnimation) {
             OtpAnimation()
         }
-        if (otpViewModel.failed) {
+        if (userViewModel.failed) {
             FailAniamtion()
         }
 
@@ -95,21 +86,16 @@ val context= LocalContext.current
             text = R.string.Enter_Verification_Code, contentColor = Color.Black,
             fontSize = 30, fontWeight = FontWeight.ExtraBold
         )
-//        CustomButtonAndText(
-//            modifier = Modifier.padding(horizontal = 30.dp),
-//            text = R.string.Send_Otp_Info,
-//            contentColor = Color.Black,
-//            fontSize = 18,
-//            fontWeight = FontWeight.Normal
-//        )
+
 
         Text(
-            text = stringResource(R.string.Send_Otp_Info, otpViewModel.phoneNumber),            modifier = Modifier
+            text = stringResource(R.string.Send_Otp_Info, userViewModel.phone),
+            modifier = Modifier
                 .padding(horizontal = 20.dp)
                 .align(alignment = Alignment.End)
         )
 
-        OtpTextField(otpViewModel)
+        OtpTextField(userViewModel)
         Spacer(modifier = Modifier.padding(5.dp))
         Row(
             Modifier.fillMaxSize(),
@@ -119,7 +105,12 @@ val context= LocalContext.current
                 contentColor = LightBlue,
                 text = R.string.Resend_Code, fontWeight = FontWeight.Bold,
                 onClick = {
-                    otpViewModel.startCountdown()
+                    userViewModel.startCountdown()
+                    if(resendEnabled){
+
+                        userViewModel.sendVerificationCode(activity=context as Activity, callbacks = userViewModel.callbacks
+                        )
+                    }
 
                 }
             )
@@ -128,27 +119,7 @@ val context= LocalContext.current
             }
         }
 
-        Button(modifier = Modifier
-            .size(width = 350.dp, height = 85.dp)
-            .padding(20.dp),
-            shape = RoundedCornerShape(36.dp),
-            colors = ButtonDefaults.buttonColors(DarkBlue),
-                        onClick = {
-                otpViewModel.sendVerificationCode(
-                    otpViewModel.phoneNumber,
-                    otpViewModel.mAuth,
-                    context as Activity,
-                    callbacks = otpViewModel.callbacks
-                )
-                otpViewModel.startCountdown()
-            }, enabled = resendEnabled
-        ) {
 
-            Text(text = stringResource(id = R.string.send),
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Normal,
-                )
-        }
         CustomButtonAndText(
             modifier = Modifier
                 .size(width = 350.dp, height = 85.dp)
@@ -161,23 +132,30 @@ val context= LocalContext.current
             fontSize = 20,
             fontWeight = FontWeight.Normal,
             onClick = {
-                val credential: PhoneAuthCredential = PhoneAuthProvider.getCredential(
-                    otpViewModel.verificationID, otpViewModel.otpText
-                )
-                otpViewModel.signInWithPhoneAuthCredential(
-                    credential,
-                    otpViewModel.mAuth,
-                    context as Activity,
-                )
-                CoroutineScope(Dispatchers.Main).launch {
-                    delay(4000)
-                    onLoginClick()
+                if(userViewModel.verificationID!=""&&userViewModel.otpText!=""){
+                    userViewModel.signInWithPhoneAuthCredential(
+                        activity =  context as Activity,
+                    )
+
                 }
+                if(userViewModel.sucsess){
+                    CoroutineScope(Dispatchers.Main).launch {
+                        delay(3000)
+                        onLoginClick()
+                    }
+                }
+                else if (userViewModel.failed){
+                    userViewModel.otpText=""
+                }
+
+
+
 
 
 
             }
         )
+
     }
 
 
@@ -203,14 +181,14 @@ fun OtpAnimation() {
 }
 
 @Composable
-fun OtpTextField(otpViewModel: OtpViewModel) {
+fun OtpTextField(userViewModel: UserViewModel) {
 
     BasicTextField(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(10.dp), value = otpViewModel.otpText,
+            .padding(10.dp), value = userViewModel.otpText,
         onValueChange = {
-            otpViewModel.updateOtpText(it)
+            userViewModel.updateOtpText(it)
         },
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Number,
@@ -229,8 +207,8 @@ fun OtpTextField(otpViewModel: OtpViewModel) {
                     Spacer(modifier = Modifier.width(6.dp))
                 }
                 val number = when {
-                    index >= otpViewModel.otpText.length -> ""
-                    else -> otpViewModel.otpText[index]
+                    index >= userViewModel.otpText.length -> ""
+                    else -> userViewModel.otpText[index]
                 }
                 Column(
                     Modifier
@@ -266,26 +244,3 @@ fun OtpTextField(otpViewModel: OtpViewModel) {
 }
 
 
-@Composable
-@Preview
-fun prevOtp() {
-    GraduationProjectTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            Column(
-                Modifier
-                    .fillMaxSize()
-                    .padding(16.dp)
-            ) {
-
-                       OtpScreen(){
-
-                       }
-
-            }
-        }
-    }
-
-}
