@@ -27,7 +27,6 @@ import com.example.graduationproject.ui.theme.GraduationProjectTheme
 import android.Manifest
 
 class MainActivity : ComponentActivity() {
-    private val REQUEST_LOCATION_PERMISSION = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
