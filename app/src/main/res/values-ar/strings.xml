@@ -43,7 +43,11 @@
     <string name="Send_Otp_Info" >لقد تم ارسال الكود الى الرقم </string>
     <string name="send">ارسال</string>
 
-
+    <string name="loading">جار التحميل</string>
+    <string name="loading_failed">فشل في التحميل</string>
+    <string name="invalid_email_password">البريد الإلكتروني أو كلمة المرور غير صالحة</string>
+    <string name="become_service_provider">سجل لتصبح مقدم خدمة</string>
+    <string name="hire_service_provider">سجل لتوظيف مقدم خدمة</string>
 
 
 
@@ -57,6 +61,17 @@
     <string name="phone_requirement_length">يجب أن يكون طوله 11 رقمًا بالضبط</string>
 
     <string name="email_requirement_format">سلسلة تبدأ بـ 4 أحرف أبجدية على الأقل، تليها أي أحرف، ثم رمز @، ثم أي أحرف، ثم نقطة، وتنتهي بحرف أبجدي واحد أو أكثر.</string>
+
+    <string name="send_to">أرسل إلى</string>
+    <string name="to_whom">إلى من سترسل المشكلة؟</string>
+    <string name="will_send">سيتم إرسال المشكلة إلى كل مزود خدمة تختاره</string>
+    <string name="choose_service">اختر الخدمة</string>
+    <string name="done">تم</string>
+    <string name="share_problem">شارك مشكلتك</string>
+    <string name="share">شارك</string>
+    <string name="add_to_post">أضف إلى منشورك</string>
+    <string name="fixed_salary">الراتب الثابت</string>
+
 
 
     <string-array name="egypt_governorates">
@@ -87,6 +102,17 @@
         <item>سوهاج</item>
         <item>جنوب سيناء</item>
         <item>السويس</item>
+    </string-array>
+
+    <string-array name="services">
+        <item>الرسم</item>
+        <item>تكييف الهواء</item>
+        <item>الكهرباء</item>
+        <item>السباكة</item>
+        <item>السيراميك</item>
+        <item>النجارة</item>
+        <item>النظافة</item>
+        <item>الأجهزة الكهربائية</item>
     </string-array>
 
 

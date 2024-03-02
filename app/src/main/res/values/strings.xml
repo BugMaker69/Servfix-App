@@ -40,7 +40,15 @@
     <string name="Resend_Code" >Resend the code again ? </string>
     <string name="Send_Otp_Info" >We have sent the code to your mobile number %1$s, please check SMS</string>
 
+    <string name="loading">Loading</string>
+    <string name="loading_failed">Failed to load</string>
+    <string name="invalid_email_password">Invalid email or password</string>
+    <string name="become_service_provider">Signup to become a service provider</string>
+    <string name="hire_service_provider">Signup to hire a service provider</string>
 
+<!--    <string name="signup_to">Signup to </string>-->
+<!--    <string name="become">become</string>-->
+<!--    <string name="a_service_provider"> a service provider</string>-->
 
 
     <string name="password_requirement_length">At least 8 characters</string>
@@ -54,6 +62,17 @@
 
     <!--“Starts with 4 letters, followed by ‘@’, then ‘.’, and ends with letters.”-->
     <string name="email_requirement_format">A string that starts with at least 4 alphabetic characters, followed by any characters, then an @ symbol, then any characters, a period, and ends with one or more alphabetic characters.</string>
+    
+    <string name="send_to">Send To</string>
+    <string name="to_whom">To Whom Will You Send The Problem?</string>
+    <string name="will_send">The Problem Will Be Sent To Each Service Provider You Choose</string>
+    <string name="choose_service">Choose Service</string>
+    <string name="done">Done</string>
+    <string name="share_problem">Share Your Problem</string>
+    <string name="share">Share</string>
+    <string name="add_to_post">Add to your post</string>
+    <string name="fixed_salary">Fixed Salary</string>
+
 
 
     <string-array name="egypt_governorates">
@@ -86,5 +105,15 @@
         <item>Suez</item>
     </string-array>
 
+    <string-array name="services">
+    <item>Painting</item>
+    <item>Air Condition</item>
+    <item>Electricity</item>
+    <item>Plumping</item>
+    <item>Ceramic</item>
+    <item>Carpentry</item>
+    <item>Cleanliness</item>
+    <item>Electrical devices</item>
+    </string-array>
 
 </resources>
