@@ -1,28 +1,45 @@
 package com.example.graduationproject
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.geometry.Size
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 
 class UserViewModel(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-
     // LOGIN
     var email by mutableStateOf("")
     var password by mutableStateOf("")
 
+
+    var emailError by mutableStateOf(false)
+    var passwordError by mutableStateOf(false)
+
+
+
     fun onEmailChanged(email1: String) {
         email = email1.trim()
+        emailError = email1.isEmpty()
     }
 
     fun onPasswordChanged(password1: String) {
         password = password1.trim()
+        passwordError = password1.isEmpty()
+    }
+    fun onLoginClick(){
+        if (email.isEmpty()){
+            emailError = true
+        }
+        if (password.isEmpty()){
+            passwordError = true
+        }
+
     }
 
 
@@ -85,10 +102,26 @@ class UserViewModel(
     var passwordConfError by mutableStateOf(false)
 
 
-    val isPasswordFocused = mutableStateOf(false)
+    val isPasswordNFocused = mutableStateOf(false)
     val isUsernameFocused = mutableStateOf(false)
     val isPhoneNumberFocused = mutableStateOf(false)
-    val isEmailFocused = mutableStateOf(false)
+    val isEmailNFocused = mutableStateOf(false)
+
+
+    //  Third SignUp Page
+
+    var  fixedSalary by mutableStateOf("")
+
+    //  DropdownMenu Of Service Inside SignUp
+    var expandedService by mutableStateOf(false)
+    var selectedServiceIndex by mutableStateOf(-1)
+    var selectedServiceValue by mutableStateOf("")
+    var textfieldServiceSize by mutableStateOf(Size.Zero)
+
+
+
+
+
 
     val passwordRequirements = listOf(
         R.string.password_requirement_length to { s: String -> s.length >= 8 },
@@ -125,6 +158,9 @@ class UserViewModel(
     fun onUserNameChanged(userName1: String) {
         userName = userName1
         userNameError = !userName1.matches(fullnameregex)
+    }
+    fun onFixedSalaryChanged(fixedSalary1: String) {
+        fixedSalary = fixedSalary1
     }
 
 //    fun onCityChanged(city1: String) {

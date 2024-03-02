@@ -42,6 +42,7 @@ fun CustomTextField(
     keyboardOptions: KeyboardOptions = KeyboardOptions(),
     visualTransformation: VisualTransformation = VisualTransformation.None,
     trailingIcon: @Composable() (() -> Unit)? = { },
+    leadingIcon: @Composable() (() -> Unit)? = null,
 ) {
 
     OutlinedTextField(
@@ -68,7 +69,8 @@ fun CustomTextField(
         maxLines = 1,
         readOnly = readOnly,
         visualTransformation = visualTransformation,
-        trailingIcon = trailingIcon
+        trailingIcon = trailingIcon,
+        leadingIcon = leadingIcon
     )
 }
 

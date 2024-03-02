@@ -1,11 +1,15 @@
 package com.example.graduationproject
+
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,6 +22,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
+import androidx.compose.material.icons.filled.Upload
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.ripple.rememberRipple
@@ -26,6 +31,7 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -42,6 +48,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -199,7 +206,7 @@ fun SignupFirstScreen(
                     } else if (userViewModel.phoneError) {
                         phoneNumberFocusRequester.requestFocus()
                     }
-                    if(!userViewModel.userNameError && !userViewModel.cityError && !userViewModel.addressError && !userViewModel.phoneError  )
+                    if (!userViewModel.userNameError && !userViewModel.cityError && !userViewModel.addressError && !userViewModel.phoneError)
                         onNextClick(userViewModel.phone)
                 },
                 indication = rememberRipple(),
@@ -267,7 +274,7 @@ fun SignupSecondScreen(
                 modifier = Modifier
                     .focusRequester(emailFocusRequester)
                     .onFocusChanged { focusState ->
-                        userViewModel.isEmailFocused.value = focusState.isFocused
+                        userViewModel.isEmailNFocused.value = focusState.isFocused
                     },
 
                 fieldName = R.string.email,
@@ -277,7 +284,7 @@ fun SignupSecondScreen(
 
                 )
             DisplayRequirements(
-                isFieldFocused = userViewModel.isEmailFocused.value,
+                isFieldFocused = userViewModel.isEmailNFocused.value,
                 requirements = userViewModel.emailRequirements,
                 fieldValue = userViewModel.emailN
             )
@@ -286,7 +293,7 @@ fun SignupSecondScreen(
                 modifier = Modifier
                     .focusRequester(passwordFocusRequester)
                     .onFocusChanged { focusState ->
-                        userViewModel.isPasswordFocused.value = focusState.isFocused
+                        userViewModel.isPasswordNFocused.value = focusState.isFocused
 
                     },
 
@@ -309,7 +316,7 @@ fun SignupSecondScreen(
                 visualTransformation = if (userViewModel.eyeIconPress) PasswordVisualTransformation() else VisualTransformation.None
             )
             DisplayRequirements(
-                isFieldFocused = userViewModel.isPasswordFocused.value,
+                isFieldFocused = userViewModel.isPasswordNFocused.value,
                 requirements = userViewModel.passwordRequirements,
                 fieldValue = userViewModel.passwordN
             )
@@ -370,7 +377,7 @@ fun SignupSecondScreen(
                     } else if (userViewModel.passwordConfError) {
                         confirmPasswordFocusRequester.requestFocus()
                     }
-                    if(!userViewModel.emailNError && !userViewModel.passwordNError && !userViewModel.passwordConfError)
+                    if (!userViewModel.emailNError && !userViewModel.passwordNError && !userViewModel.passwordConfError)
                         onFinishClick()
                     Log.d("WHYYYYY", "SignupSecondScreen: ERRORR3")
 
@@ -381,4 +388,190 @@ fun SignupSecondScreen(
                 )
         }
     }
+}
+
+
+@Composable
+fun SignupThirdScreen(
+    modifier: Modifier = Modifier,
+    onLoginClick: () -> Unit,
+    onFinishClick: () -> Unit,
+) {
+    val userViewModel: UserViewModel = viewModel()
+
+    val context = LocalContext.current
+    val services = context.resources.getStringArray(R.array.services).toList()
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(4.dp)
+            .verticalScroll(rememberScrollState()),
+
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        Box(modifier = Modifier.padding(top = 16.dp), contentAlignment = Alignment.TopCenter) {
+            Image(
+                painter = painterResource(id = R.drawable.servix_logo),
+                contentDescription = "",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.size(100.dp),
+                alignment = Alignment.TopCenter,
+            )
+        }
+
+        Column(
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .weight(2f),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+// Service
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .clickable { userViewModel.expandedService = !userViewModel.expandedService }
+                    .padding(8.dp)
+                    .defaultMinSize(
+                        minWidth = OutlinedTextFieldDefaults.MinWidth,
+                        minHeight = OutlinedTextFieldDefaults.MinHeight
+                    )
+                    .border(width = 1.dp, color = Color.Gray,shape = OutlinedTextFieldDefaults.shape)
+                    .onGloballyPositioned { coordinates ->
+                        userViewModel.textfieldServiceSize = coordinates.size.toSize()
+                    },
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = if (userViewModel.selectedServiceValue.isNotEmpty()) userViewModel.selectedServiceValue else "Your Service",
+                    modifier = Modifier
+                        .padding(horizontal = 8.dp)
+                        .weight(7f)
+                )
+
+                Icon(
+                    imageVector = if (userViewModel.expandedService) Icons.Filled.ArrowDropUp
+                    else Icons.Filled.ArrowDropDown,
+                    contentDescription = "",
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
+            }
+
+            DropdownMenu(
+                expanded = userViewModel.expandedService,
+                onDismissRequest = { userViewModel.expandedService = false },
+                modifier = Modifier
+                    .width(with(LocalDensity.current) { userViewModel.textfieldServiceSize.width.toDp() })
+
+            ) {
+                services.forEachIndexed { index, service ->
+                    DropdownMenuItem(
+                        onClick = {
+                            userViewModel.selectedServiceIndex = index
+                            userViewModel.selectedServiceValue = service
+                            userViewModel.expandedService = false
+                        },
+                        text = {
+                            Text(text = service)
+                        }
+                    )
+                }
+            }
+
+
+//Fixed Salary
+            CustomTextField(
+                modifier = Modifier
+                    .padding(horizontal =  8.dp),
+                fieldName = R.string.fixed_salary,
+                fieldValue = userViewModel.fixedSalary,
+                onValueChange = { userViewModel.onFixedSalaryChanged(it) },
+                )
+
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .clickable { userViewModel.expanded = !userViewModel.expanded }
+                    .padding(8.dp)
+                    .defaultMinSize(
+                        minWidth = OutlinedTextFieldDefaults.MinWidth,
+                        minHeight = OutlinedTextFieldDefaults.MinHeight
+                    )
+                    .border(width = 1.dp, color = Color.Gray, shape = OutlinedTextFieldDefaults.shape),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = "National ID",
+                    modifier = Modifier
+                        .padding(horizontal = 8.dp)
+                        .weight(7f)
+                )
+                Icon(imageVector = Icons.Default.Upload, contentDescription = "",modifier = Modifier.padding(horizontal = 8.dp))
+            }
+
+
+//  Work
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .clickable { }
+                    .padding(8.dp)
+                    .defaultMinSize(
+                        minWidth = OutlinedTextFieldDefaults.MinWidth,
+                        minHeight = OutlinedTextFieldDefaults.MinHeight
+                    )
+                    .border(width = 1.dp, color = Color.Gray,shape = OutlinedTextFieldDefaults.shape),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = "Your works (optional)",
+                    modifier = Modifier
+                        .padding(horizontal = 8.dp)
+                        .weight(7f)
+                )
+
+                Icon(imageVector = Icons.Default.Upload, contentDescription = "", modifier = Modifier.padding(horizontal = 8.dp))
+            }
+
+
+        }
+
+
+        Column(
+            verticalArrangement = Arrangement.Bottom,
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            CustomButtonAndText(
+                Modifier.fillMaxWidth(),
+                text = R.string.finish,
+                indication = rememberRipple(),
+                onClick = onFinishClick,
+                backgroundColor = DarkBlue,
+                contentColor = Color.White,
+                shape = RoundedCornerShape(36.dp)
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Divider(thickness = 3.dp, color = Color.Gray)
+            Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.Center) {
+                CustomButtonAndText(text = R.string.have_account, contentColor = Color.Gray)
+                CustomButtonAndText(
+                    text = R.string.login,
+                    contentColor = Color.Blue,
+                    onClick = onLoginClick
+                )
+            }
+        }
+
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun SignupThirdScreenPreview() {
+    SignupThirdScreen(Modifier,{},{})
 }
