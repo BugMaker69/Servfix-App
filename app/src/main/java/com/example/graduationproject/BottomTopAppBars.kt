@@ -7,6 +7,7 @@ import androidx.compose.material.icons.filled.Message
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -54,7 +55,7 @@ fun BottomAppBar(
         BottomNavItem(
             title = "Favorite",
             selectedIcon = Icons.Filled.Favorite,
-            unselectedIcon = Icons.Outlined.Favorite,
+            unselectedIcon = Icons.Outlined.FavoriteBorder,
         ),
         BottomNavItem(
             title = "Settings",
