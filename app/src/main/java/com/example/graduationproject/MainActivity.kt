@@ -1,5 +1,4 @@
 package com.example.graduationproject
-import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -9,22 +8,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.sp
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.example.graduationproject.test.AnimatedTextField
-import com.example.graduationproject.test.CustomTextFieldWithUpload
-import com.example.graduationproject.test.DropdownMenuExample
-import com.example.graduationproject.test.LocationScreen
-import com.example.graduationproject.test.LocationScreen4
-//import com.example.graduationproject.test.ExpandableOutlinedTextField
-import com.example.graduationproject.test.TextFieldWithInfoIcon
-import com.example.graduationproject.test.TopBar
+
 
 import com.example.graduationproject.ui.theme.GraduationProjectTheme
-import android.Manifest
+import com.example.graduationproject.ui.ServixApp
 
 class MainActivity : ComponentActivity() {
 
