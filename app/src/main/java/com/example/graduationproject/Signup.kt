@@ -459,7 +459,7 @@ fun SignupThirdScreen(
                 Text(
                     text = if (userViewModel.selectedServiceValue.isNotEmpty()) userViewModel.selectedServiceValue else "Your Service",
                     modifier = Modifier
-                        .padding(horizontal = 8.dp)
+                        .padding(horizontal = 16.dp)
                         .weight(7f)
                 )
 
@@ -517,7 +517,7 @@ fun SignupThirdScreen(
                 Text(
                     text = "National ID",
                     modifier = Modifier
-                        .padding(horizontal = 8.dp)
+                        .padding(horizontal = 16.dp)
                         .weight(7f)
                 )
                 Icon(imageVector = Icons.Default.Upload, contentDescription = "",modifier = Modifier.padding(horizontal = 8.dp))
@@ -540,7 +540,7 @@ fun SignupThirdScreen(
                 Text(
                     text = "Your works (optional)",
                     modifier = Modifier
-                        .padding(horizontal = 8.dp)
+                        .padding(horizontal = 16.dp)
                         .weight(7f)
                 )
 
