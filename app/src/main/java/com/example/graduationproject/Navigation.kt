@@ -1,6 +1,7 @@
 package com.example.graduationproject
 
-import android.content.Context import android.widget.Toast
+import android.content.Context
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -62,7 +63,7 @@ fun ServixApp(
     }
     NavHost(
         navController = navController,
-        startDestination = if (isFirstLaunch) ServixScreens.OnBoarding.name else ServixScreens.Login.name
+        startDestination = if (isFirstLaunch) ServixScreens.OnBoarding.name else ServixScreens.Settings.name
     ) {
         composable(ServixScreens.OnBoarding.name) {
             OnBoardingScreen {
@@ -73,16 +74,64 @@ fun ServixApp(
             Login(
                 onLoginClick = {},
                 onSignupClick = {
-                    navController.navigate(ServixScreens.FirstSignup.name )
+                    navController.navigate(ServixScreens.FirstSignup.name)
                 },
                 onForgetPasswordClick = {
-                    navController.navigate(ServixScreens.ForgotPassword.name )
+                    navController.navigate(ServixScreens.ForgotPassword.name)
                 }
             )
         }
-        composable(
-            ServixScreens.FirstSignup.name)
-        {
+        //  Todo How To Handle ThirdSignUp Page ?!
+        composable(ServixScreens.BeforeSignup.name) {
+            BeforeSignup(
+                onBecomeClick = {
+                    navController.navigate(ServixScreens.FirstSignup.name)
+                },
+                onHireClick = {
+                    navController.navigate(ServixScreens.FirstSignup.name)
+                },
+                onLoginClick = {
+                    navController.navigate(ServixScreens.Login.name)
+                }
+            )
+        }
+        composable(ServixScreens.Settings.name) {
+            SettingsScreen(
+                onAccountInfoClick = {
+                    navController.navigate(ServixScreens.UserAccountInfo.name)
+                },
+                onDeleteMyAccountClick = {},
+                onSignOutClick = {},
+                onSecurityClick = {},
+                onBackButtonOnTopNavBar = {navController.popBackStack()},
+                onBottomNavigationItemClick = {}
+            )
+        }
+        //  Todo How To Handle UserInfo And ProviderInfo ?!
+        composable(ServixScreens.UserAccountInfo.name) {
+            UserAccountInfoScreen(
+                onAccountInfoDetailsClick = {
+                    navController.navigate(ServixScreens.UserAccountInfoDetails.name)
+                },
+                onBackButtonOnTopNavBar = {
+                    navController.popBackStack()
+                },
+                onBottomNavigationItemClick = {
+                    navController.navigate(ServixScreens.Settings.name)
+                }
+            )
+        }
+        composable(ServixScreens.UserAccountInfoDetails.name){
+            UserAccountInfoDetailsScreen(
+                onBackButtonOnTopNavBar={
+                navController.popBackStack()
+            },
+                onBottomNavigationItemClick = {},
+                onPhotoChangeClick = {},
+                onSaveChangesClick = {}
+            )
+        }
+        composable(ServixScreens.FirstSignup.name) {
             SignupFirstScreen(
                 userSigningLoging,
                 onLoginClick = {
@@ -94,9 +143,7 @@ fun ServixApp(
                 },
             )
         }
-        composable(
-            ServixScreens.SecondSignup.name
-        ) {
+        composable(ServixScreens.SecondSignup.name) {
             SignupSecondScreen(userSigningLoging,
                 onBackClick = {
 
@@ -104,16 +151,14 @@ fun ServixApp(
                 },
 
                 onFinishClick = {
-                    navController.navigate(ServixScreens.Otp.name )
+                    navController.navigate(ServixScreens.Otp.name)
                 }
             )
         }
-        composable(
-            ServixScreens.ForgotPassword.name ,
-            ) {
+        composable(ServixScreens.ForgotPassword.name) {
             FirstScreenOnForgotPasswordChange(
                 onSendClick = {
-                    navController.navigate(ServixScreens.Otp.name )
+                    navController.navigate(ServixScreens.Otp.name)
 
                 },
                 onLoginClick = {
@@ -135,14 +180,11 @@ fun ServixApp(
                 }
             )
         }
-
-        composable(
-            ServixScreens.Otp.name) {
+        composable(ServixScreens.Otp.name) {
             OtpScreen(userSigningLoging) {
                 navController.navigate(ServixScreens.Test.name)
             }
         }
-
         composable(ServixScreens.Test.name) {
             TestScreen()
         }

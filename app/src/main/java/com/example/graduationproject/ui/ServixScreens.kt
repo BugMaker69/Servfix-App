@@ -1,7 +1,6 @@
 package com.example.graduationproject.ui
 
 enum class ServixScreens {
-
     OnBoarding,
     Login,
     FirstSignup,
@@ -9,5 +8,15 @@ enum class ServixScreens {
     ForgotPassword,
     ResetPassword,
     AfterPassword,
-    Otp, Test
+    Otp,
+    Test,
+    BeforeSignup,
+    SignupThird,
+    ProviderAccountInfo,
+    ProviderAccountInfoDetails,
+    UserAccountInfo,
+    UserAccountInfoDetails,
+    Settings,
+    NewPassword,
+
 }
