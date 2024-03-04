@@ -1,4 +1,4 @@
-package com.example.graduationproject
+package com.example.graduationproject.presentation.common.settings
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
@@ -43,6 +43,15 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.graduationproject.ui.BottomAppBar
+import com.example.graduationproject.R
+import com.example.graduationproject.presentation.accountinfo.ProviderAccountInfo
+import com.example.graduationproject.presentation.accountinfo.ProviderAccountInfoDetails
+import com.example.graduationproject.presentation.accountinfo.UserAccountInfo
+import com.example.graduationproject.presentation.accountinfo.UserAccountInfoDetails
+import com.example.graduationproject.presentation.common.CustomButtonAndText
+import com.example.graduationproject.presentation.common.CustomDialog
+import com.example.graduationproject.presentation.common.CustomTopAppBar
 import com.example.graduationproject.ui.theme.DarkBlue
 
 
@@ -359,7 +368,6 @@ fun NewPasswordScreen(
         )
 
     }
-
 
 }
 

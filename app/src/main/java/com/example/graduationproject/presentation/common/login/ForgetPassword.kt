@@ -1,4 +1,4 @@
-package com.example.graduationproject
+package com.example.graduationproject.presentation.common.login
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -44,6 +44,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.graduationproject.presentation.common.CustomButtonAndText
+import com.example.graduationproject.presentation.common.CustomTextField
+import com.example.graduationproject.R
+import com.example.graduationproject.presentation.common.signup.DisplayRequirements
+import com.example.graduationproject.presentation.common.signup.UserViewModel
 import com.example.graduationproject.ui.theme.DarkBlue
 import kotlinx.coroutines.delay
 

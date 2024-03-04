@@ -1,4 +1,4 @@
-package com.example.graduationproject
+package com.example.graduationproject.ui
 
 import android.content.Context
 import android.widget.Toast
@@ -16,8 +16,19 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.graduationproject.ui.OnBoardingScreen
-import com.example.graduationproject.ui.OtpScreen
+import com.example.graduationproject.presentation.accountinfo.UserAccountInfoDetailsScreen
+import com.example.graduationproject.presentation.accountinfo.UserAccountInfoScreen
+import com.example.graduationproject.presentation.common.login.AfterPasswordChange
+import com.example.graduationproject.presentation.common.login.FirstScreenOnForgotPasswordChange
+import com.example.graduationproject.presentation.common.login.Login
+import com.example.graduationproject.presentation.common.login.ResetPassword
+import com.example.graduationproject.presentation.common.settings.SettingsScreen
+import com.example.graduationproject.presentation.common.signup.BeforeSignup
+import com.example.graduationproject.presentation.common.signup.SignupFirstScreen
+import com.example.graduationproject.presentation.common.signup.SignupSecondScreen
+import com.example.graduationproject.presentation.common.signup.UserViewModel
+import com.example.graduationproject.presentation.on_boarding.OnBoardingScreen
+import com.example.graduationproject.presentation.otp.OtpScreen
 import com.example.graduationproject.ui.ServixScreens
 import com.example.graduationproject.ui.TestScreen
 import kotlinx.coroutines.delay

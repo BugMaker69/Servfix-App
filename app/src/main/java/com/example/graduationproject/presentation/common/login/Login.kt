@@ -1,4 +1,4 @@
-package com.example.graduationproject
+package com.example.graduationproject.presentation.common.login
 
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
@@ -37,6 +37,10 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.graduationproject.presentation.common.CustomButtonAndText
+import com.example.graduationproject.presentation.common.CustomTextField
+import com.example.graduationproject.R
+import com.example.graduationproject.presentation.common.signup.UserViewModel
 import com.example.graduationproject.ui.theme.DarkBlue
 
 @Composable

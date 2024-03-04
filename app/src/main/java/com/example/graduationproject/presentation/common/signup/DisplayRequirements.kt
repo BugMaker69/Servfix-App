@@ -1,4 +1,4 @@
-package com.example.graduationproject
+package com.example.graduationproject.presentation.common.signup
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable

@@ -1,4 +1,4 @@
-package com.example.graduationproject.ui
+package com.example.graduationproject.presentation.otp
 
 import android.app.Activity
 
@@ -19,7 +19,6 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -38,14 +37,12 @@ import androidx.compose.ui.unit.sp
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
-import com.example.graduationproject.CustomButtonAndText
+import com.example.graduationproject.presentation.common.CustomButtonAndText
 import com.example.graduationproject.R
-import com.example.graduationproject.UserViewModel
+import com.example.graduationproject.presentation.common.signup.UserViewModel
 import com.example.graduationproject.ui.theme.DarkBlue
 import com.example.graduationproject.ui.theme.GrayBlue
 import com.example.graduationproject.ui.theme.LightBlue
-import com.google.firebase.auth.PhoneAuthCredential
-import com.google.firebase.auth.PhoneAuthProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -53,7 +50,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun OtpScreen(userViewModel: UserViewModel,
-    onLoginClick: () -> Unit
+              onLoginClick: () -> Unit
 ) {
     val context = LocalContext.current
     val countdownTime by userViewModel.countdownTime.collectAsState()

@@ -1,10 +1,10 @@
-package com.example.graduationproject
+package com.example.graduationproject.presentation.on_boarding
 
 import androidx.compose.runtime.mutableStateOf
 
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import com.example.graduationproject.R
 
 class OnBoardingViewModel() : ViewModel() {
     val animations = listOf(

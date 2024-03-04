@@ -1,4 +1,4 @@
-package com.example.graduationproject
+package com.example.graduationproject.presentation.accountinfo
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
@@ -34,6 +34,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.graduationproject.ui.BottomAppBar
+import com.example.graduationproject.presentation.common.CustomButtonAndText
+import com.example.graduationproject.R
+import com.example.graduationproject.presentation.common.ScreensTemplate
+import com.example.graduationproject.presentation.common.settings.SettingsTopBar
 import com.example.graduationproject.ui.theme.DarkBlue
 import com.example.graduationproject.ui.theme.LightBrown
 

@@ -1,4 +1,4 @@
-package com.example.graduationproject.ui
+package com.example.graduationproject.presentation.on_boarding
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -36,9 +36,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
-import com.example.graduationproject.CustomButtonAndText
-import com.example.graduationproject.MainActivity
-import com.example.graduationproject.OnBoardingViewModel
+import com.example.graduationproject.presentation.common.CustomButtonAndText
 import com.example.graduationproject.R
 import com.example.graduationproject.ui.theme.DarkBlue
 import com.example.graduationproject.ui.theme.LightBlue
