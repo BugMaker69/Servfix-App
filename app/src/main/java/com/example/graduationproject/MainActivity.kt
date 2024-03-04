@@ -43,10 +43,10 @@ class MainActivity : ComponentActivity() {
                             .fillMaxSize()
                     ) {
 //                        AnimatedTextField()
-                        SignupThirdScreen(Modifier,{},{})
+//                        SignupThirdScreen(Modifier,{},{})
 //                        ShareProblem(Modifier,{},{})
 //                        BeforeSignup(onBecomeClick = { /*TODO*/ }, onHireClick = { /*TODO*/ }) {}
-//                       ServixApp()
+                       ServixApp()
                         //OnBoardingScreen(){
 //                        ServicesHomePage()
 //                        ExpandableOutlinedTextField(
