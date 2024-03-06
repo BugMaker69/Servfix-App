@@ -16,6 +16,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.graduationproject.BeforeSignup
+import com.example.graduationproject.UserType
+import com.example.graduationproject.UserTypeViewModel
+import com.example.graduationproject.presentation.accountinfo.ProviderAccountInfoDetailsScreen
+import com.example.graduationproject.presentation.accountinfo.ProviderAccountInfoScreen
 import com.example.graduationproject.presentation.accountinfo.UserAccountInfoDetailsScreen
 import com.example.graduationproject.presentation.accountinfo.UserAccountInfoScreen
 import com.example.graduationproject.presentation.common.login.AfterPasswordChange
@@ -23,14 +28,12 @@ import com.example.graduationproject.presentation.common.login.FirstScreenOnForg
 import com.example.graduationproject.presentation.common.login.Login
 import com.example.graduationproject.presentation.common.login.ResetPassword
 import com.example.graduationproject.presentation.common.settings.SettingsScreen
-import com.example.graduationproject.presentation.common.signup.BeforeSignup
 import com.example.graduationproject.presentation.common.signup.SignupFirstScreen
 import com.example.graduationproject.presentation.common.signup.SignupSecondScreen
+import com.example.graduationproject.presentation.common.signup.SignupThirdScreen
 import com.example.graduationproject.presentation.common.signup.UserViewModel
 import com.example.graduationproject.presentation.on_boarding.OnBoardingScreen
 import com.example.graduationproject.presentation.otp.OtpScreen
-import com.example.graduationproject.ui.ServixScreens
-import com.example.graduationproject.ui.TestScreen
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.system.exitProcess
@@ -39,7 +42,7 @@ import kotlin.system.exitProcess
 fun ServixApp(
     navController: NavHostController = rememberNavController()
 ) {
-    val userSigningLoging: UserViewModel = viewModel()
+    val userViewModel: UserViewModel = viewModel()
     val userTypeViewModel: UserTypeViewModel = viewModel()
     var isBackPressedOnce by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
@@ -74,7 +77,7 @@ fun ServixApp(
     }
     NavHost(
         navController = navController,
-        startDestination = if (isFirstLaunch) ServixScreens.OnBoarding.name else ServixScreens.BeforeSignup.name
+        startDestination = if (isFirstLaunch) ServixScreens.OnBoarding.name else ServixScreens.Login.name
     ) {
         composable(ServixScreens.OnBoarding.name) {
             OnBoardingScreen {
@@ -143,11 +146,7 @@ fun ServixApp(
         composable(ServixScreens.UserAccountInfo.name) {
             UserAccountInfoScreen(
                 onAccountInfoDetailsClick = {
-//                    if (userTypeViewModel.userType.value == UserType.OwnerPerson) {
-                        navController.navigate(ServixScreens.UserAccountInfoDetails.name)
-//                    } else {
-//                        navController.navigate(ServixScreens.ProviderAccountInfoDetails.name)
-//                    }
+                    navController.navigate(ServixScreens.UserAccountInfoDetails.name)
                 },
                 onBackButtonOnTopNavBar = {
                     navController.popBackStack()
@@ -168,16 +167,16 @@ fun ServixApp(
                 onSaveChangesClick = {}
             )
         }
-        composable(ServixScreens.ProviderAccountInfo.name){
+        composable(ServixScreens.ProviderAccountInfo.name) {
             ProviderAccountInfoScreen(
                 onAccountInfoDetailsClick = {
-                                            navController.navigate(ServixScreens.ProviderAccountInfoDetails.name)
-                                            },
+                    navController.navigate(ServixScreens.ProviderAccountInfoDetails.name)
+                },
                 onBackButtonOnTopNavBar = { navController.popBackStack() },
-                onBottomNavigationItemClick ={}
+                onBottomNavigationItemClick = {}
             )
         }
-        composable(ServixScreens.ProviderAccountInfoDetails.name){
+        composable(ServixScreens.ProviderAccountInfoDetails.name) {
             ProviderAccountInfoDetailsScreen(
                 onBackButtonOnTopNavBar = { navController.popBackStack() },
                 onBottomNavigationItemClick = {},
@@ -187,7 +186,7 @@ fun ServixApp(
         }
         composable(ServixScreens.FirstSignup.name) {
             SignupFirstScreen(
-                userSigningLoging,
+                userViewModel,
                 onLoginClick = {
                     navController.navigate(ServixScreens.Login.name)
                 },
@@ -199,7 +198,7 @@ fun ServixApp(
         }
         composable(ServixScreens.SecondSignup.name) {
             SignupSecondScreen(
-                userSigningLoging,
+                userViewModel,
                 onBackClick = {
 
                     navController.navigate(ServixScreens.FirstSignup.name)
@@ -226,7 +225,7 @@ fun ServixApp(
             }, onBackClick = {
                 navController.popBackStack()
             },
-                userViewModel = userSigningLoging
+                userViewModel = userViewModel
             )
         }
         composable(ServixScreens.ForgotPassword.name) {
@@ -237,7 +236,8 @@ fun ServixApp(
                 },
                 onLoginClick = {
                     navController.navigate(ServixScreens.Login.name)
-                }
+                },
+                userViewModel = userViewModel
             )
         }
         composable(ServixScreens.ResetPassword.name) {
@@ -255,7 +255,7 @@ fun ServixApp(
             )
         }
         composable(ServixScreens.Otp.name) {
-            OtpScreen(userSigningLoging) {
+            OtpScreen(userViewModel) {
                 navController.navigate(ServixScreens.Test.name)
             }
         }

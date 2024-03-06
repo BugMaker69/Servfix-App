@@ -58,7 +58,7 @@ fun FirstScreenOnForgotPasswordChange(
     modifier: Modifier = Modifier,
     onSendClick: () -> Unit,
     onLoginClick: () -> Unit,
-    userViewModel: UserViewModel = viewModel()
+    userViewModel: UserViewModel
 ) {
 
     Column(
@@ -301,7 +301,7 @@ fun AfterPasswordChange(onBackToLoginClick: () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun PhoneAgainPreview() {
-    FirstScreenOnForgotPasswordChange(onSendClick =  {}, onLoginClick = {})
+    FirstScreenOnForgotPasswordChange(onSendClick =  {}, onLoginClick = {}, userViewModel = viewModel())
 }
 
 
