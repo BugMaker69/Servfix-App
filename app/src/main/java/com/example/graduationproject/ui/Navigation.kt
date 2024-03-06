@@ -89,7 +89,9 @@ fun ServixApp(
         }
         composable(ServixScreens.Login.name) {
             Login(
-                onLoginClick = {},
+                onLoginClick = {
+                               navController.navigate(ServixScreens.UserHomeScreen.name)
+                },
                 onSignupClick = {
                     navController.navigate(ServixScreens.BeforeSignup.name)
                 },
