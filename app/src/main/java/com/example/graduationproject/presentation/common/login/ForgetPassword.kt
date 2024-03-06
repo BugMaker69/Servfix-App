@@ -1,5 +1,6 @@
 package com.example.graduationproject.presentation.common.login
 
+import android.app.Activity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -10,8 +11,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Visibility
@@ -33,6 +36,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -60,11 +64,13 @@ fun FirstScreenOnForgotPasswordChange(
     onLoginClick: () -> Unit,
     userViewModel: UserViewModel
 ) {
+    val context = LocalContext.current
 
     Column(
         modifier= Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -105,7 +111,14 @@ fun FirstScreenOnForgotPasswordChange(
                 .fillMaxWidth()
                 .padding(top = 8.dp),
             text = R.string.send_code,
-            onClick = onSendClick,
+            onClick = {
+                userViewModel.isPasswordForget= true
+                userViewModel.onFinishSignupClick()
+                userViewModel.sendVerificationCode(
+                    activity = context as Activity,
+                    callbacks = userViewModel.callbacks
+                )
+                onSendClick()},
             backgroundColor = DarkBlue,
             contentColor = Color.White,
             indication = rememberRipple(),
@@ -129,13 +142,15 @@ fun FirstScreenOnForgotPasswordChange(
 fun ResetPassword(
     modifier: Modifier = Modifier,
     onResetClick: () -> Unit,
-    userViewModel: UserViewModel = viewModel()
+    userViewModel: UserViewModel
 ) {
 
     Column(
         modifier= Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState())
+        ,
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -308,7 +323,7 @@ fun PhoneAgainPreview() {
 @Preview(showBackground = true)
 @Composable
 fun ResetPasswordPreview() {
-    ResetPassword(onResetClick =  {})
+    ResetPassword(userViewModel = viewModel(),onResetClick =  {})
 }
 
 

@@ -1,6 +1,7 @@
 package com.example.graduationproject.presentation.common.login
 
 import android.content.res.Configuration
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -49,12 +50,12 @@ fun Login(
     onForgetPasswordClick: () -> Unit,
     onSignupClick: () -> Unit,
     onLoginClick: () -> Unit,
-    userViewModel: UserViewModel = viewModel()
+    userViewModel: UserViewModel
 ) {
     var press by remember { mutableStateOf(false) }
     val configuration = LocalConfiguration.current
     val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
-
+    userViewModel.isPasswordForget = false
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -140,8 +141,6 @@ fun LoginBottomPart(
     onSignupClick: () -> Unit,
     onLoginClick: () -> Unit,
 ) {
-    val userViewModel: UserViewModel = viewModel()
-
     CustomButtonAndText(
         Modifier.fillMaxWidth(),
         text = R.string.login,

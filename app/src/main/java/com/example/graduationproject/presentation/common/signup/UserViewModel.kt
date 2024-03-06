@@ -39,6 +39,7 @@ class UserViewModel() : ViewModel() {
     var emailError by mutableStateOf(false)
     var passwordError by mutableStateOf(false)
 
+    var isPasswordForget by mutableStateOf(false)
 
     fun onEmailChanged(email1: String) {
         email = email1.trim()

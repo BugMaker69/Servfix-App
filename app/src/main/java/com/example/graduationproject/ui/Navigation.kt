@@ -90,14 +90,15 @@ fun ServixApp(
         composable(ServixScreens.Login.name) {
             Login(
                 onLoginClick = {
-                               navController.navigate(ServixScreens.UserHomeScreen.name)
+                    navController.navigate(ServixScreens.UserHomeScreen.name)
                 },
                 onSignupClick = {
                     navController.navigate(ServixScreens.BeforeSignup.name)
                 },
                 onForgetPasswordClick = {
                     navController.navigate(ServixScreens.ForgotPassword.name)
-                }
+                },
+                userViewModel = userViewModel
             )
         }
         //  Todo How To Handle ThirdSignUp Page ?!
@@ -249,7 +250,8 @@ fun ServixApp(
             ResetPassword(
                 onResetClick = {
                     navController.navigate(ServixScreens.AfterPassword.name)
-                }
+                },
+                userViewModel = userViewModel
             )
         }
         composable(ServixScreens.AfterPassword.name) {
@@ -260,9 +262,16 @@ fun ServixApp(
             )
         }
         composable(ServixScreens.Otp.name) {
-            OtpScreen(userViewModel) {
-                navController.navigate(ServixScreens.UserHomeScreen.name)
-            }
+            OtpScreen(
+                userViewModel = userViewModel,
+                onLoginClick = {
+                    if (userViewModel.isPasswordForget) {
+                        navController.navigate(ServixScreens.AfterPassword.name)
+                    } else {
+                        navController.navigate(ServixScreens.UserHomeScreen.name)
+                    }
+                }
+            )
         }
         composable(ServixScreens.UserHomeScreen.name) {
             UserHomeScreen(
