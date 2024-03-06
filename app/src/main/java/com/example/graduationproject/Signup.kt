@@ -1,4 +1,5 @@
 package com.example.graduationproject
+
 import android.app.Activity
 import android.util.Log
 import androidx.compose.foundation.Image
@@ -60,7 +61,9 @@ fun SignupFirstScreen(
     modifier: Modifier = Modifier,
     onLoginClick: () -> Unit,
     onNextClick: () -> Unit,
-) {
+    viewModel: UserTypeViewModel,
+
+    ) {
 
     val context = LocalContext.current
     val governorates = context.resources.getStringArray(R.array.egypt_governorates).toList()
@@ -196,6 +199,8 @@ fun SignupFirstScreen(
                     .padding(top = 8.dp),
                 text = R.string.next,
                 onClick = {
+                    Log.d("WHYYYYY", "SignupSecondScreen: USER TYPE ${viewModel.userType.value}")
+
                     userViewModel.onNextFirstSignupClick()
                     if (userViewModel.userNameError) {
                         usernameFocusRequester.requestFocus()
@@ -206,7 +211,7 @@ fun SignupFirstScreen(
                     } else if (userViewModel.phoneError) {
                         phoneNumberFocusRequester.requestFocus()
                     }
-                    if(!userViewModel.userNameError && !userViewModel.cityError && !userViewModel.addressError && !userViewModel.phoneError  ){
+                    if (!userViewModel.userNameError && !userViewModel.cityError && !userViewModel.addressError && !userViewModel.phoneError) {
 
                         onNextClick()
 
@@ -238,7 +243,10 @@ fun SignupSecondScreen(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
     onFinishClick: () -> Unit,
-) {
+    onLoginClick: () -> Unit,
+    viewModel: UserTypeViewModel,
+
+    ) {
     val context = LocalContext.current
 
     val emailFocusRequester = remember { FocusRequester() }
@@ -350,7 +358,7 @@ fun SignupSecondScreen(
         }
 
 
-        Divider(thickness = 3.dp, color = Color.Gray)
+//        Divider(thickness = 3.dp, color = Color.Gray)
         Spacer(modifier = Modifier.height(16.dp))
         Row(
             modifier = Modifier
@@ -368,10 +376,15 @@ fun SignupSecondScreen(
             )
             CustomButtonAndText(
                 modifier = Modifier.fillMaxWidth(.75f),
-                text = R.string.finish,
+                text = if (viewModel.userType.value == UserType.OwnerPerson) R.string.finish else R.string.next,
                 onClick = {
                     Log.d("WHYYYYY", "SignupSecondScreen: ERRORR1")
-                    userViewModel.onNextSecondSignupClick()
+                    Log.d("WHYYYYY", "SignupSecondScreen: USER TYPE ${viewModel.userType.value}")
+                    if (viewModel.userType.value == UserType.OwnerPerson) {
+                        userViewModel.onNextSecondSignupClick()
+                        userViewModel.onFinishSignupClick()
+                    } else
+                        userViewModel.onNextSecondSignupClick()
                     if (userViewModel.emailNError) {
                         Log.d("WHYYYYY", "SignupSecondScreen: ERRORR2")
 
@@ -381,11 +394,13 @@ fun SignupSecondScreen(
                     } else if (userViewModel.passwordConfError) {
                         confirmPasswordFocusRequester.requestFocus()
                     }
-                    if(!userViewModel.emailNError && !userViewModel.passwordNError && !userViewModel.passwordConfError){
-                        userViewModel.sendVerificationCode(
-                            activity = context as Activity,
-                            callbacks = userViewModel.callbacks
-                        )
+                    if (!userViewModel.emailNError && !userViewModel.passwordNError && !userViewModel.passwordConfError) {
+                        if (viewModel.userType.value == UserType.OwnerPerson) {
+                            userViewModel.sendVerificationCode(
+                                activity = context as Activity,
+                                callbacks = userViewModel.callbacks
+                            )
+                        }
                         onFinishClick()
                     }
 
@@ -397,6 +412,18 @@ fun SignupSecondScreen(
 
                 )
         }
+        Spacer(modifier = Modifier.height(16.dp))
+        Divider(thickness = 3.dp, color = Color.Gray)
+        Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.Center) {
+            CustomButtonAndText(text = R.string.have_account, contentColor = Color.Gray)
+            CustomButtonAndText(
+                text = R.string.login,
+                contentColor = Color.Blue,
+                onClick = onLoginClick
+            )
+        }
+
+
     }
 }
 
@@ -406,8 +433,10 @@ fun SignupThirdScreen(
     modifier: Modifier = Modifier,
     onLoginClick: () -> Unit,
     onFinishClick: () -> Unit,
-) {
-    val userViewModel: UserViewModel = viewModel()
+    onBackClick: () -> Unit,
+    userViewModel: UserViewModel
+
+    ) {
 
     val context = LocalContext.current
     val services = context.resources.getStringArray(R.array.services).toList()
@@ -450,7 +479,11 @@ fun SignupThirdScreen(
                         minWidth = OutlinedTextFieldDefaults.MinWidth,
                         minHeight = OutlinedTextFieldDefaults.MinHeight
                     )
-                    .border(width = 1.dp, color = Color.Gray,shape = OutlinedTextFieldDefaults.shape)
+                    .border(
+                        width = 1.dp,
+                        color = Color.Gray,
+                        shape = OutlinedTextFieldDefaults.shape
+                    )
                     .onGloballyPositioned { coordinates ->
                         userViewModel.textfieldServiceSize = coordinates.size.toSize()
                     },
@@ -496,7 +529,7 @@ fun SignupThirdScreen(
 //Fixed Salary
             CustomTextField(
                 modifier = Modifier
-                    .padding(horizontal =  8.dp),
+                    .padding(horizontal = 8.dp),
                 fieldName = R.string.fixed_salary,
                 fieldValue = userViewModel.fixedSalary,
                 onValueChange = { userViewModel.onFixedSalaryChanged(it) },
@@ -511,7 +544,11 @@ fun SignupThirdScreen(
                         minWidth = OutlinedTextFieldDefaults.MinWidth,
                         minHeight = OutlinedTextFieldDefaults.MinHeight
                     )
-                    .border(width = 1.dp, color = Color.Gray, shape = OutlinedTextFieldDefaults.shape),
+                    .border(
+                        width = 1.dp,
+                        color = Color.Gray,
+                        shape = OutlinedTextFieldDefaults.shape
+                    ),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
@@ -520,7 +557,11 @@ fun SignupThirdScreen(
                         .padding(horizontal = 16.dp)
                         .weight(7f)
                 )
-                Icon(imageVector = Icons.Default.Upload, contentDescription = "",modifier = Modifier.padding(horizontal = 8.dp))
+                Icon(
+                    imageVector = Icons.Default.Upload,
+                    contentDescription = "",
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
             }
 
 
@@ -534,7 +575,11 @@ fun SignupThirdScreen(
                         minWidth = OutlinedTextFieldDefaults.MinWidth,
                         minHeight = OutlinedTextFieldDefaults.MinHeight
                     )
-                    .border(width = 1.dp, color = Color.Gray,shape = OutlinedTextFieldDefaults.shape),
+                    .border(
+                        width = 1.dp,
+                        color = Color.Gray,
+                        shape = OutlinedTextFieldDefaults.shape
+                    ),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
@@ -544,7 +589,11 @@ fun SignupThirdScreen(
                         .weight(7f)
                 )
 
-                Icon(imageVector = Icons.Default.Upload, contentDescription = "", modifier = Modifier.padding(horizontal = 8.dp))
+                Icon(
+                    imageVector = Icons.Default.Upload,
+                    contentDescription = "",
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
             }
 
 
@@ -555,15 +604,38 @@ fun SignupThirdScreen(
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            CustomButtonAndText(
-                Modifier.fillMaxWidth(),
-                text = R.string.finish,
-                indication = rememberRipple(),
-                onClick = onFinishClick,
-                backgroundColor = DarkBlue,
-                contentColor = Color.White,
-                shape = RoundedCornerShape(36.dp)
-            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(4.dp),
+                verticalAlignment = Alignment.Bottom,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                CustomButtonAndText(
+                    modifier = Modifier.fillMaxWidth(.25f),
+                    text = R.string.back,
+                    onClick = onBackClick,
+                    contentColor = DarkBlue,
+                    backgroundColor = Color.LightGray
+                )
+
+                CustomButtonAndText(
+                    Modifier.fillMaxWidth(.75f),
+                    text = R.string.finish,
+                    indication = rememberRipple(),
+                    onClick = {
+                        userViewModel.onFinishSignupClick()
+                        userViewModel.sendVerificationCode(
+                            activity = context as Activity,
+                            callbacks = userViewModel.callbacks
+                        )
+                        onFinishClick()
+                    },
+                    backgroundColor = DarkBlue,
+                    contentColor = Color.White,
+//                    shape = RoundedCornerShape(36.dp)
+                )
+            }
             Spacer(modifier = Modifier.height(16.dp))
             Divider(thickness = 3.dp, color = Color.Gray)
             Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.Center) {
@@ -583,5 +655,5 @@ fun SignupThirdScreen(
 @Preview(showBackground = true)
 @Composable
 fun SignupThirdScreenPreview() {
-    SignupThirdScreen(Modifier,{},{})
+    SignupThirdScreen(Modifier, {}, {}, {}, viewModel())
 }

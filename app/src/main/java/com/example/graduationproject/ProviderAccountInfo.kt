@@ -51,7 +51,7 @@ fun ProviderAccountInfoScreen(
         bottomBar = { BottomAppBar(onBottomNavigationItemClick = onBottomNavigationItemClick) },
         content = {
             ProviderAccountInfo(
-                modifier.padding(top = it.calculateTopPadding() - 10.dp),
+                modifier.padding(top = it.calculateTopPadding() - 10.dp, bottom = it.calculateBottomPadding()),
                 onAccountInfoDetailsClick = onAccountInfoDetailsClick
             )
         }
@@ -73,7 +73,7 @@ fun ProviderAccountInfoDetailsScreen(
         bottomBar = { BottomAppBar(onBottomNavigationItemClick = onBottomNavigationItemClick) },
         content = {
             ProviderAccountInfoDetails(
-                modifier.padding(top = it.calculateTopPadding() - 10.dp),
+                modifier.padding(top = it.calculateTopPadding() - 10.dp, bottom = it.calculateBottomPadding()),
                 onSaveChangesClick = onSaveChangesClick,
                 onPhotoChangeClick = onPhotoChangeClick
             )
