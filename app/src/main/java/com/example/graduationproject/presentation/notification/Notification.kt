@@ -1,7 +1,6 @@
-package com.example.graduationproject
+package com.example.graduationproject.presentation.notification
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,6 +25,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.graduationproject.R
 import com.example.graduationproject.presentation.common.CustomTopAppBar
 import com.example.graduationproject.presentation.common.ScreensTemplate
 

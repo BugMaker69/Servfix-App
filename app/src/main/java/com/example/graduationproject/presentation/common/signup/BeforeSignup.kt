@@ -33,6 +33,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.graduationproject.presentation.common.CustomButtonAndText
+import com.example.graduationproject.presentation.common.UserType
+import com.example.graduationproject.presentation.common.UserTypeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

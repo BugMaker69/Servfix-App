@@ -54,8 +54,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.graduationproject.R
-import com.example.graduationproject.UserType
-import com.example.graduationproject.UserTypeViewModel
+import com.example.graduationproject.presentation.common.UserType
+import com.example.graduationproject.presentation.common.UserTypeViewModel
 import com.example.graduationproject.presentation.common.CustomButtonAndText
 import com.example.graduationproject.presentation.common.CustomTextField
 import com.example.graduationproject.ui.theme.DarkBlue

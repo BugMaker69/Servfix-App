@@ -17,8 +17,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.graduationproject.BeforeSignup
-import com.example.graduationproject.UserType
-import com.example.graduationproject.UserTypeViewModel
+import com.example.graduationproject.presentation.common.UserType
+import com.example.graduationproject.presentation.common.UserTypeViewModel
 import com.example.graduationproject.presentation.accountinfo.ProviderAccountInfoDetailsScreen
 import com.example.graduationproject.presentation.accountinfo.ProviderAccountInfoScreen
 import com.example.graduationproject.presentation.accountinfo.UserAccountInfoDetailsScreen
