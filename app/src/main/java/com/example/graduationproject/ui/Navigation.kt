@@ -17,12 +17,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.graduationproject.BeforeSignup
-import com.example.graduationproject.presentation.common.UserType
-import com.example.graduationproject.presentation.common.UserTypeViewModel
 import com.example.graduationproject.presentation.accountinfo.ProviderAccountInfoDetailsScreen
 import com.example.graduationproject.presentation.accountinfo.ProviderAccountInfoScreen
 import com.example.graduationproject.presentation.accountinfo.UserAccountInfoDetailsScreen
 import com.example.graduationproject.presentation.accountinfo.UserAccountInfoScreen
+import com.example.graduationproject.presentation.common.UserType
+import com.example.graduationproject.presentation.common.UserTypeViewModel
 import com.example.graduationproject.presentation.common.login.AfterPasswordChange
 import com.example.graduationproject.presentation.common.login.FirstScreenOnForgotPasswordChange
 import com.example.graduationproject.presentation.common.login.Login
@@ -32,8 +32,11 @@ import com.example.graduationproject.presentation.common.signup.SignupFirstScree
 import com.example.graduationproject.presentation.common.signup.SignupSecondScreen
 import com.example.graduationproject.presentation.common.signup.SignupThirdScreen
 import com.example.graduationproject.presentation.common.signup.UserViewModel
+import com.example.graduationproject.presentation.notification.NotificationScreen
 import com.example.graduationproject.presentation.on_boarding.OnBoardingScreen
 import com.example.graduationproject.presentation.otp.OtpScreen
+import com.example.graduationproject.presentation.userservice.ShareProblemScreen
+import com.example.graduationproject.presentation.userservice.UserHomeScreen
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.system.exitProcess
@@ -256,8 +259,32 @@ fun ServixApp(
         }
         composable(ServixScreens.Otp.name) {
             OtpScreen(userViewModel) {
-                navController.navigate(ServixScreens.Test.name)
+                navController.navigate(ServixScreens.UserHomeScreen.name)
             }
+        }
+        composable(ServixScreens.UserHomeScreen.name) {
+            UserHomeScreen(
+                onNotificationClick = {
+                    navController.navigate(ServixScreens.Notification.name)
+                },
+                onMessageClick = { /*TODO*/ },
+                onTextFieldClick = {
+                    navController.navigate(ServixScreens.ShareProblemScreen.name)
+                },
+                onServiceItemClick = {}
+            )
+        }
+        composable(ServixScreens.Notification.name) {
+            NotificationScreen(
+                onBackButtonOnTopNavBar = { navController.popBackStack() },
+                onNotificationItemClick = { /*TODO*/ },
+                notificationDescription = ""
+            )
+        }
+        composable(ServixScreens.ShareProblemScreen.name) {
+            ShareProblemScreen(
+                onCancelClick = { navController.popBackStack() },
+                onShareClick = { navController.navigate(ServixScreens.UserHomeScreen.name) })
         }
         composable(ServixScreens.Test.name) {
             TestScreen()

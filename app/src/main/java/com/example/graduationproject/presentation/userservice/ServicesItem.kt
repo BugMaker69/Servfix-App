@@ -18,9 +18,14 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Message
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -36,7 +41,29 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.graduationproject.presentation.common.CustomTextField
 import com.example.graduationproject.R
+import com.example.graduationproject.presentation.common.CustomTopAppBar
+import com.example.graduationproject.presentation.common.ScreensTemplate
+import com.example.graduationproject.ui.theme.DarkBlue
 import com.example.graduationproject.ui.theme.LightBlue
+
+
+@Composable
+fun UserHomeScreen(
+    modifier: Modifier = Modifier,
+    onNotificationClick: () -> Unit,
+    onMessageClick: () -> Unit,
+    onTextFieldClick:()->Unit,
+    onServiceItemClick:()->Unit,
+) {
+
+    ScreensTemplate(
+        topBar = { HomeTopBar(onNotificationClick=onNotificationClick,onMessageClick=onMessageClick) }
+    ) {
+        ServicesHomePage(modifier=modifier.padding(it),onTextFieldClick = onTextFieldClick,onServiceItemClick=onServiceItemClick)
+    }
+
+}
+
 
 
 @Composable
@@ -46,8 +73,9 @@ fun ServicesHomePage(
     onServiceItemClick:()->Unit,
 ) {
 
-    Column() {
-
+    Column(
+        modifier = modifier
+    ) {
         ShareProblemBar(onTextFieldClick)
 
         LazyVerticalGrid(
@@ -150,8 +178,39 @@ fun ShareProblemBar(
 
 
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HomeTopBar(
+    modifier: Modifier = Modifier,
+    onNotificationClick: () -> Unit,
+    onMessageClick: () -> Unit,
+) {
+    CustomTopAppBar(
+        title = "Servfix",
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = DarkBlue,
+            actionIconContentColor = Color.White,
+            titleContentColor = Color.White
+        ),
+        actions = {
+            IconButton(onClick = onNotificationClick) {
+                Icon(imageVector = Icons.Filled.Notifications, contentDescription = "Notifications")
+            }
+            IconButton(onClick = onMessageClick) {
+                Icon(imageVector = Icons.Filled.Message, contentDescription = "Message")
+            }
+        }
+    )
+}
 
 
+
+
+@Preview(showBackground = true)
+@Composable
+fun UserHomeScreenPreview() {
+    UserHomeScreen(Modifier,{},{},{},{})
+}
 
 
 @Preview(showBackground = true)

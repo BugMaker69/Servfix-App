@@ -98,28 +98,3 @@ fun BottomAppBar(
 
 
 
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun HomeTopBar(
-    modifier: Modifier = Modifier,
-    onNotificationClick: () -> Unit,
-    onMessageClick: () -> Unit,
-) {
-    CustomTopAppBar(
-        title = "Servfix",
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = DarkBlue,
-            actionIconContentColor = Color.White,
-            titleContentColor = Color.White
-        ),
-        actions = {
-            IconButton(onClick = onNotificationClick) {
-                Icon(imageVector = Icons.Filled.Notifications, contentDescription = "Notifications")
-            }
-            IconButton(onClick = onMessageClick) {
-                Icon(imageVector = Icons.Filled.Message, contentDescription = "Message")
-            }
-        }
-    )
-}

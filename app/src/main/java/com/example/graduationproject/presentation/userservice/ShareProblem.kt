@@ -56,7 +56,7 @@ import com.example.graduationproject.ui.theme.DarkBlue
 
 
 @Composable
-fun ShareProblem(
+fun ShareProblemScreen(
     modifier: Modifier = Modifier,
     onCancelClick: () -> Unit,
     onShareClick: () -> Unit,
@@ -345,5 +345,5 @@ fun ShareProblem(
 @Preview(showBackground = true)
 @Composable
 fun ShareProblemPreview() {
-    ShareProblem(Modifier, {}, {})
+    ShareProblemScreen(Modifier, {}, {})
 }

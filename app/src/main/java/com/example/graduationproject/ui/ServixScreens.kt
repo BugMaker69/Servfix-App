@@ -18,5 +18,9 @@ enum class ServixScreens {
     UserAccountInfoDetails,
     Settings,
     NewPassword,
+    UserHomeScreen,
+    Notification,
+    ShareProblemScreen,
+
 
 }
