@@ -162,8 +162,8 @@ fun CustomDialog(
     dismissButtonText : String,
     onConfirmButtonClick:()->Unit,
     onDismissButtonClick:()->Unit,
-    dialogTitle:String,
-    dialogText:String,
+    title: @Composable (() -> Unit)? = null,
+    text: @Composable (() -> Unit)? = null,
 ) {
     var show by remember { mutableStateOf(false) }
     AlertDialog(
@@ -179,18 +179,8 @@ fun CustomDialog(
                 Text(text = dismissButtonText)
             }
         },
-        title = {
-            Text(
-                text = dialogTitle,
-                textAlign = TextAlign.Center
-            )
-        },
-        text = {
-            Text(
-                text = dialogText,
-                textAlign = TextAlign.Center
-            )
-        }
+        title = title,
+        text = text
     )
 }
 

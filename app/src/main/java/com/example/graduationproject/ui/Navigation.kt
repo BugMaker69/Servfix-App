@@ -40,7 +40,7 @@ fun ServixApp(
     navController: NavHostController = rememberNavController()
 ) {
     val userSigningLoging: UserViewModel = viewModel()
-
+    val userTypeViewModel: UserTypeViewModel = viewModel()
     var isBackPressedOnce by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -74,7 +74,7 @@ fun ServixApp(
     }
     NavHost(
         navController = navController,
-        startDestination = if (isFirstLaunch) ServixScreens.OnBoarding.name else ServixScreens.Settings.name
+        startDestination = if (isFirstLaunch) ServixScreens.OnBoarding.name else ServixScreens.BeforeSignup.name
     ) {
         composable(ServixScreens.OnBoarding.name) {
             OnBoardingScreen {
@@ -85,7 +85,7 @@ fun ServixApp(
             Login(
                 onLoginClick = {},
                 onSignupClick = {
-                    navController.navigate(ServixScreens.FirstSignup.name)
+                    navController.navigate(ServixScreens.BeforeSignup.name)
                 },
                 onForgetPasswordClick = {
                     navController.navigate(ServixScreens.ForgotPassword.name)
@@ -103,18 +103,39 @@ fun ServixApp(
                 },
                 onLoginClick = {
                     navController.navigate(ServixScreens.Login.name)
-                }
+                },
+                userTypeViewModel = userTypeViewModel
             )
         }
         composable(ServixScreens.Settings.name) {
             SettingsScreen(
                 onAccountInfoClick = {
-                    navController.navigate(ServixScreens.UserAccountInfo.name)
+                    if (userTypeViewModel.userType.value == UserType.OwnerPerson) {
+                        navController.navigate(ServixScreens.UserAccountInfo.name)
+                    } else {
+                        navController.navigate(ServixScreens.ProviderAccountInfo.name)
+                    }
                 },
-                onDeleteMyAccountClick = {},
-                onSignOutClick = {},
+                onDeleteMyAccountClick = {
+                    navController.navigate(ServixScreens.Login.name) {
+                        popUpTo(ServixScreens.Settings.name) {
+                            inclusive = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
+                onSignOutClick = {
+                    navController.navigate(ServixScreens.Login.name) {
+                        popUpTo(ServixScreens.Settings.name) {
+                            inclusive = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
                 onSecurityClick = {},
-                onBackButtonOnTopNavBar = {navController.popBackStack()},
+                onBackButtonOnTopNavBar = { navController.popBackStack() },
                 onBottomNavigationItemClick = {}
             )
         }
@@ -122,24 +143,46 @@ fun ServixApp(
         composable(ServixScreens.UserAccountInfo.name) {
             UserAccountInfoScreen(
                 onAccountInfoDetailsClick = {
-                    navController.navigate(ServixScreens.UserAccountInfoDetails.name)
+//                    if (userTypeViewModel.userType.value == UserType.OwnerPerson) {
+                        navController.navigate(ServixScreens.UserAccountInfoDetails.name)
+//                    } else {
+//                        navController.navigate(ServixScreens.ProviderAccountInfoDetails.name)
+//                    }
                 },
                 onBackButtonOnTopNavBar = {
                     navController.popBackStack()
                 },
+                //  TODO Not Handled Yet It's Wrong
                 onBottomNavigationItemClick = {
                     navController.navigate(ServixScreens.Settings.name)
                 }
             )
         }
-        composable(ServixScreens.UserAccountInfoDetails.name){
+        composable(ServixScreens.UserAccountInfoDetails.name) {
             UserAccountInfoDetailsScreen(
-                onBackButtonOnTopNavBar={
-                navController.popBackStack()
-            },
+                onBackButtonOnTopNavBar = {
+                    navController.popBackStack()
+                },
                 onBottomNavigationItemClick = {},
                 onPhotoChangeClick = {},
                 onSaveChangesClick = {}
+            )
+        }
+        composable(ServixScreens.ProviderAccountInfo.name){
+            ProviderAccountInfoScreen(
+                onAccountInfoDetailsClick = {
+                                            navController.navigate(ServixScreens.ProviderAccountInfoDetails.name)
+                                            },
+                onBackButtonOnTopNavBar = { navController.popBackStack() },
+                onBottomNavigationItemClick ={}
+            )
+        }
+        composable(ServixScreens.ProviderAccountInfoDetails.name){
+            ProviderAccountInfoDetailsScreen(
+                onBackButtonOnTopNavBar = { navController.popBackStack() },
+                onBottomNavigationItemClick = {},
+                onSaveChangesClick = { /*TODO*/ },
+                onPhotoChangeClick = {}
             )
         }
         composable(ServixScreens.FirstSignup.name) {
@@ -149,21 +192,41 @@ fun ServixApp(
                     navController.navigate(ServixScreens.Login.name)
                 },
                 onNextClick = {
-
                     navController.navigate(ServixScreens.SecondSignup.name)
                 },
+                viewModel = userTypeViewModel
             )
         }
         composable(ServixScreens.SecondSignup.name) {
-            SignupSecondScreen(userSigningLoging,
+            SignupSecondScreen(
+                userSigningLoging,
                 onBackClick = {
 
                     navController.navigate(ServixScreens.FirstSignup.name)
                 },
 
                 onFinishClick = {
-                    navController.navigate(ServixScreens.Otp.name)
-                }
+                    if (userTypeViewModel.userType.value == UserType.HirePerson) {
+                        navController.navigate(ServixScreens.SignupThird.name)
+                    } else {
+                        navController.navigate(ServixScreens.Otp.name)
+                    }
+                },
+                onLoginClick = {
+                    navController.navigate(ServixScreens.Login.name)
+                },
+                viewModel = userTypeViewModel
+            )
+        }
+        composable(ServixScreens.SignupThird.name) {
+            SignupThirdScreen(onLoginClick = {
+                navController.navigate(ServixScreens.Login.name)
+            }, onFinishClick = {
+                navController.navigate(ServixScreens.Otp.name)
+            }, onBackClick = {
+                navController.popBackStack()
+            },
+                userViewModel = userSigningLoging
             )
         }
         composable(ServixScreens.ForgotPassword.name) {

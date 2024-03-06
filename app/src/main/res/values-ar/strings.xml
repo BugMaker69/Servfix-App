@@ -71,7 +71,8 @@
     <string name="share">شارك</string>
     <string name="add_to_post">أضف إلى منشورك</string>
     <string name="fixed_salary">الراتب الثابت</string>
-
+    <string name="want_job">أريد أن أجد وظيفة</string>
+    <string name="look_specialist">أبحث عن متخصص</string>
 
 
     <string-array name="egypt_governorates">

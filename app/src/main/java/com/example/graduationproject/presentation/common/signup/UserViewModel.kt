@@ -268,19 +268,19 @@ class UserViewModel() : ViewModel() {
 
 
     fun onNextFirstSignupClick() {
-        if (!userName.matches(fullnameregex)) {
-            userNameError = true
-        }
-        if (selectedCityValue.isEmpty() && selectedCityIndex == -1) {
-            cityError = true
-        }
-        if (address.isEmpty()) {
-            addressError = true
-        }
-
-        if (!phone.matches(phoneNumberregex)) {
-            phoneError = true
-        }
+//        if (!userName.matches(fullnameregex)) {
+//            userNameError = true
+//        }
+//        if (selectedCityValue.isEmpty() && selectedCityIndex == -1) {
+//            cityError = true
+//        }
+//        if (address.isEmpty()) {
+//            addressError = true
+//        }
+//
+//        if (!phone.matches(phoneNumberregex)) {
+//            phoneError = true
+//        }
 
 
 //        if (!userNameError && !cityError && !addressError && !emailNError && !phoneError && !passwordNError && !passwordConfError) {
@@ -314,18 +314,22 @@ class UserViewModel() : ViewModel() {
 
     fun onNextSecondSignupClick() {
 
-        if (!emailN.matches(Emailregex)) {
-            emailNError = true
-        }
-        if (!passwordN.matches(passwordregex)) {
-            passwordNError = true
-        }
-        if (passwordConf != passwordN || !passwordConf.matches(passwordregex)) {
-            passwordConfError = true
-        }
-        callbackmaker()
+//        if (!emailN.matches(Emailregex)) {
+//            emailNError = true
+//        }
+//        if (!passwordN.matches(passwordregex)) {
+//            passwordNError = true
+//        }
+//        if (passwordConf != passwordN || !passwordConf.matches(passwordregex)) {
+//            passwordConfError = true
+//        }
 
     }
+
+    fun onFinishSignupClick() {
+        callbackmaker()
+    }
+
 
     fun sendVerificationCode(
         number: String? = "+2" + phone,

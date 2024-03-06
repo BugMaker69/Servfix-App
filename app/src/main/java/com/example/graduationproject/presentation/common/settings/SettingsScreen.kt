@@ -1,6 +1,7 @@
 package com.example.graduationproject.presentation.common.settings
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -40,6 +41,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -89,6 +91,9 @@ fun SettingsScreenContent(
     onDeleteMyAccountClick: () -> Unit,
     onSignOutClick: () -> Unit,
 ) {
+    //  TODO Place This Values In ViewModel
+    var showSignOutDialog by remember { mutableStateOf(false) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
 
     Column(modifier = modifier.fillMaxSize()) {
 
@@ -146,10 +151,20 @@ fun SettingsScreenContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
-                .clickable { onDeleteMyAccountClick() },
+                .clickable { showDeleteDialog = true },
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
+            if (showDeleteDialog){
+                DeleteAccountDialog(onDeleteAccountConfirmButtonClick = {
+                    //  TODO We Need To Check First If Password He Enters Is Correct
+                    Log.d("SignOUT", "SettingsScreenContent: SignOUT")
+                    onDeleteMyAccountClick()
+                    showDeleteDialog = false
+                                                                        },
+                    onDeleteAccountDismissButtonClick = {showDeleteDialog = false}
+                )
+            }
             Icon(
                 imageVector = Icons.Outlined.PersonRemove,
                 contentDescription = "",
@@ -177,10 +192,20 @@ fun SettingsScreenContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
-                .clickable { onSignOutClick() },
+                .clickable { showSignOutDialog = true },
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
+            //  TODO Place This Values In ViewModel
+            if (showSignOutDialog){
+                SignOutDialog(onSignOutConfirmButtonClick = {
+                    Log.d("SignOUT", "SettingsScreenContent: SignOUT")
+                    showSignOutDialog = false
+                    onSignOutClick()
+                                                            },
+                    onSignOutDismissButtonClick = {showSignOutDialog = false})
+            }
+
             Icon(
                 imageVector = Icons.Outlined.Logout,
                 contentDescription = "",
@@ -211,8 +236,27 @@ fun DeleteAccountDialog(
     CustomDialog(
         confirmButtonText = "Delete",
         dismissButtonText = "Cancel",
-        dialogTitle = "Confirmation",
-        dialogText = "Are you sure you want to Delete Account?",
+        title = {
+            Text(
+                text = "Confirmation",
+                textAlign = TextAlign.Center
+            )
+        },
+        text = {
+            Column {
+                Text(
+                    text = "Are you sure you want to Delete Account?",
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(vertical = 4.dp),
+                )
+                Text(
+                    text = "Enter Your Password to Confirm Your Action",
+                    modifier = Modifier.padding(vertical = 4.dp),
+                )
+                //  TODO Place This Values In ViewModel
+                OutlinedTextField(value = "", onValueChange = {},)
+            }
+        },
         onConfirmButtonClick = onDeleteAccountConfirmButtonClick,
         onDismissButtonClick = onDeleteAccountDismissButtonClick
     )
@@ -382,8 +426,18 @@ fun SignOutDialog(
     CustomDialog(
         confirmButtonText = "Sign Out",
         dismissButtonText = "Cancel",
-        dialogTitle = "Confirmation",
-        dialogText = "Are you sure you want to sign out?",
+        title = {
+            Text(
+                text = "Confirmation",
+                textAlign = TextAlign.Center
+            )
+        },
+        text = {
+            Text(
+                text = "Are you sure you want to sign out?",
+                textAlign = TextAlign.Center
+            )
+        },
         onConfirmButtonClick = onSignOutConfirmButtonClick,
         onDismissButtonClick = onSignOutDismissButtonClick
     )
