@@ -152,7 +152,7 @@ fun SignupFirstScreen(
 
                 )
 
-            CustomTextField(
+    /*        CustomTextField(
                 modifier = Modifier
                     .focusRequester(cityFocusRequester)
                     .onGloballyPositioned { coordinates ->
@@ -175,7 +175,43 @@ fun SignupFirstScreen(
                     }
                 },
 
+                )*/
+
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .clickable { userViewModel.expanded = !userViewModel.expanded }
+                    .padding(top=8.dp, bottom = 16.dp)
+                    .defaultMinSize(
+                        minWidth = OutlinedTextFieldDefaults.MinWidth,
+                        minHeight = OutlinedTextFieldDefaults.MinHeight
+                    )
+                    .border(
+                        width = 1.dp,
+                        color = Color.Gray,
+                        shape = OutlinedTextFieldDefaults.shape
+                    )
+                    .onGloballyPositioned { coordinates ->
+                        userViewModel.textfieldSize = coordinates.size.toSize()
+                    },
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = if (userViewModel.selectedCityValue.isNotEmpty()) userViewModel.selectedCityValue else "City",
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .weight(7f)
                 )
+
+                Icon(
+                    imageVector = if (userViewModel.expanded) Icons.Filled.ArrowDropUp
+                    else Icons.Filled.ArrowDropDown,
+                    contentDescription = "",
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
+            }
+
+
             DropdownMenu(
                 expanded = userViewModel.expanded,
                 onDismissRequest = { userViewModel.expanded = false },
