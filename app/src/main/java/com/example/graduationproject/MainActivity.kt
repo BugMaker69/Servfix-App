@@ -10,6 +10,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.example.graduationproject.presentation.search_for_provider.FindProvider
 
 
 import com.example.graduationproject.ui.theme.GraduationProjectTheme
@@ -35,7 +36,8 @@ class MainActivity : ComponentActivity() {
 //                        SignupThirdScreen(Modifier,{},{})
 //                        ShareProblem(Modifier,{},{})
 //                        BeforeSignup(onBecomeClick = { /*TODO*/ }, onHireClick = { /*TODO*/ }) {}
-                       ServixApp()
+                    //   ServixApp()
+                        FindProvider(Modifier,{},{})
                         //OnBoardingScreen(){
 //                        ServicesHomePage()
 //                        ExpandableOutlinedTextField(

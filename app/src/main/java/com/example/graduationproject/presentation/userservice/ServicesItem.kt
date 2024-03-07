@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import com.example.graduationproject.R
 import com.example.graduationproject.presentation.common.CustomTextField
 import com.example.graduationproject.presentation.common.CustomTopAppBar
+import com.example.graduationproject.presentation.common.HomeTopBar
 import com.example.graduationproject.presentation.common.ScreensTemplate
 import com.example.graduationproject.ui.BottomAppBar
 import com.example.graduationproject.ui.theme.DarkBlue
@@ -183,30 +184,7 @@ fun ShareProblemBar(
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun HomeTopBar(
-    modifier: Modifier = Modifier,
-    onNotificationClick: () -> Unit,
-    onMessageClick: () -> Unit,
-) {
-    CustomTopAppBar(
-        title = "Servfix",
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = DarkBlue,
-            actionIconContentColor = Color.White,
-            titleContentColor = Color.White
-        ),
-        actions = {
-            IconButton(onClick = onNotificationClick) {
-                Icon(imageVector = Icons.Filled.Notifications, contentDescription = "Notifications")
-            }
-            IconButton(onClick = onMessageClick) {
-                Icon(imageVector = Icons.Filled.Message, contentDescription = "Message")
-            }
-        }
-    )
-}
+
 
 
 @Preview(showBackground = true)
