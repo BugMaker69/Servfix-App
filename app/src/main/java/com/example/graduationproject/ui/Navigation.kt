@@ -1,6 +1,7 @@
 package com.example.graduationproject.ui
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
@@ -145,7 +146,10 @@ fun ServixApp(
                 },
                 onSecurityClick = {},
                 onBackButtonOnTopNavBar = { navController.popBackStack() },
-                onBottomNavigationItemClick = {}
+                onBottomNavigationItemClick = {
+                    navController.navigate(it)
+                    Log.d("NAVHOST", "ServixApp NAVHOST: $it")
+                }
             )
         }
         //  Todo How To Handle UserInfo And ProviderInfo ?!
@@ -170,7 +174,9 @@ fun ServixApp(
                 },
                 onBottomNavigationItemClick = {},
                 onPhotoChangeClick = {},
-                onSaveChangesClick = {}
+                onSaveChangesClick = {
+                    navController.navigate(ServixScreens.Settings.name)
+                }
             )
         }
         composable(ServixScreens.ProviderAccountInfo.name) {
@@ -282,7 +288,12 @@ fun ServixApp(
                 onTextFieldClick = {
                     navController.navigate(ServixScreens.ShareProblemScreen.name)
                 },
-                onServiceItemClick = {}
+                onServiceItemClick = {},
+                //  TODO WHen Navigate the Screen Change But BottomBar Icon Not Selected Correctly
+                onBottomNavigationItemClick = {
+                    navController.navigate(it)
+                    Log.d("NAVHOST", "ServixApp NAVHOST: $it")
+                }
             )
         }
         composable(ServixScreens.Notification.name) {

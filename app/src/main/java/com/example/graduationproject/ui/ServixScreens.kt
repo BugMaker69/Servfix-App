@@ -21,6 +21,6 @@ enum class ServixScreens {
     UserHomeScreen,
     Notification,
     ShareProblemScreen,
-
+    Favorite,
 
 }

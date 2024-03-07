@@ -39,10 +39,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.graduationproject.presentation.common.CustomTextField
 import com.example.graduationproject.R
+import com.example.graduationproject.presentation.common.CustomTextField
 import com.example.graduationproject.presentation.common.CustomTopAppBar
 import com.example.graduationproject.presentation.common.ScreensTemplate
+import com.example.graduationproject.ui.BottomAppBar
 import com.example.graduationproject.ui.theme.DarkBlue
 import com.example.graduationproject.ui.theme.LightBlue
 
@@ -52,25 +53,34 @@ fun UserHomeScreen(
     modifier: Modifier = Modifier,
     onNotificationClick: () -> Unit,
     onMessageClick: () -> Unit,
-    onTextFieldClick:()->Unit,
-    onServiceItemClick:()->Unit,
+    onTextFieldClick: () -> Unit,
+    onServiceItemClick: () -> Unit,
+    onBottomNavigationItemClick: (String) -> Unit,
 ) {
 
     ScreensTemplate(
-        topBar = { HomeTopBar(onNotificationClick=onNotificationClick,onMessageClick=onMessageClick) }
+        topBar = {
+            HomeTopBar(
+                onNotificationClick = onNotificationClick,
+                onMessageClick = onMessageClick
+            )
+        },
+        bottomBar = { BottomAppBar(onBottomNavigationItemClick = { onBottomNavigationItemClick(it) }) }
     ) {
-        ServicesHomePage(modifier=modifier.padding(it),onTextFieldClick = onTextFieldClick,onServiceItemClick=onServiceItemClick)
+        ServicesHomePage(
+            modifier = modifier.padding(it),
+            onTextFieldClick = onTextFieldClick,
+            onServiceItemClick = onServiceItemClick
+        )
     }
-
 }
-
 
 
 @Composable
 fun ServicesHomePage(
     modifier: Modifier = Modifier,
-    onTextFieldClick:()->Unit,
-    onServiceItemClick:()->Unit,
+    onTextFieldClick: () -> Unit,
+    onServiceItemClick: () -> Unit,
 ) {
 
     Column(
@@ -85,15 +95,13 @@ fun ServicesHomePage(
         ) {
 
             items(10) { index ->
-                ServicesItem(Modifier, R.drawable.ic_paint, R.string.login,onServiceItemClick)
+                ServicesItem(Modifier, R.drawable.ic_paint, R.string.login, onServiceItemClick)
             }
             item {
-                ServicesItem(Modifier, R.drawable.ic_device, R.string.login,onServiceItemClick)
+                ServicesItem(Modifier, R.drawable.ic_device, R.string.login, onServiceItemClick)
             }
         }
     }
-
-
 }
 
 
@@ -102,7 +110,7 @@ fun ServicesItem(
     modifier: Modifier = Modifier,
     @DrawableRes jobImage: Int,
     @StringRes jobText: Int,
-    onServiceItemClick:()->Unit
+    onServiceItemClick: () -> Unit
 ) {
 
     Card(
@@ -111,8 +119,7 @@ fun ServicesItem(
             .clickable { onServiceItemClick() }
             .background(Color.White)
             .padding(16.dp)
-            .border(width = 2.dp, color = LightBlue, shape = RoundedCornerShape(32.dp))
-        ,
+            .border(width = 2.dp, color = LightBlue, shape = RoundedCornerShape(32.dp)),
         shape = RoundedCornerShape(32.dp)
     ) {
         Column(
@@ -148,10 +155,10 @@ fun ServicesItem(
 
 @Composable
 fun ShareProblemBar(
-    onTextFieldClick:()->Unit
+    onTextFieldClick: () -> Unit
 ) {
 
-    var value by remember { mutableStateOf("")}
+    var value by remember { mutableStateOf("") }
 
     CustomTextField(
         modifier = Modifier
@@ -169,13 +176,11 @@ fun ShareProblemBar(
             .padding(horizontal = 16.dp, vertical = 8.dp),
         fieldName = R.string.share_problem,
         fieldValue = value,
-        onValueChange = {value=it},
-        leadingIcon = { Icon(imageVector = Icons.Default.Add, contentDescription = "")}
+        onValueChange = { value = it },
+        leadingIcon = { Icon(imageVector = Icons.Default.Add, contentDescription = "") }
     )
 
 }
-
-
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -204,19 +209,17 @@ fun HomeTopBar(
 }
 
 
-
-
 @Preview(showBackground = true)
 @Composable
 fun UserHomeScreenPreview() {
-    UserHomeScreen(Modifier,{},{},{},{})
+    UserHomeScreen(Modifier, {}, {}, {}, {}, {})
 }
 
 
 @Preview(showBackground = true)
 @Composable
 fun ServicesHomePagePreview() {
-    ServicesHomePage(Modifier,{},{})
+    ServicesHomePage(Modifier, {}, {})
 }
 
 
@@ -230,5 +233,5 @@ fun ShareProblemBarPreview() {
 @Preview(showBackground = true)
 @Composable
 fun ServicesItemPreview() {
-    ServicesItem(Modifier, R.drawable.ic_paint, R.string.login,{})
+    ServicesItem(Modifier, R.drawable.ic_paint, R.string.login, {})
 }

@@ -54,6 +54,7 @@ import com.example.graduationproject.presentation.accountinfo.UserAccountInfoDet
 import com.example.graduationproject.presentation.common.CustomButtonAndText
 import com.example.graduationproject.presentation.common.CustomDialog
 import com.example.graduationproject.presentation.common.CustomTopAppBar
+import com.example.graduationproject.presentation.common.ScreensTemplate
 import com.example.graduationproject.ui.theme.DarkBlue
 
 
@@ -68,9 +69,10 @@ fun SettingsScreen(
     onBackButtonOnTopNavBar: () -> Unit,
     onBottomNavigationItemClick: (String) -> Unit,
 ) {
-    Scaffold(
+    ScreensTemplate(
         topBar = { SettingsTopBar(onBackButtonOnTopNavBar = onBackButtonOnTopNavBar) },
-        bottomBar = { BottomAppBar(onBottomNavigationItemClick = onBottomNavigationItemClick) }
+        bottomBar = { BottomAppBar(onBottomNavigationItemClick = { onBottomNavigationItemClick(it)
+            Log.d("SettingsScreen", "SettingsScreen String: $it")}) }
     ) {
         SettingsScreenContent(
             modifier.padding(top = it.calculateTopPadding()),

@@ -1,5 +1,6 @@
 package com.example.graduationproject.ui
 
+import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
@@ -21,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -44,21 +46,22 @@ fun BottomAppBar(
 ) {
     //  Filled Icon When Its Selected Else Use OutLined
 
-    var selectedIconIndex by remember { mutableStateOf(0) }
+    var selectedIconIndex by rememberSaveable { mutableStateOf(0) }
 
     val items = listOf(
         BottomNavItem(
-            title = "Home",
+//            title = "Home",
+            title = ServixScreens.UserHomeScreen.name,
             selectedIcon = Icons.Filled.Home,
             unselectedIcon = Icons.Outlined.Home,
         ),
         BottomNavItem(
-            title = "Favorite",
+            title = ServixScreens.Favorite.name,
             selectedIcon = Icons.Filled.Favorite,
             unselectedIcon = Icons.Outlined.FavoriteBorder,
         ),
         BottomNavItem(
-            title = "Settings",
+            title = ServixScreens.Settings.name,
             selectedIcon = Icons.Filled.Settings,
             unselectedIcon = Icons.Outlined.Settings,
         ),
@@ -75,6 +78,9 @@ fun BottomAppBar(
                     selectedIconIndex = index
                     //  Navigation
 //                      navController.navigate(item.title)
+                    Log.d("BottomAppBar", "BottomAppBar which Element: ${item.title} ")
+                    Log.d("BottomAppBar", "BottomAppBar which Indexxx: ${index} ")
+                    Log.d("BottomAppBar", "BottomAppBar which selectedIconIndex: ${selectedIconIndex} ")
                     onBottomNavigationItemClick(item.title)
                 },
                 icon = {
@@ -92,7 +98,6 @@ fun BottomAppBar(
                 alwaysShowLabel = false,
             )
         }
-
     }
 }
 

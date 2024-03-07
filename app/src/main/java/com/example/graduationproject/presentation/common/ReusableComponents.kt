@@ -189,7 +189,7 @@ fun CustomDialog(
 fun ScreensTemplate(
     modifier: Modifier = Modifier,
     topBar: @Composable () -> Unit = {},
-    bottomBar: @Composable () -> Unit = { BottomAppBar(Modifier, { "" }) },
+    bottomBar: @Composable () -> Unit = { BottomAppBar(onBottomNavigationItemClick = { it }) },
     content: @Composable (PaddingValues) -> Unit
 ) {
 
