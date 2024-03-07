@@ -88,6 +88,10 @@ dependencies {
     //splash
     implementation ("androidx.core:core-splashscreen:1.0.1")
 
+//coroutine
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+
 
 
     implementation("io.coil-kt:coil-compose:1.4.0")
