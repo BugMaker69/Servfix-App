@@ -22,7 +22,10 @@ class FindProviderViewModel : ViewModel() {
         ServiceProviderCard("omar"),
         ServiceProviderCard("maged")
     )
+   var selectedCity = mutableStateOf("")
+    var expandend = mutableStateOf(false)
     val testState by mutableStateOf(serviceProvidersList)
+    var showDialog = mutableStateOf(false)
 
     private val _searchText = MutableStateFlow("")
     val searchText = _searchText.asStateFlow()
@@ -39,7 +42,9 @@ class FindProviderViewModel : ViewModel() {
         }
 
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), testState)
-
+    fun dismissDialog() {
+        showDialog.value = false
+    }
     fun onSearchTextChange(text: String) {
         _searchText.value = text
     }

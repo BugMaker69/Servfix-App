@@ -11,10 +11,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Message
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.AlertDialog
@@ -31,6 +33,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,6 +43,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -60,8 +64,8 @@ fun CustomTextField(
     fieldName: Int,
     fieldValue: String,
     onValueChange: (String) -> Unit,
-    isError :Boolean =false,
-    readOnly:Boolean = false,
+    isError: Boolean = false,
+    readOnly: Boolean = false,
 //    isValidField: (String) -> Boolean = { true },
     keyboardOptions: KeyboardOptions = KeyboardOptions(),
     visualTransformation: VisualTransformation = VisualTransformation.None,
@@ -98,20 +102,34 @@ fun CustomTextField(
     )
 }
 
+
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeTopBar(
     modifier: Modifier = Modifier,
     onNotificationClick: () -> Unit,
     onMessageClick: () -> Unit,
+    onBackClick:()->Unit,
+    scrollBarBehavior:TopAppBarScrollBehavior
 ) {
     CustomTopAppBar(
+        scrollBarBehavior=scrollBarBehavior,
         title = "Servfix",
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = DarkBlue,
             actionIconContentColor = Color.White,
             titleContentColor = Color.White
         ),
+        navigationIcon = {
+
+            IconButton(onClick = { onBackClick()}) {
+                Icon(
+                    imageVector = Icons.Filled.ArrowBack,
+                    contentDescription = "back", tint = Color.White
+                )
+            }},
         actions = {
             IconButton(onClick = onNotificationClick) {
                 Icon(imageVector = Icons.Filled.Notifications, contentDescription = "Notifications")
@@ -128,13 +146,13 @@ fun CustomButtonAndText(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
     text: Int,
-    fontWeight: FontWeight=FontWeight.Normal,
-    fontSize:Int=15,
+    fontWeight: FontWeight = FontWeight.Normal,
+    fontSize: Int = 15,
     indication: Indication? = null,
     shape: Shape = RoundedCornerShape(4.dp),
     backgroundColor: Color = Color.Transparent,
     contentColor: Color = Color.LightGray,
-    style : TextStyle = TextStyle(),
+    style: TextStyle = TextStyle(),
     alignment: Alignment = Alignment.Center
 ) {
     val interactionSource = remember { MutableInteractionSource() }
@@ -153,24 +171,31 @@ fun CustomButtonAndText(
         Text(
             text = stringResource(id = text),
             color = contentColor,
-            style=style,
+            style = style,
             fontSize = fontSize.sp,
-          fontWeight = fontWeight
+            fontWeight = fontWeight
         )
     }
 }
 
 
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomTopAppBar(
     modifier: Modifier = Modifier,
-    title:String,
-    navigationIcon : @Composable () -> Unit = {},
+    title: String,
+    navigationIcon: @Composable () -> Unit = {},
     actions: @Composable RowScope.() -> Unit = {},
-    colors: TopAppBarColors = TopAppBarDefaults.topAppBarColors(containerColor = DarkBlue, actionIconContentColor = Color.White, titleContentColor = Color.White,navigationIconContentColor = Color.White),
+    scrollBarBehavior: TopAppBarScrollBehavior,
+    colors: TopAppBarColors = TopAppBarDefaults.topAppBarColors(
+        containerColor = DarkBlue,
+        actionIconContentColor = Color.White,
+        titleContentColor = Color.White,
+        navigationIconContentColor = Color.White
+    ),
 ) {
     TopAppBar(
+        scrollBehavior = scrollBarBehavior,
         title = { Text(text = title) },
         colors = colors,
         actions = actions,
@@ -180,31 +205,35 @@ fun CustomTopAppBar(
 }
 
 
-
-
 @Composable
 fun CustomDialog(
     modifier: Modifier = Modifier,
-    confirmButtonColors: ButtonColors = ButtonDefaults.buttonColors(containerColor = Color.Transparent, contentColor = Color.Red),
-    dismissButtonColors: ButtonColors = ButtonDefaults.buttonColors(containerColor = Color.Transparent, contentColor = Color.Black),
-    confirmButtonText : String,
-    dismissButtonText : String,
-    onConfirmButtonClick:()->Unit,
-    onDismissButtonClick:()->Unit,
+    confirmButtonColors: ButtonColors = ButtonDefaults.buttonColors(
+        containerColor = Color.Transparent,
+        contentColor = Color.Red
+    ),
+    dismissButtonColors: ButtonColors = ButtonDefaults.buttonColors(
+        containerColor = Color.Transparent,
+        contentColor = Color.Black
+    ),
+    confirmButtonText: String,
+    dismissButtonText: String,
+    onConfirmButtonClick: () -> Unit,
+    onDismissButtonClick: () -> Unit,
     title: @Composable (() -> Unit)? = null,
     text: @Composable (() -> Unit)? = null,
 ) {
-    var show by remember { mutableStateOf(false) }
+   var show by remember { mutableStateOf(false) }
     AlertDialog(
         modifier = modifier,
         onDismissRequest = { show = false },
         confirmButton = {
-            Button(onClick = onConfirmButtonClick,colors = confirmButtonColors) {
-                Text(text = confirmButtonText,)
+            Button(onClick = onConfirmButtonClick, colors = confirmButtonColors) {
+                Text(text = confirmButtonText)
             }
         },
         dismissButton = {
-            Button(onClick = onDismissButtonClick , colors = dismissButtonColors) {
+            Button(onClick = onDismissButtonClick, colors = dismissButtonColors) {
                 Text(text = dismissButtonText)
             }
         },
@@ -223,14 +252,13 @@ fun ScreensTemplate(
 ) {
 
     Scaffold(
+        modifier=modifier,
         topBar = topBar,
         bottomBar = bottomBar,
         content = content
     )
 
 }
-
-
 
 
 @Composable

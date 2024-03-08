@@ -6,7 +6,8 @@ data class ServiceProviderCard(
     val rate: Double = 5.1,
     val transactionsNum: Int = 100,
     val fee: Double = 400.00,
-    val feeType: String = "Fixed Fee"
+    val feeType: String = "Fixed Fee",
+    val category:String="smith"
 ) {
     fun doesMatchSearchQuery(query: String): Boolean {
         val matchingCombinations = listOf(

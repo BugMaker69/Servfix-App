@@ -18,9 +18,20 @@ import androidx.core.view.WindowCompat
 
 
 
-private val LightColorScheme = lightColorScheme(
+ val LightColorScheme = lightColorScheme(
     primary = DarkBlue,
-    secondary = Color.White,
+    secondary = Color.Black,
+     background = Color.White, // Set the background color to white
+     onSurface = Color.Black
+  //  background = Color.White,
+//   onBackground = Color.White,
+//    onSurface = Color.White,
+//    surface = Color.White,
+//    onPrimaryContainer = Color.White,
+//    onSecondaryContainer = Color.White,
+//    onPrimary = DarkBlue,
+//    onSecondary = Color.White,
+//    tertiary = Color.White
 
 
 
@@ -30,7 +41,6 @@ private val LightColorScheme = lightColorScheme(
 @Composable
 fun GraduationProjectTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {

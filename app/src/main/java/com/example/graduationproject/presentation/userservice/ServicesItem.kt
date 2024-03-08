@@ -26,6 +26,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -49,6 +50,7 @@ import com.example.graduationproject.ui.theme.DarkBlue
 import com.example.graduationproject.ui.theme.LightBlue
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserHomeScreen(
     modifier: Modifier = Modifier,
@@ -63,7 +65,8 @@ fun UserHomeScreen(
         topBar = {
             HomeTopBar(
                 onNotificationClick = onNotificationClick,
-                onMessageClick = onMessageClick
+                onMessageClick = onMessageClick,
+                onBackClick = {}, scrollBarBehavior = TopAppBarDefaults.pinnedScrollBehavior()
             )
         },
         bottomBar = { BottomAppBar(onBottomNavigationItemClick = { onBottomNavigationItemClick(it) }) }
