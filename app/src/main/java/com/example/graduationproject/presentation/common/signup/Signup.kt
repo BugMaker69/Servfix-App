@@ -442,8 +442,10 @@ fun SignupSecondScreen(
                                 callbacks = userViewModel.callbacks
                             )
                         }
-                        onFinishClick()
+                        Log.d("boolo", "registerUser: ha?")
+                       onFinishClick()
                     }
+
 
                     Log.d("WHYYYYY", "SignupSecondScreen: ERRORR3")
 

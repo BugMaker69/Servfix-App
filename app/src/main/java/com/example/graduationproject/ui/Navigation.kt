@@ -220,6 +220,8 @@ fun ServixApp(
                     if (userTypeViewModel.userType.value == UserType.HirePerson) {
                         navController.navigate(ServixScreens.SignupThird.name)
                     } else {
+                        userViewModel.registerUser()
+
                         navController.navigate(ServixScreens.Otp.name)
                     }
                 },

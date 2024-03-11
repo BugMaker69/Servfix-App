@@ -9,6 +9,8 @@ import androidx.compose.ui.geometry.Size
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.graduationproject.R
+import com.example.graduationproject.data.Register
+import com.example.graduationproject.data.retrofit.RetrofitClient
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
@@ -21,6 +23,8 @@ import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
 class UserViewModel() : ViewModel() {
+    private val apiService = RetrofitClient.apiServiceInstanceRegister()
+
 
     lateinit var callbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks
     var verificationID by mutableStateOf("")
@@ -350,5 +354,30 @@ class UserViewModel() : ViewModel() {
             Log.d("soon", "sendVerificationCode: ")
         }
     }
+    fun registerUser() {
+        val register = Register(
+            userName = userName,
+            password = passwordN,
+            email = emailN,
+            address = address,
+            phone = phone,
+            city = selectedCityValue
+        )
 
+        viewModelScope.launch {
+            val response = apiService.postRegister(register)
+            Log.d("boolo", "registerUser: maybe")
+
+
+            // Check the response
+            if (response.isSuccessful) {
+                Log.d("boolo", "registerUser: done")
+                val registeredUser = response.body()
+            } else {
+                Log.d("boolo", "registerUser: not done. Status code: ${response.code()}, Error message: ${response.message()}")
+
+            }
+        }
+    }
 }
+

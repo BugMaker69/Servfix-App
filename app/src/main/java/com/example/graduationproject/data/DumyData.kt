@@ -1,5 +1,7 @@
 package com.example.graduationproject.data
 
+import com.google.gson.annotations.SerializedName
+
 data class ServiceProviderCard(
     val name: String = "Ahmed Ramadan",
     val location: String = "Alexandria",
@@ -17,5 +19,14 @@ data class ServiceProviderCard(
     }
 
 }
+
+data class Register(
+    @SerializedName("username") val userName:String="",
+    val password:String,
+    val email:String,
+    val address:String,
+    val phone :String,
+    val city :String,
+    )
 
 
