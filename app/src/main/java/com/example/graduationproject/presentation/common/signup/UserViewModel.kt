@@ -9,6 +9,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.graduationproject.R
+import com.example.graduationproject.data.LoginRequest
 import com.example.graduationproject.data.Register
 import com.example.graduationproject.data.retrofit.RetrofitClient
 import com.google.firebase.FirebaseException
@@ -23,7 +24,7 @@ import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
 class UserViewModel() : ViewModel() {
-    private val apiService = RetrofitClient.apiServiceInstanceRegister()
+    private val apiService = RetrofitClient.userRegisterationApiService()
 
 
     lateinit var callbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks
@@ -378,6 +379,26 @@ class UserViewModel() : ViewModel() {
 
             }
         }
+    }
+    fun login(){
+        val loginRequest = LoginRequest(username = email, password = password)
+        viewModelScope.launch {
+            val response = apiService.login(loginRequest)
+
+            if (response.isSuccessful) {
+                val loginResponse = response.body()
+                if (loginResponse != null) {
+                    Log.d("bqq", "login: ${loginResponse.refresh+" wait"+ loginResponse.access}")
+                    // Save the tokens
+                } else {
+                    Log.d("bqq", "error1")
+                }
+            } else {
+                Log.d("bqq", "error2, HTTP status code: ${response.code()}, error body: ${response.errorBody()?.string()}")
+
+            }
+        }
+
     }
 }
 

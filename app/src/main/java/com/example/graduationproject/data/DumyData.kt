@@ -30,3 +30,12 @@ data class Register(
     )
 
 
+data class LoginRequest(
+    val username: String,
+    val password: String
+)
+
+data class LoginResponse(
+    val refresh: String,
+    val access: String
+)

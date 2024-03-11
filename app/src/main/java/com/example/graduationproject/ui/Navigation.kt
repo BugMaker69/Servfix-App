@@ -91,6 +91,8 @@ fun ServixApp(
         composable(ServixScreens.Login.name) {
             Login(
                 onLoginClick = {
+                    userViewModel.login()
+
                     navController.navigate(ServixScreens.UserHomeScreen.name)
                 },
                 onSignupClick = {
