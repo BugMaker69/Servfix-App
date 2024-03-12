@@ -9,7 +9,7 @@ data class ServiceProviderCard(
     val transactionsNum: Int = 100,
     val fee: Double = 400.00,
     val feeType: String = "Fixed Fee",
-    val category:String="smith"
+    val category: String = "smith"
 ) {
     fun doesMatchSearchQuery(query: String): Boolean {
         val matchingCombinations = listOf(
@@ -21,13 +21,13 @@ data class ServiceProviderCard(
 }
 
 data class Register(
-    @SerializedName("username") val userName:String="",
-    val password:String,
-    val email:String,
-    val address:String,
-    val phone :String,
-    val city :String,
-    )
+    @SerializedName("username") val userName: String = "",
+    val password: String,
+    val email: String,
+    val address: String,
+    val phone: String,
+    val city: String,
+)
 
 
 data class LoginRequest(
@@ -38,4 +38,17 @@ data class LoginRequest(
 data class LoginResponse(
     val refresh: String,
     val access: String
+)
+
+
+data class ReturnedUserData(
+    val address: String,
+    val city: String,
+    val email: String,
+    val id: Int,
+    val image: Any,
+    val password: String,
+    val phone: String,
+    val user: Int,
+    val username: String
 )
