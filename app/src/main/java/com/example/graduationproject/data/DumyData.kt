@@ -52,3 +52,12 @@ data class ReturnedUserData(
     val user: Int,
     val username: String
 )
+
+
+data class UserData(
+    val email: String,
+    val image: Any,
+    val password: String,
+    val phone: String,
+    val username: String
+)

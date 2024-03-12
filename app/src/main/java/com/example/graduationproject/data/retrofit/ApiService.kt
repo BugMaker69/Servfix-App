@@ -1,9 +1,9 @@
 package com.example.graduationproject.data.retrofit
 
-import com.example.graduationproject.api.ReturnedUserData
 import com.example.graduationproject.data.LoginRequest
 import com.example.graduationproject.data.LoginResponse
 import com.example.graduationproject.data.Register
+import com.example.graduationproject.data.ReturnedUserData
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
