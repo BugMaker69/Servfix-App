@@ -2,6 +2,7 @@ package com.example.graduationproject.data.retrofit
 
 import com.example.graduationproject.data.LoginRequest
 import com.example.graduationproject.data.LoginResponse
+import com.example.graduationproject.data.ProviderData
 import com.example.graduationproject.data.Register
 import com.example.graduationproject.data.RequsetUpdateData
 import com.example.graduationproject.data.ReturnedUserData
@@ -22,9 +23,16 @@ interface ApiService {
     @GET("api/userinfo/")
     suspend fun getReturnedUserData(@Header("Authorization") token: String): ReturnedUserData
 
-
     @PUT("api/userinfo/update")
     suspend fun updateUserData(@Header("Authorization") token: String, @Body userData: RequsetUpdateData): ReturnedUserData
+
+
+    @POST("/api/provider_register/")
+    suspend fun postRegisterProvider(@Body register: ProviderData)
+
+
+    @GET("api/userinfo/")
+    suspend fun getReturnedProviderData(@Header("Authorization") token: String): ReturnedUserData
 
 
 }

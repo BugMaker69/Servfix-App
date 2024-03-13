@@ -22,8 +22,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.graduationproject.data.LoginRequest
 import com.example.graduationproject.data.LoginResponse
+import com.example.graduationproject.data.ProviderData
 import com.example.graduationproject.data.Register
 import com.example.graduationproject.data.RequsetUpdateData
+import com.example.graduationproject.data.ReturnedProviderData
 import com.example.graduationproject.data.ReturnedUserData
 import kotlinx.coroutines.launch
 
@@ -35,6 +37,7 @@ fun TestScreenForApi() {
     val coroutineScope = rememberCoroutineScope()
     var returnUpdateUserData by remember { mutableStateOf<ReturnedUserData?>(null) }
     var getuserData by remember { mutableStateOf<ReturnedUserData?>(null) }
+    var getProviderData by remember { mutableStateOf<ReturnedProviderData?>(null) }
     var isClicked by remember { mutableStateOf(false) }
 
     val registerUserData = Register(
@@ -46,9 +49,26 @@ fun TestScreenForApi() {
         city = "alex"
     )
 
+    val registerProviderData = ProviderData(
+        username = "Omar007",
+        password = "#Omar007#",
+        email = "omar007@gmail.com",
+        address = "alex",
+        phone = "01111111111",
+        city = "alex",
+        fixed_salary = 500.0,
+        id_image = "ramadan.jpg",
+        profession = "Carpenter",
+    )
+
     val loginData = LoginRequest(
         username = "ahmedd0005",
         password = "ahmed3020",
+    )
+
+    val providerLoginData = LoginRequest(
+        username = "Omar007",
+        password = "#Omar007#",
     )
 
     val updatedUserData = RequsetUpdateData(
@@ -72,10 +92,45 @@ fun TestScreenForApi() {
         Button(onClick = {
 
             coroutineScope.launch {
+
+                // Provider REGISTER
+                RetrofitClient.userRegisterationApiService().postRegisterProvider(registerProviderData)
+                Log.d("Register TestScreenForApi", "TestScreenForApi: Register Provider Finish")
+
+                // Provider LOGIN
+                val result = RetrofitClient.userRegisterationApiService().login(providerLoginData)
+                Log.d("Token TestScreenForApi", "TestScreenForApi: Token Finish ${accessToken}")
+
+                if (result.isSuccessful) {
+                    val loginResponse = result.body()
+                    accessToken = loginResponse
+                    if (loginResponse != null) {
+                        Log.d("LogIn Succ", "login Token : ${loginResponse.access}")
+                    } else {
+                        Log.d("Errorrr", "Blabla")
+                    }
+                } else {
+                    Log.d("Unhandle Error", "HTTP status code: ${result.code()}")
+
+                }
+
+                // Provider DATA
+                getuserData = accessToken?.access?.let {
+                    RetrofitClient.userRegisterationApiService().getReturnedProviderData("Bearer $it")
+                }
+                Log.d(
+                    "Get Provider Data TestScreenForApi",
+                    "TestScreenForApi:  Provider Data ${getuserData!!.user} || ${getuserData!!.username} || ${getuserData!!.phone} || ${getuserData!!.email} || ${getuserData!!.city} || ${getuserData!!.image}"
+                )
+
+
+
+
+                // USER REGISTER
                 RetrofitClient.userRegisterationApiService().postRegister(registerUserData)
-                Log.d("Register LoginScreen2", "LoginScreen2: Register Finish")
+                Log.d("Register TestScreenForApi", "TestScreenForApi: Register Finish")
 
-
+                // USER LOGIN
                 val response = RetrofitClient.userRegisterationApiService().login(loginData)
                 Log.d("Token TestScreenForApi", "TestScreenForApi: Token Finish ${accessToken}")
 
@@ -92,6 +147,7 @@ fun TestScreenForApi() {
 
                 }
 
+                // USER DATA
                 getuserData = accessToken?.access?.let {
                     RetrofitClient.userRegisterationApiService().getReturnedUserData("Bearer $it")
                 }
@@ -101,6 +157,7 @@ fun TestScreenForApi() {
                     "TestScreenForApi: UserData ${getuserData!!.user} || ${getuserData!!.email} || ${getuserData!!.city} || ${getuserData!!.image}"
                 )
 
+                // UPDATE USER DATA
                 returnUpdateUserData = accessToken?.access?.let {
                     RetrofitClient.userRegisterationApiService().updateUserData(
                         "Bearer $it",

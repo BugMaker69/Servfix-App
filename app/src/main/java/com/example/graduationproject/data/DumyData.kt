@@ -69,3 +69,31 @@ data class UserData(
     val phone: String,
     val username: String
 )
+
+data class ProviderData(
+    val address: String,
+    val city: String,
+    val email: String,
+    val fixed_salary: Double,
+    val id_image: String,
+    val password: String,
+    val phone: String,
+    val profession: String,
+    val username: String
+)
+
+data class ReturnedProviderData(
+    val address: String,
+    val city: String,
+    val email: String,
+    val fixed_salary: String,
+    val id: Int,
+    val image: Any,
+    val password: String,
+    val phone: String,
+    val profession: String,
+    val ratings: String,
+    val service_id: Int,
+    val user: Int,
+    val username: String
+)
