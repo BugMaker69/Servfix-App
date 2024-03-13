@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.example.graduationproject.data.LoginRequest
 import com.example.graduationproject.data.LoginResponse
 import com.example.graduationproject.data.Register
+import com.example.graduationproject.data.RequsetUpdateData
 import com.example.graduationproject.data.ReturnedUserData
 import kotlinx.coroutines.launch
 
@@ -32,20 +33,31 @@ import kotlinx.coroutines.launch
 fun TestScreenForApi() {
     var accessToken by remember { mutableStateOf<LoginResponse?>(null) }
     val coroutineScope = rememberCoroutineScope()
+    var returnUpdateUserData by remember { mutableStateOf<ReturnedUserData?>(null) }
     var getuserData by remember { mutableStateOf<ReturnedUserData?>(null) }
     var isClicked by remember { mutableStateOf(false) }
+
     val registerUserData = Register(
-        userName = "ahmedd0003",
+        userName = "ahmedd0005",
         password = "ahmed3020",
-        email = "ahmed0003@gmail.com",
+        email = "ahmed0005@gmail.com",
         address = "alex",
         phone = "01210437593",
         city = "alex"
     )
 
     val loginData = LoginRequest(
-        username = "ahmedd0003",
+        username = "ahmedd0005",
         password = "ahmed3020",
+    )
+
+    val updatedUserData = RequsetUpdateData(
+        username = "Omar01",
+        email = "omar01@gmail.com",
+        phone = "0121222222",
+        address = "alexandria",
+        city = "alex",
+        image = ""
     )
 
     Column(
@@ -83,9 +95,21 @@ fun TestScreenForApi() {
                 getuserData = accessToken?.access?.let {
                     RetrofitClient.userRegisterationApiService().getReturnedUserData("Bearer $it")
                 }
+
                 Log.d(
                     "Get User Data TestScreenForApi",
                     "TestScreenForApi: UserData ${getuserData!!.user} || ${getuserData!!.email} || ${getuserData!!.city} || ${getuserData!!.image}"
+                )
+
+                returnUpdateUserData = accessToken?.access?.let {
+                    RetrofitClient.userRegisterationApiService().updateUserData(
+                        "Bearer $it",
+                        updatedUserData
+                    )
+                }
+                Log.d(
+                    "Get UpdatedUser Data LoginScreen2",
+                    "LoginScreen2: Updated UserData ${returnUpdateUserData!!.user} || ${returnUpdateUserData!!.username} || ${returnUpdateUserData!!.phone} || ${returnUpdateUserData!!.email} || ${returnUpdateUserData!!.city} || ${returnUpdateUserData!!.image}"
                 )
 
             }
@@ -97,10 +121,7 @@ fun TestScreenForApi() {
             else
                 Text(text = "Update User")
         }
-
     }
-
-
 }
 
 @Preview(showBackground = true)

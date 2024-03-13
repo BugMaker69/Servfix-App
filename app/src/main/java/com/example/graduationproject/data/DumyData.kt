@@ -53,6 +53,14 @@ data class ReturnedUserData(
     val username: String
 )
 
+data class RequsetUpdateData(
+    val address: String,
+    val city: String,
+    val email: String,
+    val image: Any,
+    val phone: String,
+    val username: String
+)
 
 data class UserData(
     val email: String,
