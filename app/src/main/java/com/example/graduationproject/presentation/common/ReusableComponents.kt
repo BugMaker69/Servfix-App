@@ -111,7 +111,7 @@ fun HomeTopBar(
     modifier: Modifier = Modifier,
     onNotificationClick: () -> Unit,
     onMessageClick: () -> Unit,
-    onBackClick:()->Unit,
+  //  onBackClick:()->Unit,
     scrollBarBehavior:TopAppBarScrollBehavior
 ) {
     CustomTopAppBar(
@@ -122,14 +122,14 @@ fun HomeTopBar(
             actionIconContentColor = Color.White,
             titleContentColor = Color.White
         ),
-        navigationIcon = {
-
-            IconButton(onClick = { onBackClick()}) {
-                Icon(
-                    imageVector = Icons.Filled.ArrowBack,
-                    contentDescription = "back", tint = Color.White
-                )
-            }},
+//        navigationIcon = {
+//
+//            IconButton(onClick = { onBackClick()}) {
+//                Icon(
+//                    imageVector = Icons.Filled.ArrowBack,
+//                    contentDescription = "back", tint = Color.White
+//                )
+//            }},
         actions = {
             IconButton(onClick = onNotificationClick) {
                 Icon(imageVector = Icons.Filled.Notifications, contentDescription = "Notifications")
@@ -243,22 +243,22 @@ fun CustomDialog(
 }
 
 
-@Composable
-fun ScreensTemplate(
-    modifier: Modifier = Modifier,
-    topBar: @Composable () -> Unit = {},
-    bottomBar: @Composable () -> Unit = { BottomAppBar(onBottomNavigationItemClick = { it }) },
-    content: @Composable (PaddingValues) -> Unit
-) {
-
-    Scaffold(
-        modifier=modifier,
-        topBar = topBar,
-        bottomBar = bottomBar,
-        content = content
-    )
-
-}
+//@Composable
+//fun ScreensTemplate(
+//    modifier: Modifier = Modifier,
+//    topBar: @Composable () -> Unit = {},
+//    bottomBar: @Composable () -> Unit = { BottomAppBar(onBottomNavigationItemClick = { it }) },
+//    content: @Composable (PaddingValues) -> Unit
+//) {
+//
+//    Scaffold(
+//        modifier=modifier,
+//        topBar = topBar,
+//        bottomBar = bottomBar,
+//        content = content
+//    )
+//
+//}
 
 
 @Composable

@@ -27,6 +27,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.graduationproject.presentation.common.CustomTopAppBar
 import com.example.graduationproject.ui.theme.DarkBlue
 
@@ -41,10 +43,13 @@ data class BottomNavItem(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BottomAppBar(
+    navController:NavController,
     modifier: Modifier = Modifier,
     onBottomNavigationItemClick: (String) -> Unit,
 ) {
     //  Filled Icon When Its Selected Else Use OutLined
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
 
     var selectedIconIndex by rememberSaveable { mutableStateOf(0) }
 
@@ -72,12 +77,15 @@ fun BottomAppBar(
     ) {
 
         items.forEachIndexed { index, item ->
+
             NavigationBarItem(
                 selected = selectedIconIndex == index,
                 onClick = {
                     selectedIconIndex = index
                     //  Navigation
-//                      navController.navigate(item.title)
+                    Log.d("Wait", "BottomAppBar: ")
+
+                    navController.navigate(item.title)
                     Log.d("BottomAppBar", "BottomAppBar which Element: ${item.title} ")
                     Log.d("BottomAppBar", "BottomAppBar which Indexxx: ${index} ")
                     Log.d("BottomAppBar", "BottomAppBar which selectedIconIndex: ${selectedIconIndex} ")

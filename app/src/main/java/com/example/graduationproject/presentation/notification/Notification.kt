@@ -28,7 +28,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.graduationproject.R
 import com.example.graduationproject.presentation.common.CustomTopAppBar
-import com.example.graduationproject.presentation.common.ScreensTemplate
 
 
 data class Notification(
@@ -48,17 +47,15 @@ fun NotificationScreen(
     notificationDescription: String,
 ) {
 
-    ScreensTemplate(
-        topBar = { NotificationTopBar { onBackButtonOnTopNavBar() } },
-    ) {
+
         NotificationItems(
-            modifier = modifier.padding(it),
+            modifier = modifier,
             onNotificationItemClick = onNotificationItemClick,
             notificationDescription = notificationDescription
         )
     }
 
-}
+
 
 @Composable
 fun NotificationItems(

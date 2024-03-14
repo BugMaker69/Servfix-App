@@ -61,7 +61,6 @@ import com.example.graduationproject.R
 import com.example.graduationproject.data.ServiceProviderCard
 import com.example.graduationproject.presentation.common.CustomDialog
 import com.example.graduationproject.presentation.common.HomeTopBar
-import com.example.graduationproject.presentation.common.ScreensTemplate
 import com.example.graduationproject.ui.theme.GraduationProjectTheme
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.toList
@@ -69,6 +68,7 @@ import kotlinx.coroutines.flow.toList
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FindProvider(
+    innerPadding:PaddingValues,
     modifier: Modifier = Modifier,
     onNotificationClick: () -> Unit,
     onMessageClick: () -> Unit,
@@ -77,7 +77,6 @@ fun FindProvider(
     val findProviderViewModel: FindProviderViewModel = viewModel()
     val serviceProviders by findProviderViewModel.serviceProviders.collectAsState()
     val searchText by findProviderViewModel.searchText.collectAsState()
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     if (findProviderViewModel.showDialog.value) {
         CustomDialog(onConfirmButtonClick = {
             findProviderViewModel.dismissDialog()
@@ -88,25 +87,12 @@ fun FindProvider(
             FilterScreen(findProviderViewModel)
         }
     }
-    ScreensTemplate(
-        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        topBar = {
-            HomeTopBar(
-                onMessageClick = {},
-                onNotificationClick = {},
-                onBackClick = { onBackClick() },
-                scrollBarBehavior = scrollBehavior
-            )
-        }
-    ) { padding ->
-
-
 
 
         LazyColumn(
             modifier = modifier
                 .fillMaxSize()
-                .padding(padding), contentPadding = PaddingValues(2.dp)
+                .padding(innerPadding), contentPadding = PaddingValues(2.dp)
         ) {
             item {
                 Row(
@@ -169,7 +155,6 @@ fun FindProvider(
 
     }
 
-}
 
 @Composable
 fun ProviderItem(modifier: Modifier, state: ServiceProviderCard) {
@@ -375,7 +360,7 @@ fun RateSection() {
 fun ProviderItemPrev() {
     //   ProviderItem(modifier = Modifier,SeriveProviderCard())
     GraduationProjectTheme {
-        FindProvider(Modifier, {}, onBackClick = {}, onMessageClick = {})
+        FindProvider(PaddingValues(30.dp),Modifier, {}, onBackClick = {}, onMessageClick = {})
 
     }
 }

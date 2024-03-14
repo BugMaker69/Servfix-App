@@ -22,5 +22,5 @@ enum class ServixScreens {
     Notification,
     ShareProblemScreen,
     Favorite,
-
+FindProvider,
 }

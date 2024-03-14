@@ -44,7 +44,6 @@ import com.example.graduationproject.R
 import com.example.graduationproject.presentation.common.CustomTextField
 import com.example.graduationproject.presentation.common.CustomTopAppBar
 import com.example.graduationproject.presentation.common.HomeTopBar
-import com.example.graduationproject.presentation.common.ScreensTemplate
 import com.example.graduationproject.ui.BottomAppBar
 import com.example.graduationproject.ui.theme.DarkBlue
 import com.example.graduationproject.ui.theme.LightBlue
@@ -61,22 +60,13 @@ fun UserHomeScreen(
     onBottomNavigationItemClick: (String) -> Unit,
 ) {
 
-    ScreensTemplate(
-        topBar = {
-            HomeTopBar(
-                onNotificationClick = onNotificationClick,
-                onMessageClick = onMessageClick,
-                onBackClick = {}, scrollBarBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-            )
-        },
-        bottomBar = { BottomAppBar(onBottomNavigationItemClick = { onBottomNavigationItemClick(it) }) }
-    ) {
+
         ServicesHomePage(
-            modifier = modifier.padding(it),
+            modifier = modifier,
             onTextFieldClick = onTextFieldClick,
             onServiceItemClick = onServiceItemClick
         )
-    }
+
 }
 
 

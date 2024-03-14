@@ -93,10 +93,10 @@ fun Login(
 
 
             CustomTextField(
-                fieldName = R.string.email,
-                fieldValue = userViewModel.email,
-                onValueChange = { userViewModel.onEmailChanged(it) },
-                isError = userViewModel.emailError
+                fieldName = R.string.username,
+                fieldValue = userViewModel.userName,
+                onValueChange = { userViewModel.onUserNameChanged(it) },
+                isError = userViewModel.userNameError
             )
             CustomTextField(
                 fieldName = R.string.password,

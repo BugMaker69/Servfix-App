@@ -10,6 +10,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.example.graduationproject.data.retrofit.TestScreenForApi
 import com.example.graduationproject.presentation.search_for_provider.FindProvider
 
 
@@ -36,6 +37,7 @@ class MainActivity : ComponentActivity() {
 //                        SignupThirdScreen(Modifier,{},{})
 //                        ShareProblem(Modifier,{},{})
 //                        BeforeSignup(onBecomeClick = { /*TODO*/ }, onHireClick = { /*TODO*/ }) {}
+                        //TestScreenForApi()
                        ServixApp()
                      //   FindProvider(Modifier,{},{},{})
                         //OnBoardingScreen(){

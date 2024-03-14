@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -36,7 +37,6 @@ import androidx.compose.ui.unit.sp
 import com.example.graduationproject.ui.BottomAppBar
 import com.example.graduationproject.presentation.common.CustomButtonAndText
 import com.example.graduationproject.R
-import com.example.graduationproject.presentation.common.ScreensTemplate
 import com.example.graduationproject.presentation.common.settings.SettingsTopBar
 import com.example.graduationproject.ui.theme.DarkBlue
 import com.example.graduationproject.ui.theme.LightBrown
@@ -45,47 +45,41 @@ import com.example.graduationproject.ui.theme.LightBrown
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun UserAccountInfoScreen(
+    innerPadding :PaddingValues,
     modifier: Modifier = Modifier,
     onAccountInfoDetailsClick: () -> Unit,
     onBackButtonOnTopNavBar: () -> Unit,
     onBottomNavigationItemClick: (String) -> Unit,
 ) {
-    ScreensTemplate(
-        topBar = { SettingsTopBar(onBackButtonOnTopNavBar = onBackButtonOnTopNavBar) },
-        bottomBar = { BottomAppBar(onBottomNavigationItemClick =  onBottomNavigationItemClick ) },
-        content = {
+
             UserAccountInfo(
-                modifier.padding(top = it.calculateTopPadding() - 10.dp),
-                onAccountInfoDetailsClick = onAccountInfoDetailsClick
-            )
-        }
-    )
+                modifier.padding(top = innerPadding.calculateTopPadding() - 10.dp),
+                onAccountInfoDetailsClick = onAccountInfoDetailsClick)
+
 }
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun UserAccountInfoDetailsScreen(
+    innerPadding: PaddingValues,
     modifier: Modifier = Modifier,
     onBackButtonOnTopNavBar: () -> Unit,
     onBottomNavigationItemClick: (String) -> Unit,
     onSaveChangesClick: () -> Unit,
     onPhotoChangeClick: () -> Unit,
 ) {
-    ScreensTemplate(
-        topBar = { SettingsTopBar(onBackButtonOnTopNavBar = onBackButtonOnTopNavBar) },
-        bottomBar = { BottomAppBar(onBottomNavigationItemClick = onBottomNavigationItemClick) },
-        content = {
+
             UserAccountInfoDetails(
                 modifier.padding(
-                    top = it.calculateTopPadding() - 10.dp,
-                    bottom = it.calculateBottomPadding()
+                    top = innerPadding.calculateTopPadding() - 10.dp,
+                    bottom = innerPadding.calculateBottomPadding()
                 ),
                 onSaveChangesClick = onSaveChangesClick,
                 onPhotoChangeClick = onPhotoChangeClick
             )
-        }
-    )
+
+
 }
 
 

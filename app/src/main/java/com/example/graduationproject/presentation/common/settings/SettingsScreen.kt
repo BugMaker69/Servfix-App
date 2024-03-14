@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -56,13 +57,13 @@ import com.example.graduationproject.presentation.accountinfo.UserAccountInfoDet
 import com.example.graduationproject.presentation.common.CustomButtonAndText
 import com.example.graduationproject.presentation.common.CustomDialog
 import com.example.graduationproject.presentation.common.CustomTopAppBar
-import com.example.graduationproject.presentation.common.ScreensTemplate
 import com.example.graduationproject.ui.theme.DarkBlue
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun SettingsScreen(
+    innerPadding:PaddingValues,
     modifier: Modifier = Modifier,
     onAccountInfoClick: () -> Unit,
     onDeleteMyAccountClick: () -> Unit,
@@ -71,19 +72,15 @@ fun SettingsScreen(
     onBackButtonOnTopNavBar: () -> Unit,
     onBottomNavigationItemClick: (String) -> Unit,
 ) {
-    ScreensTemplate(
-        topBar = { SettingsTopBar(onBackButtonOnTopNavBar = onBackButtonOnTopNavBar) },
-        bottomBar = { BottomAppBar(onBottomNavigationItemClick = { onBottomNavigationItemClick(it)
-            Log.d("SettingsScreen", "SettingsScreen String: $it")}) }
-    ) {
+
         SettingsScreenContent(
-            modifier.padding(top = it.calculateTopPadding()),
+            modifier.padding(top = innerPadding.calculateTopPadding()),
             onAccountInfoClick = onAccountInfoClick,
             onDeleteMyAccountClick = onDeleteMyAccountClick,
             onSecurityClick = onSecurityClick,
             onSignOutClick = onSignOutClick
         )
-    }
+
 }
 
 
@@ -452,15 +449,19 @@ fun SignOutDialog(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsTopBar(
+    showBack:Boolean,
     modifier: Modifier = Modifier,
     onBackButtonOnTopNavBar: () -> Unit
 ) {
     CustomTopAppBar(
         title = "Settings",
         navigationIcon = {
-            IconButton(onClick = onBackButtonOnTopNavBar) {
-                Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Back Arrow")
+            if (showBack){
+                IconButton(onClick = onBackButtonOnTopNavBar) {
+                    Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Back Arrow")
+                }
             }
+
         }, scrollBarBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     )
 }
@@ -531,5 +532,5 @@ fun SettingsScreenContentPreview() {
 @Preview(showBackground = true)
 @Composable
 fun SettingsTopBarPreview() {
-    SettingsTopBar(Modifier, {})
+    SettingsTopBar(modifier=Modifier,showBack=true){}
 }
