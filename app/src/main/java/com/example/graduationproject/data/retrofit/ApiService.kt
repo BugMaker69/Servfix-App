@@ -5,6 +5,7 @@ import com.example.graduationproject.data.LoginResponse
 import com.example.graduationproject.data.ProviderData
 import com.example.graduationproject.data.Register
 import com.example.graduationproject.data.RequsetUpdateData
+import com.example.graduationproject.data.ReturnedProviderData
 import com.example.graduationproject.data.ReturnedUserData
 import retrofit2.Response
 import retrofit2.http.Body
@@ -30,9 +31,11 @@ interface ApiService {
     @POST("/api/provider_register/")
     suspend fun postRegisterProvider(@Body register: ProviderData)
 
+    @GET("api/providerinfo/")
+    suspend fun getReturnedProviderData(@Header("Authorization") token: String): ReturnedProviderData
 
-    @GET("api/userinfo/")
-    suspend fun getReturnedProviderData(@Header("Authorization") token: String): ReturnedUserData
+    @PUT("api/providerinfo/update")
+    suspend fun updateProviderData(@Header("Authorization") token: String, @Body userData: ReturnedProviderData): ReturnedProviderData
 
 
 }
