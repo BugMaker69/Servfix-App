@@ -37,8 +37,8 @@ class MainActivity : ComponentActivity() {
 //                        SignupThirdScreen(Modifier,{},{})
 //                        ShareProblem(Modifier,{},{})
 //                        BeforeSignup(onBecomeClick = { /*TODO*/ }, onHireClick = { /*TODO*/ }) {}
-                        //TestScreenForApi()
-                       ServixApp()
+                        TestScreenForApi()
+                       //ServixApp()
                      //   FindProvider(Modifier,{},{},{})
                         //OnBoardingScreen(){
 //                        ServicesHomePage()

@@ -19,7 +19,34 @@ data class ServiceProviderCard(
     }
 
 }
+//"phone": "01210437593",
+//"username": "ahmed3",
+//"password": "pbkdf2_sha256$720000$hl4aP6I59Zbn2hXOoL2Bn9$Hym+ki7gkES5pmAz34YWCTl3Sn90qJMv4S9/DSl56jw=",
+//"email": "ahmed3@gmail.com",
+//"fixed_salary": "200",
+//"image": null,
+//"ratings": "4.00",
+//"city": "alex",
+//"address": "alex",
+//"id": 4,
+//"user": 5,
+//"profession": "carpenter",
+//"service_id": 2
+//data class (val phone:String,val userName:String,val fixed_salary: String,val image: Any,val ratings: String,val city: String,val address: String,val profession: String)
+data class ServiceProviderSearch (
 
+    @SerializedName("phone"        ) var phone       : String,
+    @SerializedName("username"     ) var username    : String,
+    @SerializedName("password"     ) var password    : String,
+    @SerializedName("email"        ) var email       : String,
+    @SerializedName("fixed_salary" ) var fixedSalary : String,
+    @SerializedName("ratings"      ) var ratings     : String,
+    @SerializedName("city"         ) var city        : String,
+    @SerializedName("address"      ) var address     : String,
+    @SerializedName("profession"   ) var profession  : String,
+    @SerializedName("service_id"   ) var serviceId   : Int
+
+)
 data class Register(
     @SerializedName("username") val userName: String = "",
     val password: String,
@@ -59,7 +86,6 @@ data class RequsetUpdateData(
     val email: String,
     val image: Any,
     val phone: String,
-    val username: String
 )
 
 data class UserData(

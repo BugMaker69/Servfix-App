@@ -48,8 +48,8 @@ fun BottomAppBar(
     onBottomNavigationItemClick: (String) -> Unit,
 ) {
     //  Filled Icon When Its Selected Else Use OutLined
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route
+//    val navBackStackEntry by navController.currentBackStackEntryAsState()
+//    val currentRoute = navBackStackEntry?.destination?.route
 
     var selectedIconIndex by rememberSaveable { mutableStateOf(0) }
 
@@ -82,13 +82,9 @@ fun BottomAppBar(
                 selected = selectedIconIndex == index,
                 onClick = {
                     selectedIconIndex = index
-                    //  Navigation
-                    Log.d("Wait", "BottomAppBar: ")
+
 
                     navController.navigate(item.title)
-                    Log.d("BottomAppBar", "BottomAppBar which Element: ${item.title} ")
-                    Log.d("BottomAppBar", "BottomAppBar which Indexxx: ${index} ")
-                    Log.d("BottomAppBar", "BottomAppBar which selectedIconIndex: ${selectedIconIndex} ")
                     onBottomNavigationItemClick(item.title)
                 },
                 icon = {

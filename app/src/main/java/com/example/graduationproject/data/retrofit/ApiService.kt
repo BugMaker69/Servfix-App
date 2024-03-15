@@ -7,6 +7,7 @@ import com.example.graduationproject.data.Register
 import com.example.graduationproject.data.RequsetUpdateData
 import com.example.graduationproject.data.ReturnedProviderData
 import com.example.graduationproject.data.ReturnedUserData
+import com.example.graduationproject.data.ServiceProviderSearch
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -23,6 +24,8 @@ interface ApiService {
 
     @GET("api/userinfo/")
     suspend fun getReturnedUserData(@Header("Authorization") token: String): ReturnedUserData
+    @GET("api/providerinfo/")
+    suspend fun getProvidersSearch(@Header("Authorization") token: String) : ServiceProviderSearch
 
     @PUT("api/userinfo/update")
     suspend fun updateUserData(@Header("Authorization") token: String, @Body userData: RequsetUpdateData): ReturnedUserData
