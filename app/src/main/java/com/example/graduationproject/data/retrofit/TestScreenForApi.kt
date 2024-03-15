@@ -41,7 +41,7 @@ fun TestScreenForApi() {
     var getuserData by remember { mutableStateOf<ReturnedUserData?>(null) }
     var getProviderData by remember { mutableStateOf<ReturnedProviderData?>(null) }
     var isClicked by remember { mutableStateOf(false) }
-    var test by remember { mutableStateOf<ServiceProviderSearch?>(null) }
+    var test by remember { mutableStateOf<List< ServiceProviderSearch>?>(null) }
 
 
     val registerUserData = Register(
@@ -148,12 +148,13 @@ fun TestScreenForApi() {
 
             coroutineScope.launch {
 
-         test=accessToken?.access?.let {
-             RetrofitClient.userRegisterationApiService().getProvidersSearch("Bearer $it")
-         }
+         test=
+             RetrofitClient.userRegisterationApiService().getProvidersSearch()
+
                 Log.d(
                     "Get Provider Data TestScreenForApi",
-                    "TestScreenForApi:  Provider Data ${test!!.profession} || ${getuserData!!.city} || ${getuserData!!.address} || ${getuserData!!.image}"
+                    //  Put data you want to see
+                    "TestScreenForApi:  Provider Data ${test!!} "
                 )
 
 

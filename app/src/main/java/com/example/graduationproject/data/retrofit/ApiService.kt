@@ -14,6 +14,7 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Path
 
 interface ApiService {
     @POST("/api/register/")
@@ -24,8 +25,8 @@ interface ApiService {
 
     @GET("api/userinfo/")
     suspend fun getReturnedUserData(@Header("Authorization") token: String): ReturnedUserData
-    @GET("api/providerinfo/")
-    suspend fun getProvidersSearch(@Header("Authorization") token: String) : ServiceProviderSearch
+    @GET("api/all/1")
+    suspend fun getProvidersSearch() : List< ServiceProviderSearch>
 
     @PUT("api/userinfo/update")
     suspend fun updateUserData(@Header("Authorization") token: String, @Body userData: RequsetUpdateData): ReturnedUserData
