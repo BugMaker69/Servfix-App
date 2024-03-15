@@ -25,8 +25,8 @@ interface ApiService {
 
     @GET("api/userinfo/")
     suspend fun getReturnedUserData(@Header("Authorization") token: String): ReturnedUserData
-    @GET("api/all/1")
-    suspend fun getProvidersSearch() : List< ServiceProviderSearch>
+    @GET("api/all/{id}")
+    suspend fun getProvidersSearch(@Path("id") id:Int) : List< ServiceProviderSearch>
 
     @PUT("api/userinfo/update")
     suspend fun updateUserData(@Header("Authorization") token: String, @Body userData: RequsetUpdateData): ReturnedUserData

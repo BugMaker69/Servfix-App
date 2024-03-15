@@ -149,7 +149,8 @@ fun TestScreenForApi() {
             coroutineScope.launch {
 
          test=
-             RetrofitClient.userRegisterationApiService().getProvidersSearch()
+             // Put Wanted Id
+             RetrofitClient.userRegisterationApiService().getProvidersSearch(2)
 
                 Log.d(
                     "Get Provider Data TestScreenForApi",
