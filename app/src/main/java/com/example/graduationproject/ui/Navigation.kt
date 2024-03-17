@@ -109,7 +109,7 @@ fun ServixApp(
                ServixScreens.Settings.name->{    SettingsTopBar(onBackButtonOnTopNavBar = {  }, showBack = false)
                 }
 
-                ServixScreens.UserHomeScreen.name->HomeTopBar(
+                ServixScreens.UserHomeScreen.name,ServixScreens.FindProvider.name->HomeTopBar(
                     onNotificationClick = { navController.navigate(ServixScreens.Notification.name) },
                     onMessageClick = { },
                     scrollBarBehavior = scrollBehavior
@@ -125,7 +125,7 @@ fun ServixApp(
         bottomBar = {
             val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
 
-            if (currentRoute in listOf(ServixScreens.Settings.name,ServixScreens.Favorite.name,ServixScreens.UserHomeScreen.name,ServixScreens.ProviderAccountInfo.name,ServixScreens.ProviderAccountInfoDetails.name))
+            if (currentRoute in listOf(ServixScreens.Settings.name,ServixScreens.Favorite.name,ServixScreens.UserHomeScreen.name,ServixScreens.ProviderAccountInfo.name,ServixScreens.ProviderAccountInfoDetails.name,ServixScreens.FindProvider.name))
          BottomAppBar(onBottomNavigationItemClick = {}, navController = navController)
         }
     ) { innerPadding->
@@ -139,9 +139,7 @@ fun ServixApp(
                 }
             }
             composable(ServixScreens.FindProvider.name) {
-              FindProvider(innerPadding,onNotificationClick = { /*TODO*/ }, onMessageClick = { /*TODO*/ }) {
-
-              }
+              FindProvider(modifier = Modifier.padding(innerPadding),onNotificationClick = { /*TODO*/ }, onMessageClick = { /*TODO*/ },{})
             }
             composable(ServixScreens.Favorite.name){
                 FavoriteScreen()

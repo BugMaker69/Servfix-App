@@ -1,6 +1,9 @@
 package com.example.graduationproject.data.retrofit
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,8 +21,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
+import com.example.graduationproject.R
 import com.example.graduationproject.data.LoginRequest
 import com.example.graduationproject.data.LoginResponse
 import com.example.graduationproject.data.ProviderData
@@ -29,6 +35,11 @@ import com.example.graduationproject.data.ReturnedProviderData
 import com.example.graduationproject.data.ReturnedUserData
 import com.example.graduationproject.data.ServiceProviderSearch
 import kotlinx.coroutines.launch
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import java.io.File
+import java.io.FileOutputStream
 
 
 @SuppressLint("DiscouragedApi")
@@ -41,29 +52,51 @@ fun TestScreenForApi() {
     var getuserData by remember { mutableStateOf<ReturnedUserData?>(null) }
     var getProviderData by remember { mutableStateOf<ReturnedProviderData?>(null) }
     var isClicked by remember { mutableStateOf(false) }
-    var test by remember { mutableStateOf<List< ServiceProviderSearch>?>(null) }
+    var test by remember { mutableStateOf<List<ServiceProviderSearch>?>(null) }
 
 
     val registerUserData = Register(
-        userName = "ahmedd0005",
-        password = "ahmed3020",
-        email = "ahmed0005@gmail.com",
+        userName = "belal",
+        password = "#Test123",
+        email = "belal@gmail.com",
         address = "alex",
         phone = "01210437593",
         city = "alex"
     )
 
     val registerProviderData = ProviderData(
-        username = "Omar003",
-        password = "#Omar003#",
-        email = "omar107@gmail.com",
-        address = "alex",
-        phone = "01111113111",
-        city = "alex",
-        fixed_salary = 500.0,
-        id_image = "mohamed.jpg",
-        profession = "Carpenter",
+        username = "aly",
+        password = "#Aly23#",
+        email = "aly@gmail.com",
+        address = "test",
+        phone = "0130982311",
+        city = "Cairo",
+        fixed_salary = 300.00,
+        id_image = "ramadan.jpg",
+        profession = "electricity",
     )
+    val addressPart =
+        RequestBody.create(MediaType.parse("text/plain"), registerProviderData.address)
+    val cityPart = RequestBody.create(MediaType.parse("text/plain"), registerProviderData.city)
+    val emailPart = RequestBody.create(MediaType.parse("text/plain"), registerProviderData.email)
+    val fixedSalaryPart = RequestBody.create(
+        MediaType.parse("text/plain"),
+        registerProviderData.fixed_salary.toString()
+    )
+    val context= LocalContext.current
+    val passwordPart =
+        RequestBody.create(MediaType.parse("text/plain"), registerProviderData.password)
+    val phonePart = RequestBody.create(MediaType.parse("text/plain"), registerProviderData.phone)
+    val professionPart =
+        RequestBody.create(MediaType.parse("text/plain"), registerProviderData.profession)
+    val usernamePart =
+        RequestBody.create(MediaType.parse("text/plain"), registerProviderData.username)
+    val imageFile = drawableToFile(context, R.drawable.person, "person.jpg")
+    val requestFile = RequestBody.create(MediaType.parse("image/jpeg"), imageFile)
+
+// Create MultipartBody.Part for the image
+    val imagePart = MultipartBody.Part.createFormData("id_image", imageFile.name, requestFile)
+
 
     val loginData = LoginRequest(
         username = "ahmedd0005",
@@ -71,8 +104,8 @@ fun TestScreenForApi() {
     )
 
     val providerLoginData = LoginRequest(
-        username = "Omar007",
-        password = "#Omar007#",
+        username = "aly",
+        password = "#Aly23#",
     )
 
     val updatedUserData = RequsetUpdateData(
@@ -88,7 +121,7 @@ fun TestScreenForApi() {
         username = "Omar005",
         password = "#Omar007#",
         email = "omar005@gmail.com",
-        fixed_salary = "200",
+        fixed_salary = 200.0,
         image = "",
         ratings = "4.4",
         city = "alex",
@@ -110,11 +143,30 @@ fun TestScreenForApi() {
         Button(onClick = {
 
             coroutineScope.launch {
-              //   Provider REGISTER
-                RetrofitClient.userRegisterationApiService()
-                    .postRegisterProvider(registerProviderData)
-                Log.d("Register done", "TestScreenForApi: Register Provider Finish")
+                // Provider REGISTER
+
+               val result= RetrofitClient.userRegisterationApiService()
+                        .postRegisterProvider(
+                            address = addressPart,
+                            city = cityPart,
+                            email = emailPart,
+                            fixed_salary = fixedSalaryPart,
+                            password = passwordPart,
+                            phone = phonePart,
+                            profession = professionPart,
+                            username = usernamePart,
+                            id_image = imagePart
+                        )
+                Log.d("wwwww", "TestScreenForApi: ${result.body()?.details.toString()}")
+
+                Log.d("wwwww", "TestScreenForApi: ${registerProviderData.profession}")
+
+
+                    Log.d("Register done", "TestScreenForApi: Register Provider Finish")
+
             }
+
+
         }) {
             Text(text = "Register")
         }
@@ -148,16 +200,15 @@ fun TestScreenForApi() {
 
             coroutineScope.launch {
 
-         test=
-             // Put Wanted Id
-             RetrofitClient.userRegisterationApiService().getProvidersSearch(2)
+                test =
+                        // Put Wanted Id
+                    RetrofitClient.userRegisterationApiService().getProvidersSearch(2)
 
                 Log.d(
                     "Get Provider Data TestScreenForApi",
                     //  Put data you want to see
                     "TestScreenForApi:  Provider Data ${test!!} "
                 )
-
 
 
 //                // Provider DATA
@@ -239,11 +290,28 @@ fun TestScreenForApi() {
         }
     }
 }
+fun drawableToFile(context: Context, drawableId: Int, fileName: String): File {
+    // Get the drawable resource
+    val drawable = ContextCompat.getDrawable(context, drawableId)
+
+    // Create a file in the internal storage
+    val file = File(context.cacheDir, fileName)
+
+    // Convert drawable to Bitmap
+    val bitmap = (drawable as BitmapDrawable).bitmap
+
+    // Write the file
+    FileOutputStream(file).use { out ->
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
+    }
+
+    return file
+}
+
 
 @Preview(showBackground = true)
 @Composable
 fun TestScreenForApiPreview() {
     TestScreenForApi()
 }
-
 
