@@ -8,12 +8,17 @@ import com.example.graduationproject.data.RequsetUpdateData
 import com.example.graduationproject.data.ReturnedProviderData
 import com.example.graduationproject.data.ReturnedUserData
 import com.example.graduationproject.data.ServiceProviderSearch
+import com.example.graduationproject.data.Test
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Part
 import retrofit2.http.Path
 
 interface ApiService {
@@ -32,8 +37,19 @@ interface ApiService {
     suspend fun updateUserData(@Header("Authorization") token: String, @Body userData: RequsetUpdateData): ReturnedUserData
 
 
+    @Multipart
     @POST("/api/provider_register/")
-    suspend fun postRegisterProvider(@Body register: ProviderData)
+    suspend fun postRegisterProvider(
+        @Part("username") username: RequestBody,
+        @Part("password") password: RequestBody,
+        @Part("email") email: RequestBody,
+        @Part("address") address: RequestBody,
+        @Part("phone") phone: RequestBody,
+        @Part("city") city: RequestBody,
+        @Part("profession") profession: RequestBody,
+        @Part("fixed_salary") fixed_salary: RequestBody,
+        @Part id_image: MultipartBody.Part
+    ): Response<Test>
 
     @GET("api/providerinfo/")
     suspend fun getReturnedProviderData(@Header("Authorization") token: String): ReturnedProviderData

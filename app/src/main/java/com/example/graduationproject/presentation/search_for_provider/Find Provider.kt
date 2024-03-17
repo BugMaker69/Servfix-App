@@ -59,6 +59,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.graduationproject.R
 import com.example.graduationproject.data.ServiceProviderCard
+import com.example.graduationproject.data.ServiceProviderSearch
 import com.example.graduationproject.presentation.common.CustomDialog
 import com.example.graduationproject.presentation.common.HomeTopBar
 import com.example.graduationproject.ui.theme.GraduationProjectTheme
@@ -68,14 +69,15 @@ import kotlinx.coroutines.flow.toList
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FindProvider(
-    innerPadding:PaddingValues,
     modifier: Modifier = Modifier,
     onNotificationClick: () -> Unit,
     onMessageClick: () -> Unit,
     onBackClick: () -> Unit
 ) {
     val findProviderViewModel: FindProviderViewModel = viewModel()
-    val serviceProviders by findProviderViewModel.serviceProviders.collectAsState()
+
+    val serviceProviders by findProviderViewModel._serviceProviders.collectAsState()
+
     val searchText by findProviderViewModel.searchText.collectAsState()
     if (findProviderViewModel.showDialog.value) {
         CustomDialog(onConfirmButtonClick = {
@@ -92,7 +94,7 @@ fun FindProvider(
         LazyColumn(
             modifier = modifier
                 .fillMaxSize()
-                .padding(innerPadding), contentPadding = PaddingValues(2.dp)
+                , contentPadding = PaddingValues(2.dp)
         ) {
             item {
                 Row(
@@ -101,7 +103,7 @@ fun FindProvider(
                 ) {
                     Icon(imageVector = Icons.Filled.ArrowRight, contentDescription = "location")
 
-                    Text(text = serviceProviders[0].category)
+                    Text(text = "category")
                     Divider(
                         color = Gray, modifier = modifier
                             .padding(horizontal = 4.dp, vertical = 4.dp)
@@ -142,9 +144,12 @@ fun FindProvider(
 
                 }
             }
-            items(serviceProviders) {
+            items(serviceProviders){
                 ProviderItem(modifier, it)
             }
+//            items(serviceProviders) {
+//
+//            }
 
         }
 //            LazyVerticalGrid(columns = GridCells.Fixed(2) ){
@@ -157,7 +162,7 @@ fun FindProvider(
 
 
 @Composable
-fun ProviderItem(modifier: Modifier, state: ServiceProviderCard) {
+fun ProviderItem(modifier: Modifier, state: ServiceProviderSearch) {
     Card(
         colors = CardDefaults.cardColors(containerColor = White),
         modifier = modifier
@@ -192,7 +197,7 @@ fun ProviderItem(modifier: Modifier, state: ServiceProviderCard) {
                         .fillMaxWidth()
                         .padding(horizontal = 20.dp, vertical = 5.dp)
                 ) {
-                    Text(text = state.name, fontWeight = FontWeight.ExtraBold, fontSize = 20.sp)
+                    Text(text = state.username, fontWeight = FontWeight.ExtraBold, fontSize = 20.sp)
                 }
                 Row(
                     modifier
@@ -205,7 +210,7 @@ fun ProviderItem(modifier: Modifier, state: ServiceProviderCard) {
                         tint = Gray,
                         modifier = Modifier.weight(0.2f)
                     )
-                    Text(state.location, color = Gray, modifier = Modifier.weight(1f))
+                    Text(state.city, color = Gray, modifier = Modifier.weight(1f))
                     Divider(
                         color = Gray, modifier = modifier
                             .padding(horizontal = 4.dp, vertical = 4.dp)
@@ -221,7 +226,7 @@ fun ProviderItem(modifier: Modifier, state: ServiceProviderCard) {
 
                         )
                     Text(
-                        state.rate.toString(), modifier = Modifier.weight(0.3f)
+                        state.ratings.toString(), modifier = Modifier.weight(0.3f)
                     )
                     Divider(
                         color = Gray, modifier = modifier
@@ -232,7 +237,7 @@ fun ProviderItem(modifier: Modifier, state: ServiceProviderCard) {
                     )
                     Icon(imageVector = Icons.Filled.Handshake, contentDescription = "")
                     Text(
-                        text = state.transactionsNum.toString(),
+                        text = "100 ",
 
                         modifier = modifier.weight(0.7f)
                     )
@@ -245,15 +250,10 @@ fun ProviderItem(modifier: Modifier, state: ServiceProviderCard) {
                         .padding(horizontal = 20.dp, vertical = 5.dp),
                 ) {
                     Text(
-                        text = state.fee.toString() + " " + stringResource(id = R.string.Egyptian_Currency),
+                        text = state.fixed_salary.toString() + " " + stringResource(id = R.string.Egyptian_Currency),
                         fontWeight = FontWeight.Bold
                     )
-                    Text(
-                        text = state.feeType,
-                        color = Gray,
-                        fontSize = 13.sp,
-                        modifier = modifier.padding(start = 7.dp, top = 7.dp)
-                    )
+
 
 
                 }
@@ -360,7 +360,7 @@ fun RateSection() {
 fun ProviderItemPrev() {
     //   ProviderItem(modifier = Modifier,SeriveProviderCard())
     GraduationProjectTheme {
-        FindProvider(PaddingValues(30.dp),Modifier, {}, onBackClick = {}, onMessageClick = {})
+        FindProvider(Modifier, {}, onBackClick = {}, onMessageClick = {})
 
     }
 }

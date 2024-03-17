@@ -39,7 +39,7 @@ data class ServiceProviderSearch (
     @SerializedName("username"     ) var username    : String,
     @SerializedName("password"     ) var password    : String,
     @SerializedName("email"        ) var email       : String,
-    @SerializedName("fixed_salary" ) var fixedSalary : String,
+    @SerializedName("fixed_salary" ) var fixed_salary: String ,
     @SerializedName("ratings"      ) var ratings     : String,
     @SerializedName("city"         ) var city        : String,
     @SerializedName("address"      ) var address     : String,
@@ -107,12 +107,13 @@ data class ProviderData(
     val profession: String,
     val username: String
 )
+data class Test(val details:String)
 
 data class ReturnedProviderData(
     val address: String,
     val city: String,
     val email: String,
-    val fixed_salary: String,
+    val fixed_salary: Double,
     val id: Int,
     val image: Any,
     val password: String,

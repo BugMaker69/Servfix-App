@@ -3,11 +3,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.example.graduationproject.data.retrofit.TestScreenForApi
@@ -38,8 +40,8 @@ class MainActivity : ComponentActivity() {
 //                        ShareProblem(Modifier,{},{})
 //                        BeforeSignup(onBecomeClick = { /*TODO*/ }, onHireClick = { /*TODO*/ }) {}
                         TestScreenForApi()
-                       //ServixApp()
-                     //   FindProvider(Modifier,{},{},{})
+                     // ServixApp()
+                    //FindProvider(Modifier,{},{},{})
                         //OnBoardingScreen(){
 //                        ServicesHomePage()
 //                        ExpandableOutlinedTextField(
