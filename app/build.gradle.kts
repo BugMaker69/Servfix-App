@@ -4,7 +4,6 @@ plugins {
     id("com.google.gms.google-services")
     id ("kotlin-kapt")
 
-
 }
 
 android {
