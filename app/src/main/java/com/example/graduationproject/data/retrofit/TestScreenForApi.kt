@@ -25,6 +25,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import com.airbnb.lottie.compose.rememberLottieDynamicProperty
 import com.example.graduationproject.R
 import com.example.graduationproject.data.LoginRequest
 import com.example.graduationproject.data.LoginResponse
@@ -76,21 +77,21 @@ fun TestScreenForApi() {
         profession = "electricity",
     )
     val addressPart =
-        RequestBody.create(MediaType.parse("text/plain"), registerProviderData.address)
-    val cityPart = RequestBody.create(MediaType.parse("text/plain"), registerProviderData.city)
-    val emailPart = RequestBody.create(MediaType.parse("text/plain"), registerProviderData.email)
+        RequestBody.create(MediaType.parse("text/plain"),"lol")
+    val cityPart = RequestBody.create(MediaType.parse("text/plain"), "registerProviderData.city")
+    val emailPart = RequestBody.create(MediaType.parse("text/plain"), "registerProviderData.email")
     val fixedSalaryPart = RequestBody.create(
         MediaType.parse("text/plain"),
-        registerProviderData.fixed_salary.toString()
+       "200.00"
     )
     val context= LocalContext.current
     val passwordPart =
-        RequestBody.create(MediaType.parse("text/plain"), registerProviderData.password)
-    val phonePart = RequestBody.create(MediaType.parse("text/plain"), registerProviderData.phone)
+        RequestBody.create(MediaType.parse("text/plain")," registerProviderData.password")
+    val phonePart = RequestBody.create(MediaType.parse("text/plain"), "0100230301")
     val professionPart =
-        RequestBody.create(MediaType.parse("text/plain"), registerProviderData.profession)
+        RequestBody.create(MediaType.parse("text/plain"), "electricity")
     val usernamePart =
-        RequestBody.create(MediaType.parse("text/plain"), registerProviderData.username)
+        RequestBody.create(MediaType.parse("text/plain"),"ahmed343242")
     val imageFile = drawableToFile(context, R.drawable.person, "person.jpg")
     val requestFile = RequestBody.create(MediaType.parse("image/jpeg"), imageFile)
 
@@ -144,8 +145,8 @@ fun TestScreenForApi() {
 
             coroutineScope.launch {
                 // Provider REGISTER
-
-               val result= RetrofitClient.userRegisterationApiService()
+                try{
+                 RetrofitClient.userRegisterationApiService()
                         .postRegisterProvider(
                             address = addressPart,
                             city = cityPart,
@@ -157,9 +158,23 @@ fun TestScreenForApi() {
                             username = usernamePart,
                             id_image = imagePart
                         )
-                Log.d("wwwww", "TestScreenForApi: ${result.body()?.details.toString()}")
+                    Log.d("toot", "TestScreenForApi:${addressPart.contentLength()} ")
+                    Log.d("toot", "TestScreenForApi:${cityPart} ")
+                    Log.d("toot", "TestScreenForApi:${imagePart} ")
 
-                Log.d("wwwww", "TestScreenForApi: ${registerProviderData.profession}")
+
+
+                }catch (Ex:Exception)
+                {
+                    Log.d("errr", "TestScreenForApi:${Ex.message.toString()} ")
+
+                }
+
+
+
+//
+//
+//                Log.d("wwwww", "TestScreenForApi: ${result.headers().get("id_image").toString()}")
 
 
                     Log.d("Register done", "TestScreenForApi: Register Provider Finish")
@@ -304,7 +319,7 @@ fun drawableToFile(context: Context, drawableId: Int, fileName: String): File {
     FileOutputStream(file).use { out ->
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
     }
-
+    Log.d("fffff", "drawableToFile: $file")
     return file
 }
 

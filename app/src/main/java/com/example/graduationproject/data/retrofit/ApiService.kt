@@ -36,7 +36,6 @@ interface ApiService {
     @PUT("api/userinfo/update")
     suspend fun updateUserData(@Header("Authorization") token: String, @Body userData: RequsetUpdateData): ReturnedUserData
 
-
     @Multipart
     @POST("/api/provider_register/")
     suspend fun postRegisterProvider(

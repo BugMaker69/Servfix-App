@@ -39,9 +39,9 @@ class MainActivity : ComponentActivity() {
 //                        SignupThirdScreen(Modifier,{},{})
 //                        ShareProblem(Modifier,{},{})
 //                        BeforeSignup(onBecomeClick = { /*TODO*/ }, onHireClick = { /*TODO*/ }) {}
-                        TestScreenForApi()
+                       // TestScreenForApi()
                      // ServixApp()
-                    //FindProvider(Modifier,{},{},{})
+                    FindProvider(Modifier,{},{},{})
                         //OnBoardingScreen(){
 //                        ServicesHomePage()
 //                        ExpandableOutlinedTextField(
