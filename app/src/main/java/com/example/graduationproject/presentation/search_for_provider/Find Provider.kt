@@ -35,7 +35,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -47,7 +46,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.Color.Companion.Yellow
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -58,21 +56,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.graduationproject.R
-import com.example.graduationproject.data.ServiceProviderCard
 import com.example.graduationproject.data.ServiceProviderSearch
 import com.example.graduationproject.presentation.common.CustomDialog
-import com.example.graduationproject.presentation.common.HomeTopBar
 import com.example.graduationproject.ui.theme.GraduationProjectTheme
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.toList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FindProvider(
     modifier: Modifier,
-    onNotificationClick: () -> Unit,
-    onMessageClick: () -> Unit,
-    onBackClick: () -> Unit
+
 ) {
     val findProviderViewModel: FindProviderViewModel = viewModel()
 
@@ -91,74 +83,74 @@ fun FindProvider(
     }
 
 
-        LazyColumn(
-            modifier = modifier
-                .fillMaxSize()
-                , contentPadding = PaddingValues(2.dp)
-        ) {
-            item {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                ) {
-                    Icon(imageVector = Icons.Filled.ArrowRight, contentDescription = "location")
-
-                    Text(text = "category")
-                    Divider(
-                        color = Gray, modifier = Modifier
-                            .padding(horizontal = 4.dp, vertical = 4.dp)
-                            .width(1.dp)
-                            .height(15.dp)
-                    )
-                    Icon(imageVector = Icons.Filled.LocationOn, contentDescription = "location")
-                    Text(text = findProviderViewModel.selectedCity.value)
-
-
-                }
-                TextField(
-                    leadingIcon = { Icon(Icons.Outlined.Search, contentDescription = "") },
-                    value = searchText,
-                    onValueChange = findProviderViewModel::onSearchTextChange,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(10.dp), colors = TextFieldDefaults.colors(
-                        focusedContainerColor = White,
-                        unfocusedContainerColor = White,
-                    ),
-                    placeholder = {
-                        Text(
-                            text = "search"
-                        )
-                    }
-                )
-                Row(modifier = Modifier
+    LazyColumn(
+        modifier = modifier
+            .fillMaxSize()
+        , contentPadding = PaddingValues(2.dp)
+    ) {
+        item {
+            Row(
+                modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 10.dp)
-                    .clickable {
-                        findProviderViewModel.showDialog.value = true
-                    }
-                ) {
-                    Text(text = stringResource(id = R.string.filters))
-                    Icon(imageVector = Icons.Filled.ArrowRight, contentDescription = "location")
+            ) {
+                Icon(imageVector = Icons.Filled.ArrowRight, contentDescription = "location")
+
+                Text(text = findProviderViewModel.serviceName)
+                Divider(
+                    color = Gray, modifier = Modifier
+                        .padding(horizontal = 4.dp, vertical = 4.dp)
+                        .width(1.dp)
+                        .height(15.dp)
+                )
+                Icon(imageVector = Icons.Filled.LocationOn, contentDescription = "location")
+                Text(text = findProviderViewModel.selectedCity.value)
 
 
+            }
+            TextField(
+                leadingIcon = { Icon(Icons.Outlined.Search, contentDescription = "") },
+                value = searchText,
+                onValueChange = findProviderViewModel::onSearchTextChange,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp), colors = TextFieldDefaults.colors(
+                    focusedContainerColor = White,
+                    unfocusedContainerColor = White,
+                ),
+                placeholder = {
+                    Text(
+                        text = "search"
+                    )
                 }
+            )
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 10.dp)
+                .clickable {
+                    findProviderViewModel.showDialog.value = true
+                }
+            ) {
+                Text(text = stringResource(id = R.string.filters))
+                Icon(imageVector = Icons.Filled.ArrowRight, contentDescription = "location")
+
+
             }
-            items(serviceProviders){
-                ProviderItem(Modifier, it)
-            }
+        }
+        items(serviceProviders){
+            ProviderItem(Modifier, it)
+        }
 //            items(serviceProviders) {
 //
 //            }
 
-        }
+    }
 //            LazyVerticalGrid(columns = GridCells.Fixed(2) ){
 //        items (20){
 //        ProviderItem(modifier,findProviderViewModel.testState.get(0))
 //       }
-        //}
+    //}
 
-    }
+}
 
 
 @Composable
@@ -360,7 +352,7 @@ fun RateSection() {
 fun ProviderItemPrev() {
     //   ProviderItem(modifier = Modifier,SeriveProviderCard())
     GraduationProjectTheme {
-        FindProvider(Modifier, {}, onBackClick = {}, onMessageClick = {})
+        FindProvider(Modifier)
 
     }
 }

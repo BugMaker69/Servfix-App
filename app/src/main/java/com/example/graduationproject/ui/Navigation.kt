@@ -112,7 +112,7 @@ fun ServixApp(
                     SettingsTopBar(onBackButtonOnTopNavBar = { }, showBack = false)
                 }
 
-                ServixScreens.UserHomeScreen.name, ServixScreens.FindProvider.name + "/{id}", ServixScreens.Favorite.name -> HomeTopBar(
+                ServixScreens.Home.name, ServixScreens.FindProvider.name + "/{id}"+"/{serviceName}", ServixScreens.Favorite.name -> HomeTopBar(
                     onNotificationClick = { navController.navigate(ServixScreens.Notification.name) },
                     onMessageClick = { },
                     scrollBarBehavior = scrollBehavior
@@ -132,10 +132,10 @@ fun ServixApp(
             if (currentRoute in listOf(
                     ServixScreens.Settings.name,
                     ServixScreens.Favorite.name,
-                    ServixScreens.UserHomeScreen.name,
+                    ServixScreens.Home.name,
                     ServixScreens.ProviderAccountInfo.name,
                     ServixScreens.ProviderAccountInfoDetails.name,
-                    ServixScreens.FindProvider.name + "/{id}"
+                    ServixScreens.FindProvider.name + "/{id}"+"/{serviceName}"
                 )
             )
                 BottomAppBar(onBottomNavigationItemClick = {}, navController = navController)
@@ -152,16 +152,17 @@ fun ServixApp(
                 }
             }
             composable(
-                ServixScreens.FindProvider.name + "/{id}", arguments = listOf(
+                ServixScreens.FindProvider.name +"/{id}"+"/{serviceName}", arguments = listOf(
                     navArgument("id") {
                         type = NavType.IntType
-                    })
+                    }, navArgument("serviceName"){
+                        type= NavType.StringType
+                    }
+                )
             ) {
                 FindProvider(
                     modifier = Modifier.padding(innerPadding),
-                    onNotificationClick = { /*TODO*/ },
-                    onMessageClick = { /*TODO*/ },
-                    {})
+               )
             }
             composable(ServixScreens.Favorite.name) {
                 FavoriteScreen(modifier = Modifier.padding(innerPadding))
@@ -171,7 +172,7 @@ fun ServixApp(
                     onLoginClick = {
                         userViewModel.login()
 
-                        navController.navigate(ServixScreens.UserHomeScreen.name)
+                        navController.navigate(ServixScreens.Home.name)
                     },
                     onSignupClick = {
                         navController.navigate(ServixScreens.BeforeSignup.name)
@@ -182,7 +183,6 @@ fun ServixApp(
                     userViewModel = userViewModel
                 )
             }
-            //  Todo How To Handle ThirdSignUp Page ?!
             composable(ServixScreens.BeforeSignup.name) {
                 BeforeSignup(
                     onBecomeClick = {
@@ -358,30 +358,23 @@ fun ServixApp(
                         if (userViewModel.isPasswordForget) {
                             navController.navigate(ServixScreens.AfterPassword.name)
                         } else {
-                            navController.navigate(ServixScreens.UserHomeScreen.name)
+                            navController.navigate(ServixScreens.Home.name)
                         }
                     }
                 )
             }
-            composable(ServixScreens.UserHomeScreen.name) {
+            composable(ServixScreens.Home.name) {
                 UserHomeScreen(
                     modifier = Modifier.padding(innerPadding),
-                    onNotificationClick = {
-                        navController.navigate(ServixScreens.Notification.name)
-                    },
-                    onMessageClick = { /*TODO*/ },
+
                     onTextFieldClick = {
                         navController.navigate(ServixScreens.ShareProblemScreen.name)
                     },
-                    onServiceItemClick = { id ->
-                        navController.navigate(ServixScreens.FindProvider.name + "/$id")
+                    onServiceItemClick = { id,serviceName ->
+                        navController.navigate(ServixScreens.FindProvider.name + "/$id"+"/$serviceName")
 
                     },
-                    //  TODO WHen Navigate the Screen Change But BottomBar Icon Not Selected Correctly
-                    onBottomNavigationItemClick = {
-                        navController.navigate(it)
-                        Log.d("NAVHOST", "ServixApp NAVHOST: $it")
-                    }
+
                 )
             }
             composable(ServixScreens.Notification.name) {
@@ -395,7 +388,7 @@ fun ServixApp(
             composable(ServixScreens.ShareProblemScreen.name) {
                 ShareProblemScreen(
                     onCancelClick = { navController.popBackStack() },
-                    onShareClick = { navController.navigate(ServixScreens.UserHomeScreen.name) })
+                    onShareClick = { navController.navigate(ServixScreens.Home.name) })
             }
             composable(ServixScreens.Test.name) {
                 TestScreen()

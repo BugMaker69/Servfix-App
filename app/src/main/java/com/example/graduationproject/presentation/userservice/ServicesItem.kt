@@ -48,11 +48,9 @@ import com.example.graduationproject.ui.theme.LightBlue
 @Composable
 fun UserHomeScreen(
     modifier: Modifier = Modifier,
-    onNotificationClick: () -> Unit,
-    onMessageClick: () -> Unit,
     onTextFieldClick: () -> Unit,
-    onServiceItemClick: (Int) -> Unit,
-    onBottomNavigationItemClick: (String) -> Unit,
+    onServiceItemClick: (Int,String) -> Unit,
+
 ) {
     val serviceViewModel: ServiceViewModel = viewModel()
 
@@ -72,7 +70,7 @@ fun ServicesHomePage(
     modifier: Modifier = Modifier,
     vm: ServiceViewModel = ServiceViewModel(),
     onTextFieldClick: () -> Unit,
-    onServiceItemClick: (Int) -> Unit,
+    onServiceItemClick: (Int,String) -> Unit,
 ) {
 
     Column(
@@ -92,7 +90,7 @@ fun ServicesHomePage(
                     Modifier,
                     R.drawable.ic_paint,
                     R.string.login,
-                    onServiceItemClick = { onServiceItemClick(it.id) })
+                    onServiceItemClick = { onServiceItemClick(it.id,it.name) })
             }
 
         }
@@ -185,11 +183,11 @@ fun ShareProblemBar(
 }
 
 
-@Preview(showBackground = true)
-@Composable
-fun UserHomeScreenPreview() {
-    UserHomeScreen(Modifier, {}, {}, {}, {}, {})
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun UserHomeScreenPreview() {
+//    UserHomeScreen(Modifier, {}, {}, {}, {3,"electricity"}, {})
+//}
 
 
 @Preview(showBackground = true)

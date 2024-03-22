@@ -2,7 +2,9 @@ package com.example.graduationproject.presentation.search_for_provider
 
 import android.annotation.SuppressLint
 import android.util.Log
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -17,7 +19,7 @@ import kotlinx.coroutines.launch
 @SuppressLint("SuspiciousIndentation")
 class FindProviderViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
     private val findProviderRepo:FindProviderSearchReopsitory= FindProviderSearchReopsitory()
-
+var serviceName by mutableStateOf("")
    var selectedCity = mutableStateOf("")
     var expandend = mutableStateOf(false)
     private var listState = MutableStateFlow(emptyList<ServiceProviderSearch>())
@@ -32,6 +34,7 @@ class FindProviderViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
 
     init {
       val id= savedStateHandle.get<Int>("id")
+         serviceName= savedStateHandle.get<String>("serviceName").toString()
         Log.d("tesstt", "$id: ")
         if (id != null) {
             getSearchProvidersList(id)
@@ -63,6 +66,9 @@ class FindProviderViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
    private fun getSearchProvidersList(id:Int){
         viewModelScope.launch (Dispatchers.IO){
           listState.value= findProviderRepo.getProvidersList(id)
+            if (listState.value.isNotEmpty()){
+//                category.value=listState.value.get(0).profession
+            }
         }
     }
 
