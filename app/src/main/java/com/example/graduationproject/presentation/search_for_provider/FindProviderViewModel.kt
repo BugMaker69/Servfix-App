@@ -8,6 +8,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.graduationproject.data.ReturnedProviderData
 import com.example.graduationproject.data.ServiceProviderSearch
 import com.example.graduationproject.data.repositories.FindProviderSearchReopsitory
 import kotlinx.coroutines.Dispatchers
@@ -22,14 +23,14 @@ class FindProviderViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
 var serviceName by mutableStateOf("")
    var selectedCity = mutableStateOf("")
     var expandend = mutableStateOf(false)
-    private var listState = MutableStateFlow(emptyList<ServiceProviderSearch>())
+    private var listState = MutableStateFlow(emptyList<ReturnedProviderData>())
     var showDialog = mutableStateOf(false)
 
     private val _searchText = MutableStateFlow("")
     val searchText = _searchText.asStateFlow()
     private val _isSearching = MutableStateFlow(false)
     val isSearching = _isSearching.asStateFlow()
-     var _serviceProviders = MutableStateFlow(listOf<ServiceProviderSearch>())
+     var _serviceProviders = MutableStateFlow(listOf<ReturnedProviderData>())
 
 
     init {
@@ -41,6 +42,8 @@ var serviceName by mutableStateOf("")
         }
         listFilteration()
     }
+    private val BASE_URL = "https://p2kjdbr8-8000.uks1.devtunnels.ms/api"
+
     fun listFilteration() {
         viewModelScope.launch(Dispatchers.IO) {
             searchText.combine(listState) { text, _ ->
@@ -65,7 +68,11 @@ var serviceName by mutableStateOf("")
     }
    private fun getSearchProvidersList(id:Int){
         viewModelScope.launch (Dispatchers.IO){
-          listState.value= findProviderRepo.getProvidersList(id)
+        val list = findProviderRepo.getProvidersList(id)
+            list.forEach {
+                it.image= BASE_URL+it.image
+            }
+            listState.value=list
             if (listState.value.isNotEmpty()){
 //                category.value=listState.value.get(0).profession
             }

@@ -55,7 +55,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
 import com.example.graduationproject.R
+import com.example.graduationproject.data.ReturnedProviderData
 import com.example.graduationproject.data.ServiceProviderSearch
 import com.example.graduationproject.presentation.common.CustomDialog
 import com.example.graduationproject.ui.theme.GraduationProjectTheme
@@ -154,7 +156,7 @@ fun FindProvider(
 
 
 @Composable
-fun ProviderItem(modifier: Modifier, state: ServiceProviderSearch) {
+fun ProviderItem(modifier: Modifier, state: ReturnedProviderData) {
     Card(
         colors = CardDefaults.cardColors(containerColor = White),
         modifier = modifier
@@ -170,12 +172,7 @@ fun ProviderItem(modifier: Modifier, state: ServiceProviderSearch) {
                     .padding(5.dp)
                     .clip(CircleShape)
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_become),
-                    contentDescription = "",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.size(100.dp),
-                )
+                AsyncImage(modifier=Modifier.size(130.dp),model =state.image, contentDescription = "")
             }
 
 

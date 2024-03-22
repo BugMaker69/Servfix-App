@@ -118,7 +118,7 @@ data class ReturnedProviderData(
     val email: String,
     val fixed_salary: Double,
     val id: Int,
-    val image: Any,
+    var image: Any,
     val password: String,
     val phone: String,
     val profession: String,
