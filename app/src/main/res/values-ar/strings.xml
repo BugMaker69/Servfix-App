@@ -80,9 +80,13 @@
     <string name="home">الرئيسية</string>
     <string name="favorite">المفضل</string>
     <string name="settings">الإعدادات</string>
-
-
-
+    <string name="accept">قبول</string>
+    <string name="reject">رفض</string>
+    <string name="see_more">رؤية المزيد</string>
+    <string name="delete">حذف</string>
+    <string name="go_back">العودة</string>
+    <string name="confirmation">تأكيد</string>
+    <string name="cancel">إلغاء</string>
 
 
     <string-array name="egypt_governorates">
