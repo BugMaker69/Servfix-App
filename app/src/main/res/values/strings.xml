@@ -78,6 +78,10 @@
     <string name="number_transactions">transactions</string>
     <string name="view_profile">view profile</string>
     <string name="filters">Filters</string>
+    <string name="home">Home</string>
+    <string name="favorite">Favorite</string>
+    <string name="settings">Settings</string>
+
 
 
 

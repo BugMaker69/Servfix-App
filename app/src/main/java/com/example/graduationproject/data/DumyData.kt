@@ -33,20 +33,22 @@ data class ServiceProviderCard(
 //"profession": "carpenter",
 //"service_id": 2
 //data class (val phone:String,val userName:String,val fixed_salary: String,val image: Any,val ratings: String,val city: String,val address: String,val profession: String)
-data class ServiceProviderSearch (
 
-    @SerializedName("phone"        ) var phone       : String,
-    @SerializedName("username"     ) var username    : String,
-    @SerializedName("password"     ) var password    : String,
-    @SerializedName("email"        ) var email       : String,
-    @SerializedName("fixed_salary" ) var fixed_salary: String ,
-    @SerializedName("ratings"      ) var ratings     : String,
-    @SerializedName("city"         ) var city        : String,
-    @SerializedName("address"      ) var address     : String,
-    @SerializedName("profession"   ) var profession  : String,
-    @SerializedName("service_id"   ) var serviceId   : Int
+data class ServiceProviderSearch(
+
+    @SerializedName("phone") var phone: String,
+    @SerializedName("username") var username: String,
+    @SerializedName("password") var password: String,
+    @SerializedName("email") var email: String,
+    @SerializedName("fixed_salary") var fixed_salary: String,
+    @SerializedName("ratings") var ratings: String,
+    @SerializedName("city") var city: String,
+    @SerializedName("address") var address: String,
+    @SerializedName("profession") var profession: String,
+    @SerializedName("service_id") var serviceId: Int
 
 )
+
 data class Register(
     @SerializedName("username") val userName: String = "",
     val password: String,
@@ -107,7 +109,8 @@ data class ProviderData(
     val profession: String,
     val username: String
 )
-data class Test(val details:String)
+
+data class Test(val details: String)
 
 data class ReturnedProviderData(
     val address: String,
@@ -123,4 +126,16 @@ data class ReturnedProviderData(
     val service_id: Int,
     val user: Int,
     val username: String
+)
+data class ServicesCategories (
+
+    @SerializedName("service" ) var service : ArrayList<Services> = arrayListOf()
+
+)
+
+data class Services(
+    val name: String,
+    val description: String,
+    var image: String,
+    val id: Int
 )

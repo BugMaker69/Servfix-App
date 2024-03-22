@@ -22,10 +22,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.graduationproject.BeforeSignup
 import com.example.graduationproject.presentation.accountinfo.ProviderAccountInfoDetailsScreen
 import com.example.graduationproject.presentation.accountinfo.ProviderAccountInfoScreen
@@ -109,7 +111,7 @@ fun ServixApp(
                ServixScreens.Settings.name->{    SettingsTopBar(onBackButtonOnTopNavBar = {  }, showBack = false)
                 }
 
-                ServixScreens.UserHomeScreen.name,ServixScreens.FindProvider.name->HomeTopBar(
+                ServixScreens.UserHomeScreen.name,ServixScreens.FindProvider.name+"/{id}",ServixScreens.Favorite.name->HomeTopBar(
                     onNotificationClick = { navController.navigate(ServixScreens.Notification.name) },
                     onMessageClick = { },
                     scrollBarBehavior = scrollBehavior
@@ -125,10 +127,11 @@ fun ServixApp(
         bottomBar = {
             val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
 
-            if (currentRoute in listOf(ServixScreens.Settings.name,ServixScreens.Favorite.name,ServixScreens.UserHomeScreen.name,ServixScreens.ProviderAccountInfo.name,ServixScreens.ProviderAccountInfoDetails.name,ServixScreens.FindProvider.name))
+            if (currentRoute in listOf(ServixScreens.Settings.name,ServixScreens.Favorite.name,ServixScreens.UserHomeScreen.name,ServixScreens.ProviderAccountInfo.name,ServixScreens.ProviderAccountInfoDetails.name,ServixScreens.FindProvider.name+"/{id}"))
          BottomAppBar(onBottomNavigationItemClick = {}, navController = navController)
         }
     ) { innerPadding->
+        Log.d("oooook", "ServixApp: ${innerPadding.toString()}")
         NavHost(
             navController = navController,
             startDestination = if (isFirstLaunch) ServixScreens.OnBoarding.name else ServixScreens.Login.name
@@ -138,11 +141,14 @@ fun ServixApp(
                     navController.navigate(ServixScreens.Login.name)
                 }
             }
-            composable(ServixScreens.FindProvider.name) {
+            composable(ServixScreens.FindProvider.name+"/{id}", arguments = listOf(
+                navArgument("id"){
+                    type= NavType.IntType
+                })) {
               FindProvider(modifier = Modifier.padding(innerPadding),onNotificationClick = { /*TODO*/ }, onMessageClick = { /*TODO*/ },{})
             }
             composable(ServixScreens.Favorite.name){
-                FavoriteScreen()
+                FavoriteScreen(modifier=Modifier.padding(innerPadding))
             }
             composable(ServixScreens.Login.name) {
                 Login(
@@ -351,7 +357,10 @@ fun ServixApp(
                     onTextFieldClick = {
                         navController.navigate(ServixScreens.ShareProblemScreen.name)
                     },
-                    onServiceItemClick = {},
+                    onServiceItemClick = {id->
+                                         navController.navigate(ServixScreens.FindProvider.name+"/$id")
+
+                    },
                     //  TODO WHen Navigate the Screen Change But BottomBar Icon Not Selected Correctly
                     onBottomNavigationItemClick = {
                         navController.navigate(it)

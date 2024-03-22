@@ -77,7 +77,9 @@
     <string name="number_transactions">معاملات</string>
     <string name="view_profile">الملف الشخصى</string>
     <string name="filters">فلترة</string>
-
+    <string name="home">الرئيسية</string>
+    <string name="favorite">المفضل</string>
+    <string name="settings">الإعدادات</string>
 
 
 

@@ -69,7 +69,7 @@ import kotlinx.coroutines.flow.toList
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FindProvider(
-    modifier: Modifier = Modifier,
+    modifier: Modifier,
     onNotificationClick: () -> Unit,
     onMessageClick: () -> Unit,
     onBackClick: () -> Unit

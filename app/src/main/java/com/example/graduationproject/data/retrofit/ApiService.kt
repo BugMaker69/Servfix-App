@@ -2,13 +2,13 @@ package com.example.graduationproject.data.retrofit
 
 import com.example.graduationproject.data.LoginRequest
 import com.example.graduationproject.data.LoginResponse
-import com.example.graduationproject.data.ProviderData
 import com.example.graduationproject.data.Register
 import com.example.graduationproject.data.RequsetUpdateData
 import com.example.graduationproject.data.ReturnedProviderData
 import com.example.graduationproject.data.ReturnedUserData
 import com.example.graduationproject.data.ServiceProviderSearch
 import com.example.graduationproject.data.Test
+import com.example.graduationproject.data.ServicesCategories
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
@@ -24,6 +24,9 @@ import retrofit2.http.Path
 interface ApiService {
     @POST("/api/register/")
     suspend fun postRegister(@Body register: Register): Response<Register>
+
+    @GET("/api/get_service/")
+    suspend fun getServices():ServicesCategories
 
     @POST("/api/token/")
     suspend fun login(@Body loginRequest: LoginRequest): Response<LoginResponse>

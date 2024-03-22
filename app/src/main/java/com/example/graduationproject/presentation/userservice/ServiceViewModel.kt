@@ -4,16 +4,43 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.geometry.Size
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.graduationproject.data.Services
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.UUID
 
 class ServiceViewModel : ViewModel() {
+    var servicesState = mutableStateOf(emptyList<Services>())
+    private val userServicesRep: UserServicesRepository = UserServicesRepository()
 
+    init {
+        getServicesList()
+    }
+
+    private val BASE_URL = "https://p2kjdbr8-8000.uks1.devtunnels.ms/api"
+
+    fun getServicesList() {
+
+        viewModelScope.launch(Dispatchers.IO) {
+            val services = userServicesRep.getServicesList()
+            services.forEach { service ->
+                service.image = BASE_URL + service.image
+
+            }
+            servicesState.value = services
+            Log.d("pppp", ": ${servicesState.value}")
+        }
+
+
+    }
     //  Share Problem   Handle Text
 
     var expandDropDownMenu by mutableStateOf(false)
@@ -27,15 +54,10 @@ class ServiceViewModel : ViewModel() {
     }
 
 
-
     //  DropdownMenu Of Service Inside Share Problem
     var selectedSentToServiceIndex by mutableStateOf(-1)
     var selectedSentToServiceValue by mutableStateOf("")
     var textfieldSentToServiceSize by mutableStateOf(Size.Zero)
-
-
-
-
 
 
     //  Share Problem   Handle Photos
@@ -81,6 +103,7 @@ class ServiceViewModel : ViewModel() {
         bitmap?.let { addImage(UUID.randomUUID().toString(), it) }
         stopLoading()
     }
+
     fun handlePermissionResult(isGranted: Boolean) {
         if (isGranted) {
             startLoading()

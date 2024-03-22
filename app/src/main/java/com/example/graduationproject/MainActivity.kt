@@ -5,6 +5,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 
@@ -13,7 +14,9 @@ import androidx.compose.ui.unit.dp
 
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.example.graduationproject.data.retrofit.TestScreenForApi
+import com.example.graduationproject.presentation.favourite.FavoriteScreen
 import com.example.graduationproject.presentation.search_for_provider.FindProvider
+import com.example.graduationproject.presentation.userservice.UserHomeScreen
 
 
 import com.example.graduationproject.ui.theme.GraduationProjectTheme
@@ -35,13 +38,21 @@ class MainActivity : ComponentActivity() {
                         Modifier
                             .fillMaxSize()
                     ) {
+                       // FavoriteScreen(Modifier.padding(PaddingValues(start=0.0.dp, top=64.0.dp, end=0.0.dp, bottom=80.0.dp)))
 //                        AnimatedTextField()
 //                        SignupThirdScreen(Modifier,{},{})
 //                        ShareProblem(Modifier,{},{})
 //                        BeforeSignup(onBecomeClick = { /*TODO*/ }, onHireClick = { /*TODO*/ }) {}
-                       // TestScreenForApi()
-                     // ServixApp()
-                    FindProvider(Modifier,{},{},{})
+                     //   TestScreenForApi()
+                      ServixApp()
+//                        UserHomeScreen(
+//                            onNotificationClick = { /*TODO*/ },
+//                            onMessageClick = { /*TODO*/ },
+//                            onTextFieldClick = { /*TODO*/ },
+//                            onServiceItemClick = { /*TODO*/ },
+//                            onBottomNavigationItemClick = {}
+//                        )
+                 //   FindProvider(Modifier,{},{},{})
                         //OnBoardingScreen(){
 //                        ServicesHomePage()
 //                        ExpandableOutlinedTextField(

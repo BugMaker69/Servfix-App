@@ -1,5 +1,6 @@
 package com.example.graduationproject.presentation.userservice
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -36,19 +38,27 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
+import coil.compose.rememberImagePainter
 import com.example.graduationproject.R
+import com.example.graduationproject.data.Services
 import com.example.graduationproject.presentation.common.CustomTextField
 import com.example.graduationproject.presentation.common.CustomTopAppBar
 import com.example.graduationproject.presentation.common.HomeTopBar
 import com.example.graduationproject.ui.BottomAppBar
 import com.example.graduationproject.ui.theme.DarkBlue
 import com.example.graduationproject.ui.theme.LightBlue
+import org.jetbrains.annotations.Async
 
 
+@SuppressLint("SuspiciousIndentation")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserHomeScreen(
@@ -56,12 +66,14 @@ fun UserHomeScreen(
     onNotificationClick: () -> Unit,
     onMessageClick: () -> Unit,
     onTextFieldClick: () -> Unit,
-    onServiceItemClick: () -> Unit,
+    onServiceItemClick: (Int) -> Unit,
     onBottomNavigationItemClick: (String) -> Unit,
 ) {
+    val serviceViewModel: ServiceViewModel= viewModel()
 
 
         ServicesHomePage(
+            vm= serviceViewModel,
             modifier = modifier,
             onTextFieldClick = onTextFieldClick,
             onServiceItemClick = onServiceItemClick
@@ -72,9 +84,10 @@ fun UserHomeScreen(
 
 @Composable
 fun ServicesHomePage(
+    vm:ServiceViewModel=ServiceViewModel(),
     modifier: Modifier = Modifier,
     onTextFieldClick: () -> Unit,
-    onServiceItemClick: () -> Unit,
+    onServiceItemClick: (Int) -> Unit,
 ) {
 
     Column(
@@ -88,12 +101,10 @@ fun ServicesHomePage(
 //        columns = GridCells.Adaptive(70.dp)
         ) {
 
-            items(10) { index ->
-                ServicesItem(Modifier, R.drawable.ic_paint, R.string.login, onServiceItemClick)
+            items(vm.servicesState.value) {
+                ServicesItem(it,Modifier, R.drawable.ic_paint, R.string.login, onServiceItemClick={onServiceItemClick(it.id)})
             }
-            item {
-                ServicesItem(Modifier, R.drawable.ic_device, R.string.login, onServiceItemClick)
-            }
+
         }
     }
 }
@@ -101,6 +112,7 @@ fun ServicesHomePage(
 
 @Composable
 fun ServicesItem(
+     service:Services,
     modifier: Modifier = Modifier,
     @DrawableRes jobImage: Int,
     @StringRes jobText: Int,
@@ -126,12 +138,13 @@ fun ServicesItem(
                 Modifier
                     .background(Color.White)
             ) {
-                Image(
-                    modifier = Modifier.fillMaxSize(),
-                    alignment = Alignment.Center,
-                    painter = painterResource(id = jobImage),
-                    contentDescription = stringResource(id = jobText),
-                )
+AsyncImage(model =service.image , contentDescription = "", contentScale = ContentScale.Crop,modifier=modifier.fillMaxWidth())
+//                Image(
+//                    modifier = Modifier.fillMaxSize(),
+//                    alignment = Alignment.Center,
+//                    painter = painterResource(id = jobImage),
+//                    contentDescription = service.description,
+//                )
             }
             Box(
                 modifier = Modifier
@@ -140,7 +153,7 @@ fun ServicesItem(
                     .padding(8.dp),
                 contentAlignment = Alignment.Center
             ) {
-                Text(text = stringResource(id = jobText), color = Color.White)
+                Text(text = service.name, color = Color.White)
             }
         }
     }
@@ -190,7 +203,7 @@ fun UserHomeScreenPreview() {
 @Preview(showBackground = true)
 @Composable
 fun ServicesHomePagePreview() {
-    ServicesHomePage(Modifier, {}, {})
+   // ServicesHomePage(Modifier, {}, {})
 }
 
 
@@ -204,5 +217,5 @@ fun ShareProblemBarPreview() {
 @Preview(showBackground = true)
 @Composable
 fun ServicesItemPreview() {
-    ServicesItem(Modifier, R.drawable.ic_paint, R.string.login, {})
+   // ServicesItem(Modifier, R.drawable.ic_paint, R.string.login, {})
 }
