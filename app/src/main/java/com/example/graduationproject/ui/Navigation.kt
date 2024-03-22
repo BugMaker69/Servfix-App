@@ -101,18 +101,16 @@ fun ServixApp(
 
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            val currentRoute =
-                navController.currentBackStackEntryAsState().value?.destination?.route
-            when (currentRoute) {
+            when (navController.currentBackStackEntryAsState().value?.destination?.route) {
                 ServixScreens.ProviderAccountInfo.name, ServixScreens.ProviderAccountInfoDetails.name, ServixScreens.UserAccountInfo.name -> {
-                    SettingsTopBar(onBackButtonOnTopNavBar = { }, showBack = true)
+                    SettingsTopBar(onBackButtonOnTopNavBar = { }, showBack = true, scrollBarBehavior = scrollBehavior)
                 }
 
                 ServixScreens.Settings.name -> {
-                    SettingsTopBar(onBackButtonOnTopNavBar = { }, showBack = false)
+                    SettingsTopBar(onBackButtonOnTopNavBar = { }, showBack = false,scrollBarBehavior = scrollBehavior)
                 }
 
-                ServixScreens.Home.name, ServixScreens.FindProvider.name + "/{id}"+"/{serviceName}", ServixScreens.Favorite.name -> HomeTopBar(
+                ServixScreens.Home.name, ServixScreens.FindProvider.name + "/{id}" + "/{serviceName}", ServixScreens.Favorite.name -> HomeTopBar(
                     onNotificationClick = { navController.navigate(ServixScreens.Notification.name) },
                     onMessageClick = { },
                     scrollBarBehavior = scrollBehavior
@@ -135,13 +133,12 @@ fun ServixApp(
                     ServixScreens.Home.name,
                     ServixScreens.ProviderAccountInfo.name,
                     ServixScreens.ProviderAccountInfoDetails.name,
-                    ServixScreens.FindProvider.name + "/{id}"+"/{serviceName}"
+                    ServixScreens.FindProvider.name + "/{id}" + "/{serviceName}"
                 )
             )
-                BottomAppBar(onBottomNavigationItemClick = {}, navController = navController)
+                BottomAppBar( navController = navController)
         }
     ) { innerPadding ->
-        Log.d("oooook", "ServixApp: ${innerPadding.toString()}")
         NavHost(
             navController = navController,
             startDestination = if (isFirstLaunch) ServixScreens.OnBoarding.name else ServixScreens.Login.name
@@ -152,17 +149,17 @@ fun ServixApp(
                 }
             }
             composable(
-                ServixScreens.FindProvider.name +"/{id}"+"/{serviceName}", arguments = listOf(
+                ServixScreens.FindProvider.name + "/{id}" + "/{serviceName}", arguments = listOf(
                     navArgument("id") {
                         type = NavType.IntType
-                    }, navArgument("serviceName"){
-                        type= NavType.StringType
+                    }, navArgument("serviceName") {
+                        type = NavType.StringType
                     }
                 )
             ) {
                 FindProvider(
                     modifier = Modifier.padding(innerPadding),
-               )
+                )
             }
             composable(ServixScreens.Favorite.name) {
                 FavoriteScreen(modifier = Modifier.padding(innerPadding))
@@ -262,18 +259,16 @@ fun ServixApp(
             }
             composable(ServixScreens.ProviderAccountInfo.name) {
                 ProviderAccountInfoScreen(
-                    innerPadding = innerPadding,
+                    modifier = Modifier.padding(innerPadding),
                     onAccountInfoDetailsClick = {
                         navController.navigate(ServixScreens.ProviderAccountInfoDetails.name)
                     },
-                    onBackButtonOnTopNavBar = { navController.popBackStack() },
-                    onBottomNavigationItemClick = {}
                 )
             }
             composable(ServixScreens.ProviderAccountInfoDetails.name) {
-                ProviderAccountInfoDetailsScreen(innerPadding = innerPadding,
-                    onBackButtonOnTopNavBar = { navController.popBackStack() },
-                    onBottomNavigationItemClick = {},
+                ProviderAccountInfoDetailsScreen(
+                    modifier = Modifier.padding(innerPadding),
+
                     onSaveChangesClick = { /*TODO*/ },
                     onPhotoChangeClick = {}
                 )
@@ -370,12 +365,12 @@ fun ServixApp(
                     onTextFieldClick = {
                         navController.navigate(ServixScreens.ShareProblemScreen.name)
                     },
-                    onServiceItemClick = { id,serviceName ->
-                        navController.navigate(ServixScreens.FindProvider.name + "/$id"+"/$serviceName")
+                    onServiceItemClick = { id, serviceName ->
+                        navController.navigate(ServixScreens.FindProvider.name + "/$id" + "/$serviceName")
 
                     },
 
-                )
+                    )
             }
             composable(ServixScreens.Notification.name) {
                 NotificationScreen(

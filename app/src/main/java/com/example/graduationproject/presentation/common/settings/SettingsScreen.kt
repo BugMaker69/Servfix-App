@@ -449,6 +449,8 @@ fun SignOutDialog(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsTopBar(
+    scrollBarBehavior:TopAppBarScrollBehavior,
+
     showBack:Boolean,
     modifier: Modifier = Modifier,
     onBackButtonOnTopNavBar: () -> Unit
@@ -462,7 +464,7 @@ fun SettingsTopBar(
                 }
             }
 
-        }, scrollBarBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+        }, scrollBarBehavior =scrollBarBehavior
     )
 }
 
@@ -532,5 +534,5 @@ fun SettingsScreenContentPreview() {
 @Preview(showBackground = true)
 @Composable
 fun SettingsTopBarPreview() {
-    SettingsTopBar(modifier=Modifier,showBack=true){}
+  //  SettingsTopBar(modifier=Modifier,showBack=true){}
 }

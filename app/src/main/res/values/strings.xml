@@ -89,6 +89,7 @@
     <string name="go_back">Go Back</string>
     <string name="confirmation">Confirmation</string>
     <string name="cancel">Cancel</string>
+    <string name="messages">Messages</string>
 
 
     <string-array name="egypt_governorates">

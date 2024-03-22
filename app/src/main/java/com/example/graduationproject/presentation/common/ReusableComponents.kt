@@ -134,9 +134,7 @@ fun HomeTopBar(
             IconButton(onClick = onNotificationClick) {
                 Icon(imageVector = Icons.Filled.Notifications, contentDescription = "Notifications")
             }
-            IconButton(onClick = onMessageClick) {
-                Icon(imageVector = Icons.Filled.Message, contentDescription = "Message")
-            }
+
         }
     )
 }

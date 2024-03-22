@@ -46,15 +46,13 @@ import com.example.graduationproject.ui.theme.LightBrown
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ProviderAccountInfoScreen(
-    innerPadding: PaddingValues,
-    modifier: Modifier = Modifier,
+    modifier: Modifier,
     onAccountInfoDetailsClick: () -> Unit,
-    onBackButtonOnTopNavBar: () -> Unit,
-    onBottomNavigationItemClick: (String) -> Unit,
+
 ) {
 
             ProviderAccountInfo(
-                modifier.padding(top = innerPadding.calculateTopPadding() - 10.dp, bottom = innerPadding.calculateBottomPadding()),
+              modifier=modifier,
                 onAccountInfoDetailsClick = onAccountInfoDetailsClick
             )
         }
@@ -65,16 +63,13 @@ fun ProviderAccountInfoScreen(
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ProviderAccountInfoDetailsScreen(
-    innerPadding: PaddingValues,
-    modifier: Modifier = Modifier,
-    onBackButtonOnTopNavBar: () -> Unit,
-    onBottomNavigationItemClick: (String) -> Unit,
+    modifier: Modifier,
     onSaveChangesClick: () -> Unit,
     onPhotoChangeClick: () -> Unit,
 ) {
 
             ProviderAccountInfoDetails(
-                modifier.padding(top = innerPadding.calculateTopPadding() - 10.dp, bottom = innerPadding.calculateBottomPadding()),
+modifier=modifier,
                 onSaveChangesClick = onSaveChangesClick,
                 onPhotoChangeClick = onPhotoChangeClick
             )

@@ -87,6 +87,8 @@
     <string name="go_back">العودة</string>
     <string name="confirmation">تأكيد</string>
     <string name="cancel">إلغاء</string>
+    <string name="messages">الرسائل</string>
+
 
 
     <string-array name="egypt_governorates">
