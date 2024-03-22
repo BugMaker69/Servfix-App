@@ -1,4 +1,4 @@
-package com.example.graduationproject.presentation.userservice
+package com.example.graduationproject.data.repositories
 
 import com.example.graduationproject.data.Services
 import com.example.graduationproject.data.retrofit.RetrofitClient
