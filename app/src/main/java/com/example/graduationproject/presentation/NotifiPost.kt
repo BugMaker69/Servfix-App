@@ -1,6 +1,10 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.example.graduationproject.presentation
 
 import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -12,6 +16,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -19,6 +26,7 @@ import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,26 +38,36 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.graduationproject.R
 import com.example.graduationproject.presentation.common.CustomButtonAndText
 import com.example.graduationproject.presentation.common.CustomDialog
+import com.example.graduationproject.presentation.userservice.ServiceViewModel
 import com.example.graduationproject.ui.theme.DarkBlue
 
 
+//  TODO HARD WRITTEN TEXT,IMAGE NEED TO BE DYNAMIC AND CREATE VIEWMODEL
+
 @Composable
-fun NotifiPostItem() {
+fun NotifiPostItem(
+    modifier: Modifier = Modifier,
+    onNotifiPostItemClick: () -> Unit,
+) {
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
 //            .fillMaxHeight(.6f)
             .padding(8.dp),
+        onClick = onNotifiPostItemClick,
 
         ) {
         Text(
@@ -60,7 +78,7 @@ fun NotifiPostItem() {
             style = TextStyle(textAlign = TextAlign.Start)
         )
         Text(
-            text = "See More",
+            text = stringResource(R.string.see_more),
             modifier = Modifier
                 .padding(end = 8.dp, bottom = 8.dp)
                 .align(Alignment.End),
@@ -72,7 +90,25 @@ fun NotifiPostItem() {
 
 
 @Composable
-fun NotifiPostItemDetail() {
+fun NotifiPostItems(
+    modifier: Modifier = Modifier,
+    onNotifiPostItemClick: () -> Unit,
+) {
+    LazyColumn(
+
+    ) {
+        items(10) {
+            NotifiPostItem(Modifier, onNotifiPostItemClick)
+        }
+    }
+}
+
+
+@Composable
+fun NotifiPostItemDetail(
+    modifier: Modifier = Modifier,
+
+    ) {
 
     Card(
         modifier = Modifier
@@ -91,13 +127,6 @@ fun NotifiPostItemDetail() {
             Icon(imageVector = Icons.Filled.ArrowBackIosNew, contentDescription = "Go Back")
         }
 
-        /*
-                IconButton(onClick = { */
-        /*TODO*//*
- }) {
-            Icon(imageVector = Icons.Default.ArrowBackIosNew, contentDescription = "Go Back")
-        }
-*/
 
         Text(
             text = "HelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHelloHello",
@@ -110,7 +139,6 @@ fun NotifiPostItemDetail() {
                 .padding(16.dp)
                 .clip(RoundedCornerShape(16.dp))
                 .align(Alignment.CenterHorizontally),
-//                    .border(width = .21.dp, shape = RoundedCornerShape(32.dp), color = Color.Black)
         ) {
             Image(
                 //  TODO Image Want To Be Dynamic I don't Know yet if i will use painter or ImageVector or What?
@@ -144,28 +172,29 @@ fun NotifiPostItemDetail() {
             )
         }
 
-//        Image(painter = painterResource(id = R.drawable.forgot_password), contentDescription = "", modifier = Modifier)
-
     }
 
 }
 
 
 @Composable
-fun AddWorkToProfileItem() {
+fun AddWorkToProfileItem(
+    modifier: Modifier = Modifier,
+    onAddWorkToProfileItemOpenPhoto: () -> Unit,
+) {
 
     Box(
         modifier = Modifier
-            .size(300.dp)
-            .padding(16.dp)
-            .clip(RoundedCornerShape(16.dp))
-//                    .border(width = .21.dp, shape = RoundedCornerShape(32.dp), color = Color.Black)
+            .size(150.dp)
+            .padding(4.dp)
+            .clickable { onAddWorkToProfileItemOpenPhoto() }
+//            .clip(RoundedCornerShape(16.dp))
     ) {
         Image(
             //  TODO Image Want To Be Dynamic I don't Know yet if i will use painter or ImageVector or What?
             painter = painterResource(id = R.drawable.forgot_password),
             contentDescription = "",
-            contentScale = ContentScale.Crop,
+//            contentScale = ContentScale.Crop,
             modifier = Modifier.align(Alignment.Center)
 //                modifier = Modifier.size(300.dp),
         )
@@ -175,11 +204,23 @@ fun AddWorkToProfileItem() {
 
 
 @Composable
-fun AddNeWorkToProfileItem() {
+fun AddNeWorkToProfileItem(
+    modifier: Modifier = Modifier,
+    serviceViewModel: ServiceViewModel = viewModel()
+) {
+
+
+    val context = LocalContext.current
+
+
+    val galleryLauncher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetMultipleContents()) { uris ->
+            serviceViewModel.handleGalleryResult(context, uris)
+        }
 
     Box(
         modifier = Modifier
-            .size(100.dp)
+            .size(150.dp)
             .padding(8.dp),
         contentAlignment = Alignment.Center,
     ) {
@@ -228,7 +269,12 @@ fun AddNeWorkToProfileItem() {
                 .align(Alignment.Center)
                 .clip(RoundedCornerShape(8.dp))
                 .background(DarkBlue)
-                .clickable { Log.d("CustomUI", "CustomUI: Clicked") }
+                .clickable {
+                    if (serviceViewModel.imageMap.size != serviceViewModel.maxImages) {
+                        serviceViewModel.startLoading()
+                        galleryLauncher.launch("image/*")
+                    }
+                }
 
         ) {
             Icon(imageVector = Icons.Filled.Add, contentDescription = "")
@@ -240,7 +286,34 @@ fun AddNeWorkToProfileItem() {
 
 
 @Composable
-fun SeeWork() {
+fun AddNeWorkToProfileItems(
+    modifier: Modifier = Modifier,
+    onAddWorkToProfileItemOpenPhoto: () -> Unit,
+    serviceViewModel: ServiceViewModel = viewModel()
+) {
+
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(3),
+        verticalArrangement = Arrangement.Center,
+        horizontalArrangement = Arrangement.Center
+    ) {
+        item {
+            AddNeWorkToProfileItem()
+        }
+        items(10) {
+            AddWorkToProfileItem(onAddWorkToProfileItemOpenPhoto = onAddWorkToProfileItemOpenPhoto)
+        }
+    }
+
+}
+
+
+@Composable
+fun SeeWork(
+    modifier: Modifier = Modifier,
+    onBackIconClick: () -> Unit,
+    onDeleteIconClick: () -> Unit,
+) {
 
     Card(
         modifier = Modifier
@@ -258,22 +331,26 @@ fun SeeWork() {
             Box(
                 modifier = Modifier
                     .clip(RoundedCornerShape(8.dp))
-                    .clickable { Log.d("CustomUI", "Go Back") }
+                    .clickable { onBackIconClick() }
 
             ) {
-                Icon(imageVector = Icons.Filled.ArrowBackIosNew, contentDescription = "Go Back")
+                Icon(
+                    imageVector = Icons.Filled.ArrowBackIosNew, contentDescription = stringResource(
+                        R.string.go_back
+                    )
+                )
             }
 
             Box(
                 modifier = Modifier
                     .clip(RoundedCornerShape(8.dp))
-                    .clickable { Log.d("CustomUI", "Delete") }
+                    .clickable { onDeleteIconClick() }
 
             ) {
                 Icon(
                     imageVector = Icons.Filled.Delete,
                     tint = Color.Red,
-                    contentDescription = "Delete"
+                    contentDescription = stringResource(R.string.delete)
                 )
             }
 
@@ -299,21 +376,26 @@ fun SeeWork() {
 
 
 @Composable
-fun DeleteImageDialog() {
+fun DeleteImageDialog(
+    modifier: Modifier = Modifier,
+    onDismissButtonClick: () -> Unit,
+    onConfirmButtonClick: () -> Unit,
+
+    ) {
 
     CustomDialog(
         title = {
             Text(
-                text = "Confirmation",
+                text = stringResource(R.string.confirmation),
                 modifier = Modifier,
                 style = TextStyle(textAlign = TextAlign.Center)
             )
         },
         text = { Text(text = "Are you sure you want to Delete It?") },
-        dismissButtonText = "Cancel",
+        dismissButtonText = stringResource(R.string.cancel),
         confirmButtonText = "Delete",
-        onDismissButtonClick = {},
-        onConfirmButtonClick = {},
+        onDismissButtonClick = onDismissButtonClick,
+        onConfirmButtonClick = onConfirmButtonClick,
     )
 
 }
@@ -322,7 +404,7 @@ fun DeleteImageDialog() {
 @Preview(showBackground = true)
 @Composable
 fun NotifiPostItemPreview() {
-    NotifiPostItem()
+    NotifiPostItem(Modifier, {})
 }
 
 
@@ -336,7 +418,7 @@ fun NotifiPostItemDetailPreview() {
 @Preview(showBackground = true)
 @Composable
 fun AddWorkToProfileItemPreview() {
-    AddWorkToProfileItem()
+    AddWorkToProfileItem(Modifier, {})
 }
 
 
@@ -350,12 +432,26 @@ fun AddNeWorkToProfileItemPreview() {
 @Preview(showBackground = true)
 @Composable
 fun SeeWorkPreview() {
-    SeeWork()
+    SeeWork(Modifier, {}, {})
 }
 
 
 @Preview(showBackground = true)
 @Composable
 fun DeleteImageDialogPreview() {
-    DeleteImageDialog()
+    DeleteImageDialog(Modifier, {}, {})
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun AddNeWorkToProfileItemsPreview() {
+    AddNeWorkToProfileItems(Modifier,{})
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun NotifiPostItemsPreview() {
+    NotifiPostItems(Modifier, {})
 }
