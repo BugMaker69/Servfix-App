@@ -98,14 +98,14 @@ fun FindProvider(
         ) {
             item {
                 Row(
-                    modifier = modifier
+                    modifier = Modifier
                         .fillMaxWidth()
                 ) {
                     Icon(imageVector = Icons.Filled.ArrowRight, contentDescription = "location")
 
                     Text(text = "category")
                     Divider(
-                        color = Gray, modifier = modifier
+                        color = Gray, modifier = Modifier
                             .padding(horizontal = 4.dp, vertical = 4.dp)
                             .width(1.dp)
                             .height(15.dp)
@@ -119,7 +119,7 @@ fun FindProvider(
                     leadingIcon = { Icon(Icons.Outlined.Search, contentDescription = "") },
                     value = searchText,
                     onValueChange = findProviderViewModel::onSearchTextChange,
-                    modifier = modifier
+                    modifier = Modifier
                         .fillMaxWidth()
                         .padding(10.dp), colors = TextFieldDefaults.colors(
                         focusedContainerColor = White,
@@ -131,7 +131,7 @@ fun FindProvider(
                         )
                     }
                 )
-                Row(modifier = modifier
+                Row(modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 10.dp)
                     .clickable {
@@ -145,7 +145,7 @@ fun FindProvider(
                 }
             }
             items(serviceProviders){
-                ProviderItem(modifier, it)
+                ProviderItem(Modifier, it)
             }
 //            items(serviceProviders) {
 //
