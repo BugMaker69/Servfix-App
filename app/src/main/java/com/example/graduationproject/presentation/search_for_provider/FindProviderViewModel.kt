@@ -9,7 +9,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.graduationproject.data.ReturnedProviderData
-import com.example.graduationproject.data.ServiceProviderSearch
 import com.example.graduationproject.data.repositories.FindProviderSearchReopsitory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

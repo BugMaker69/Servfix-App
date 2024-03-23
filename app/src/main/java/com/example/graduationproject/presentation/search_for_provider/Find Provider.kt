@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -26,6 +27,7 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -56,9 +58,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import com.example.graduationproject.R
 import com.example.graduationproject.data.ReturnedProviderData
-import com.example.graduationproject.data.ServiceProviderSearch
 import com.example.graduationproject.presentation.common.CustomDialog
 import com.example.graduationproject.ui.theme.GraduationProjectTheme
 
@@ -172,7 +174,18 @@ fun ProviderItem(modifier: Modifier, state: ReturnedProviderData) {
                     .padding(5.dp)
                     .clip(CircleShape)
             ) {
-                AsyncImage(modifier=Modifier.size(130.dp),model =state.image, contentDescription = "")
+                SubcomposeAsyncImage(
+                    model = state.image,
+                    clipToBounds = true,
+                    contentDescription = "",
+                    contentScale = ContentScale.Crop,
+                    modifier = modifier
+                        .size(130.dp),
+                    loading = { CircularProgressIndicator(modifier.wrapContentSize()) },
+                    error = { Image(painter = painterResource(id = R.drawable.ic_become), contentDescription = "")}
+                )
+
+
             }
 
 
