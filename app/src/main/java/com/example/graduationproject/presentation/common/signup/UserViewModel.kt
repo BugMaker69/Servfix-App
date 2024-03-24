@@ -1,6 +1,9 @@
 package com.example.graduationproject.presentation.common.signup
 
 import android.app.Activity
+import android.content.Context
+import android.graphics.Bitmap
+import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -9,8 +12,10 @@ import androidx.compose.ui.geometry.Size
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.graduationproject.R
+import com.example.graduationproject.data.AddProviderRepository
 import com.example.graduationproject.data.LoginRequest
 import com.example.graduationproject.data.Register
+import com.example.graduationproject.data.Test
 import com.example.graduationproject.data.retrofit.RetrofitClient
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
@@ -21,9 +26,10 @@ import com.google.firebase.auth.PhoneAuthProvider
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import retrofit2.Response
 import java.util.concurrent.TimeUnit
 
-class UserViewModel() : ViewModel() {
+class UserViewModel(ctx:Context): ViewModel() {
     private val apiService = RetrofitClient.userRegisterationApiService()
 
 
@@ -180,8 +186,9 @@ class UserViewModel() : ViewModel() {
     }
 
     val phoneNumberregex = "^01[0|1|2|5]\\d{8}$".toRegex()
-    val Emailregex = "^[a-zA-Z]{4,}.*@.*\\.[a-zA-Z]+".toRegex()
-    val fullnameregex = "^[a-zA-Z]{4,} [a-zA-Z]{4,}".toRegex()
+    val Emailregex = "^[a-zA-Z]{3,}.*@.*\\.[a-zA-Z]+".toRegex()
+//    val fullnameregex = "^[a-zA-Z]{3,} [a-zA-Z]{3,}".toRegex()
+    val fullnameregex = "^[a-zA-Z]{3,}(\\s+[a-zA-Z]{3,})+".toRegex()
     val passwordregex = "^(?=.*[A-Z])(?=.*[^\\s\\w])[A-Za-z\\d[^\\s\\w]]{8,}$".toRegex()
 
 
@@ -213,7 +220,7 @@ class UserViewModel() : ViewModel() {
     val usernameRequirements = listOf(
         R.string.username_requirement_words to { s: String ->
             s.split(" ")
-                .filter { it.all { c -> c.isLetter() || c.isWhitespace() } && it.length >= 4 }.size >= 2
+                .filter { it.all { c -> c.isLetter() || c.isWhitespace() } && it.length >= 3 }.size >= 2
         })
 
     val phoneNumberRequirements = listOf(
@@ -222,7 +229,7 @@ class UserViewModel() : ViewModel() {
     )
 
     val emailRequirements = listOf(
-        R.string.email_requirement_format to { s: String -> s.matches("^[a-zA-Z]{4,}.*@.*\\.[a-zA-Z]+".toRegex()) }
+        R.string.email_requirement_format to { s: String -> s.matches("^[a-zA-Z]{3,}.*@.*\\.[a-zA-Z]+".toRegex()) }
     )
 
 
@@ -332,6 +339,152 @@ class UserViewModel() : ViewModel() {
 
     }
 
+    val isLoading = mutableStateOf(false)
+    var idImageFileError by mutableStateOf(false)
+    var showText by mutableStateOf(false)
+    var imageUri by mutableStateOf<Uri?>(null)
+
+    fun startLoading() {
+        isLoading.value = true
+    }
+
+    fun stopLoading() {
+        isLoading.value = false
+    }
+
+/*    fun handleGalleryResultForIdImage(context: Context, uri: Uri) {
+        context.contentResolver.openInputStream(uri)?.use { inputStream ->
+            idImageFile = BitmapFactory.decodeStream(inputStream)
+        }
+        idImageFileError = false
+        showText = false
+        stopLoading()
+    }
+
+
+    var workImageFile by mutableStateOf<Bitmap?>(null)
+    fun handleGalleryResultForWork(context: Context, uri: Uri) {
+        context.contentResolver.openInputStream(uri)?.use { inputStream ->
+            workImageFile = BitmapFactory.decodeStream(inputStream)
+        }
+    }*/
+
+    fun thirdSignUpFinish() {
+        if (imageUri == null) {
+            idImageFileError = true
+            showText = true
+        }
+    }
+
+
+    private val addProviderRepository = AddProviderRepository(ctx)
+    fun prepareProvideRegister(
+        address: String,
+        city: String,
+        email: String,
+        fixed_salary: String,
+        id_image: Uri,
+        password: String,
+        phone: String,
+        profession: String,
+        username: String,
+    ) {
+        addProviderRepository.UploadProvider(
+            address =  address,
+            city =  city,
+            email =  email,
+            fixed_salary =  fixed_salary,
+            id_image =  id_image,
+            password =  password,
+            phone =  phone,
+            profession =  profession,
+            username =  username,
+        )
+
+    }
+
+    fun providerRegister(){
+        prepareProvideRegister(
+            address =  address,
+            city =  selectedCityValue,
+            email =  emailN,
+            fixed_salary =  fixedSalary,
+            id_image =  imageUri!!,
+            password =  passwordN,
+            phone =  phone,
+            profession =  selectedServiceValue,
+            username =  userName,
+        )
+    }
+
+
+
+
+
+
+
+/*
+    fun provideRegister() {
+
+        */
+/*        val provideRegisterData = ProviderData(
+                    address = address,
+                    city=selectedCityValue,
+                    email=emailN,
+                    fixed_salary=fixedSalary,
+                    id_image=idImageBitmap!!,
+                    password=passwordN,
+                    phone=phone,
+                    profession=selectedServiceValue,
+                    username=userName
+                )*//*
+
+
+        val byteArrayOutputStream = ByteArrayOutputStream()
+        idImageFile!!.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
+        val byteArray = byteArrayOutputStream.toByteArray()
+
+        val requestBody = RequestBody.create("image/jpeg".toMediaTypeOrNull(), byteArray)
+        val multipartBody = MultipartBody.Part.createFormData("image", "file.jpg", requestBody)
+
+        viewModelScope.launch {
+            RetrofitClient.userRegisterationApiService().postRegisterProvider(
+                address = address.toRequestBody(),
+                city = selectedCityValue.toRequestBody(),
+                email = emailN.toRequestBody(),
+                fixed_salary = fixedSalary.toRequestBody(),
+                id_image = multipartBody,
+                password = passwordN.toRequestBody(),
+                phone = phone.toRequestBody(),
+                profession = selectedServiceValue.toRequestBody(),
+                username = userName.toRequestBody()
+            )
+
+            Log.d("toot", "TestScreenForApi:${test.toString()} ")
+            Log.d("toot", "TestScreenForApi: send ? ${test?.isSuccessful} ")
+            Log.d("toot", "TestScreenForApi:${test?.body().toString()} ")
+            Log.d("toot", "TestScreenForApi:${address} ")
+            Log.d("toot", "TestScreenForApi:${selectedServiceValue} ")
+            Log.d("toot", "TestScreenForApi:${selectedCityValue} ")
+            Log.d("toot", "TestScreenForApi:${multipartBody.toString()} ")
+            Log.d("toot", "TestScreenForApi:${multipartBody.body} ")
+            Log.d("toot", "TestScreenForApi:${multipartBody.headers} ")
+
+
+        }
+
+
+        Log.d("toot", "TestScreenForApi:${test.toString()} ")
+        Log.d("toot", "TestScreenForApi:${test?.isSuccessful} ")
+        Log.d("toot", "TestScreenForApi:${test?.body()} ")
+
+        Log.d("toot12", "TestScreenForApi:${address} ")
+        Log.d("toot12", "TestScreenForApi:${selectedCityValue} ")
+        Log.d("toot12", "TestScreenForApi:${multipartBody.body} ")
+    }
+*/
+
+
     fun onFinishSignupClick() {
         callbackmaker()
     }
@@ -355,6 +508,7 @@ class UserViewModel() : ViewModel() {
             Log.d("soon", "sendVerificationCode: ")
         }
     }
+
     fun registerUser() {
         val register = Register(
             userName = userName,
@@ -375,12 +529,16 @@ class UserViewModel() : ViewModel() {
                 Log.d("boolo", "registerUser: done")
                 val registeredUser = response.body()
             } else {
-                Log.d("boolo", "registerUser: not done. Status code: ${response.code()}, Error message: ${response.message()}")
+                Log.d(
+                    "boolo",
+                    "registerUser: not done. Status code: ${response.code()}, Error message: ${response.message()}"
+                )
 
             }
         }
     }
-    fun login(){
+
+    fun login() {
         val loginRequest = LoginRequest(username = email, password = password)
         viewModelScope.launch {
             val response = apiService.login(loginRequest)
@@ -388,13 +546,18 @@ class UserViewModel() : ViewModel() {
             if (response.isSuccessful) {
                 val loginResponse = response.body()
                 if (loginResponse != null) {
-                    Log.d("bqq", "login: ${loginResponse.refresh+" wait"+ loginResponse.access}")
+                    Log.d("bqq", "login: ${loginResponse.refresh + " wait" + loginResponse.access}")
                     // Save the tokens
                 } else {
                     Log.d("bqq", "error1")
                 }
             } else {
-                Log.d("bqq", "error2, HTTP status code: ${response.code()}, error body: ${response.errorBody()?.string()}")
+                Log.d(
+                    "bqq",
+                    "error2, HTTP status code: ${response.code()}, error body: ${
+                        response.errorBody()?.string()
+                    }"
+                )
 
             }
         }

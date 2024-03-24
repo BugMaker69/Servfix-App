@@ -44,6 +44,7 @@ import com.example.graduationproject.presentation.common.signup.SignupFirstScree
 import com.example.graduationproject.presentation.common.signup.SignupSecondScreen
 import com.example.graduationproject.presentation.common.signup.SignupThirdScreen
 import com.example.graduationproject.presentation.common.signup.UserViewModel
+import com.example.graduationproject.presentation.common.signup.ViewModelFactory
 import com.example.graduationproject.presentation.favourite.FavoriteScreen
 import com.example.graduationproject.presentation.notification.NotificationScreen
 import com.example.graduationproject.presentation.notification.NotificationTopBar
@@ -61,11 +62,11 @@ import kotlin.system.exitProcess
 fun ServixApp(
     navController: NavHostController = rememberNavController()
 ) {
-    val userViewModel: UserViewModel = viewModel()
+    val context = LocalContext.current
+    val userViewModel: UserViewModel = viewModel(factory = ViewModelFactory(context))
     val userTypeViewModel: UserTypeViewModel = viewModel()
     var isBackPressedOnce by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
-    val context = LocalContext.current
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
 

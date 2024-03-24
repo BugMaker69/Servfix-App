@@ -1,7 +1,10 @@
 package com.example.graduationproject.presentation.common.signup
 
 import android.app.Activity
+import android.net.Uri
 import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -16,6 +19,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -27,11 +31,13 @@ import androidx.compose.material.icons.filled.Upload
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,6 +48,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
@@ -53,6 +60,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.rememberImagePainter
 import com.example.graduationproject.R
 import com.example.graduationproject.presentation.common.UserType
 import com.example.graduationproject.presentation.common.UserTypeViewModel
@@ -152,36 +160,36 @@ fun SignupFirstScreen(
 
                 )
 
-    /*        CustomTextField(
-                modifier = Modifier
-                    .focusRequester(cityFocusRequester)
-                    .onGloballyPositioned { coordinates ->
-                        userViewModel.textfieldSize = coordinates.size.toSize()
-                    },
+            /*        CustomTextField(
+                        modifier = Modifier
+                            .focusRequester(cityFocusRequester)
+                            .onGloballyPositioned { coordinates ->
+                                userViewModel.textfieldSize = coordinates.size.toSize()
+                            },
 
-                fieldName = R.string.city,
-                fieldValue = userViewModel.selectedCityValue,
-                onValueChange = {},
-                readOnly = true,
-                isError = userViewModel.cityError,
+                        fieldName = R.string.city,
+                        fieldValue = userViewModel.selectedCityValue,
+                        onValueChange = {},
+                        readOnly = true,
+                        isError = userViewModel.cityError,
 
-                trailingIcon = {
-                    IconButton(onClick = { userViewModel.expanded = !userViewModel.expanded }) {
-                        Icon(
-                            imageVector = if (userViewModel.expanded) Icons.Filled.ArrowDropUp else Icons.Filled.ArrowDropDown,
-                            contentDescription = "",
-                            tint = Color.Black,
-                        )
-                    }
-                },
+                        trailingIcon = {
+                            IconButton(onClick = { userViewModel.expanded = !userViewModel.expanded }) {
+                                Icon(
+                                    imageVector = if (userViewModel.expanded) Icons.Filled.ArrowDropUp else Icons.Filled.ArrowDropDown,
+                                    contentDescription = "",
+                                    tint = Color.Black,
+                                )
+                            }
+                        },
 
-                )*/
+                        )*/
 
             Row(
                 Modifier
                     .fillMaxWidth()
                     .clickable { userViewModel.expanded = !userViewModel.expanded }
-                    .padding(top=8.dp, bottom = 16.dp)
+                    .padding(top = 8.dp, bottom = 16.dp)
                     .defaultMinSize(
                         minWidth = OutlinedTextFieldDefaults.MinWidth,
                         minHeight = OutlinedTextFieldDefaults.MinHeight
@@ -443,7 +451,7 @@ fun SignupSecondScreen(
                             )
                         }
                         Log.d("boolo", "registerUser: ha?")
-                       onFinishClick()
+                        onFinishClick()
                     }
 
 
@@ -503,6 +511,20 @@ fun SignupThirdScreen(
                 alignment = Alignment.TopCenter,
             )
         }
+
+/*        val galleryLauncher =
+            rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
+                uri?.let {
+                    userViewModel.handleGalleryResultForIdImage(context, uri)
+                }
+            }
+
+        val galleryLauncherForWork =
+            rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
+                uri?.let {
+                    userViewModel.handleGalleryResultForWork(context, uri)
+                }
+            }*/
 
         Column(
             modifier = Modifier
@@ -578,15 +600,33 @@ fun SignupThirdScreen(
                 onValueChange = { userViewModel.onFixedSalaryChanged(it) },
             )
 
+// National ID
+            val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
+                userViewModel.imageUri = uri
+            }
+
             Row(
                 Modifier
                     .fillMaxWidth()
-                    .clickable { userViewModel.expanded = !userViewModel.expanded }
+                    .clickable(
+//                        enabled = !userViewModel.isLoading.value,
+                    ) {
+//                        userViewModel.startLoading()
+                        launcher.launch("image/*")
+//                        userViewModel.stopLoading()
+
+                    }
                     .padding(8.dp)
-                    .defaultMinSize(
+                    .sizeIn(
                         minWidth = OutlinedTextFieldDefaults.MinWidth,
-                        minHeight = OutlinedTextFieldDefaults.MinHeight
+                        minHeight = OutlinedTextFieldDefaults.MinHeight,
+                        maxWidth = 150.dp,
+                        maxHeight = 150.dp,
                     )
+//                    .defaultMinSize(
+//                        minWidth = OutlinedTextFieldDefaults.MinWidth,
+//                        minHeight = OutlinedTextFieldDefaults.MinHeight
+//                    )
                     .border(
                         width = 1.dp,
                         color = Color.Gray,
@@ -594,44 +634,29 @@ fun SignupThirdScreen(
                     ),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text(
-                    text = "National ID",
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .weight(7f)
-                )
-                Icon(
-                    imageVector = Icons.Default.Upload,
-                    contentDescription = "",
-                    modifier = Modifier.padding(horizontal = 8.dp)
-                )
-            }
-
-
-//  Work
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .clickable { }
-                    .padding(8.dp)
-                    .defaultMinSize(
-                        minWidth = OutlinedTextFieldDefaults.MinWidth,
-                        minHeight = OutlinedTextFieldDefaults.MinHeight
+                if (userViewModel.isLoading.value){
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.onPrimary)
+                }
+                if (userViewModel.imageUri == null){
+                    Text(
+                        text = "National ID",
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp)
+                            .weight(7f)
                     )
-                    .border(
-                        width = 1.dp,
-                        color = Color.Gray,
-                        shape = OutlinedTextFieldDefaults.shape
-                    ),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
-                    text = "Your works (optional)",
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .weight(7f)
-                )
-
+                }
+                else
+                {
+                    Image(
+                        painter = rememberImagePainter(data =  userViewModel.imageUri)!!,
+                        contentDescription = "",
+                        contentScale = ContentScale.FillBounds,
+                        modifier = Modifier
+                            .size(150.dp)
+                            .padding(16.dp)
+                            .weight(7f)
+                    )
+                }
                 Icon(
                     imageVector = Icons.Default.Upload,
                     contentDescription = "",
@@ -639,6 +664,9 @@ fun SignupThirdScreen(
                 )
             }
 
+            if (userViewModel.showText){
+                Text(text = "Error Its Required", color = Color.Red)
+            }
 
         }
 
@@ -667,12 +695,18 @@ fun SignupThirdScreen(
                     text = R.string.finish,
                     indication = rememberRipple(),
                     onClick = {
-                        userViewModel.onFinishSignupClick()
-                        userViewModel.sendVerificationCode(
-                            activity = context as Activity,
-                            callbacks = userViewModel.callbacks
-                        )
-                        onFinishClick()
+                        userViewModel.thirdSignUpFinish()
+                        userViewModel.providerRegister()
+                        if (userViewModel.idImageFileError) {
+                           userViewModel.showText = true
+                        }
+
+//                        userViewModel.onFinishSignupClick()
+//                        userViewModel.sendVerificationCode(
+//                            activity = context as Activity,
+//                            callbacks = userViewModel.callbacks
+//                        )
+//                        onFinishClick()
                     },
                     backgroundColor = DarkBlue,
                     contentColor = Color.White,
