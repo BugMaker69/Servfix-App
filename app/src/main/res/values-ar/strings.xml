@@ -86,8 +86,11 @@
     <string name="delete">حذف</string>
     <string name="go_back">العودة</string>
     <string name="confirmation">تأكيد</string>
+    <string name="confirm">تأكيد</string>
+
     <string name="cancel">إلغاء</string>
     <string name="messages">الرسائل</string>
+    <string name="remove_favorite">حذف من المفضلة</string>
 
 
 

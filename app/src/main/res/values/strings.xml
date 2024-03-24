@@ -88,8 +88,10 @@
     <string name="delete">Delete</string>
     <string name="go_back">Go Back</string>
     <string name="confirmation">Confirmation</string>
+    <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
     <string name="messages">Messages</string>
+    <string name="remove_favorite">Remove From favourite ?</string>
 
 
     <string-array name="egypt_governorates">
