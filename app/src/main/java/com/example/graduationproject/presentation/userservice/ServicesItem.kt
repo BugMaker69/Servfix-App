@@ -1,6 +1,7 @@
 package com.example.graduationproject.presentation.userservice
 
 import android.annotation.SuppressLint
+import android.content.res.Configuration
 import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -10,9 +11,12 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -20,6 +24,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -33,10 +38,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import com.example.graduationproject.R
 import com.example.graduationproject.data.Services
 import com.example.graduationproject.presentation.common.CustomTextField
@@ -44,7 +51,6 @@ import com.example.graduationproject.ui.theme.LightBlue
 
 
 @SuppressLint("SuspiciousIndentation")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserHomeScreen(
     modifier: Modifier = Modifier,
@@ -72,27 +78,27 @@ fun ServicesHomePage(
     onTextFieldClick: () -> Unit,
     onServiceItemClick: (Int,String) -> Unit,
 ) {
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+    val columns = if (isLandscape) GridCells.Fixed(3)  else GridCells.Fixed(2)
 
     Column(
-        modifier = modifier
+        modifier = modifier.fillMaxSize()
     ) {
         ShareProblemBar(onTextFieldClick)
-
         LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            modifier = Modifier.background(Color.White)
-//        columns = GridCells.Adaptive(70.dp)
+            columns = columns,
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.White)
         ) {
 
             items(vm.servicesState.value) {
                 ServicesItem(
                     it,
                     Modifier,
-                    R.drawable.ic_paint,
-                    R.string.login,
                     onServiceItemClick = { onServiceItemClick(it.id,it.name) })
             }
-
         }
     }
 }
@@ -102,8 +108,6 @@ fun ServicesHomePage(
 fun ServicesItem(
     service: Services,
     modifier: Modifier = Modifier,
-    @DrawableRes jobImage: Int,
-    @StringRes jobText: Int,
     onServiceItemClick: () -> Unit
 ) {
 
@@ -112,7 +116,7 @@ fun ServicesItem(
             .fillMaxSize()
             .clickable { onServiceItemClick() }
             .background(Color.White)
-            .padding(16.dp)
+            .padding(14.dp)
             .border(width = 2.dp, color = LightBlue, shape = RoundedCornerShape(32.dp)),
         shape = RoundedCornerShape(32.dp)
     ) {
@@ -126,18 +130,16 @@ fun ServicesItem(
                 Modifier
                     .background(Color.White)
             ) {
-                AsyncImage(
+                SubcomposeAsyncImage(
                     model = service.image,
                     contentDescription = service.description,
                     contentScale = ContentScale.Crop,
-                    modifier = modifier.fillMaxWidth()
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .aspectRatio(600f / 300f),
+                    loading = { CircularProgressIndicator(modifier.wrapContentSize())}
                 )
-//                Image(
-//                    modifier = Modifier.fillMaxSize(),
-//                    alignment = Alignment.Center,
-//                    painter = painterResource(id = jobImage),
-//                    contentDescription = service.description,
-//                )
+
             }
             Box(
                 modifier = Modifier
@@ -162,7 +164,7 @@ fun ShareProblemBar(
 
     CustomTextField(
         modifier = Modifier
-            .fillMaxWidth()
+            .wrapContentSize()
             .clickable {
                 onTextFieldClick()
                 Log.d("Clicked", "ShareProblemBar: Clicked")
@@ -173,7 +175,7 @@ fun ShareProblemBar(
                     Log.d("Clicked", "ShareProblemBar: gained focus")
                 }
             }
-            .padding(horizontal = 16.dp, vertical = 8.dp),
+            .padding(horizontal = 16.dp, vertical = 4.dp),
         fieldName = R.string.share_problem,
         fieldValue = value,
         onValueChange = { value = it },

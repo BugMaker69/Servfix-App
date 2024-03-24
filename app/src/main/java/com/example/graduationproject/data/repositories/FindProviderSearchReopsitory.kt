@@ -1,7 +1,6 @@
 package com.example.graduationproject.data.repositories
 
 import com.example.graduationproject.data.ReturnedProviderData
-import com.example.graduationproject.data.ServiceProviderSearch
 import com.example.graduationproject.data.retrofit.RetrofitClient
 
 class FindProviderSearchReopsitory {
