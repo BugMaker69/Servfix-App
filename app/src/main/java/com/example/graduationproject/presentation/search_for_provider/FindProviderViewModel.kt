@@ -23,14 +23,15 @@ class FindProviderViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
 var serviceName by mutableStateOf("")
    var selectedCity = mutableStateOf("")
     var expandend = mutableStateOf(false)
-    private var listState = MutableStateFlow(emptyList<ReturnedProviderData>())
     var showDialog = mutableStateOf(false)
-
     private val _searchText = MutableStateFlow("")
     val searchText = _searchText.asStateFlow()
+    val categoryFiltered= MutableStateFlow(listOf<ReturnedProviderData>())
     private val _isSearching = MutableStateFlow(false)
     val isSearching = _isSearching.asStateFlow()
      var _serviceProviders = MutableStateFlow(listOf<ReturnedProviderData>())
+    private val _originalServiceProviders = MutableStateFlow(listOf<ReturnedProviderData>())
+
     var rating by mutableIntStateOf(1)
 
 
@@ -45,31 +46,38 @@ var serviceName by mutableStateOf("")
     }
     private val BASE_URL = "https://p2kjdbr8-8000.uks1.devtunnels.ms/api"
 
-    fun categoryFilteration(){
-        viewModelScope.launch (Dispatchers.IO){
-            _serviceProviders.value
-                .filter {
-                it.city==selectedCity.value && it.ratings.toDouble()<=rating.toDouble()
 
+    fun categoryFilteration() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _serviceProviders.value = _originalServiceProviders.value.filter {
+                it.city == selectedCity.value && it.ratings.toDouble() <= rating.toDouble()
             }
+            categoryFiltered.value=_serviceProviders.value
         }
     }
 
+
     private fun listFilteration() {
-        viewModelScope.launch(Dispatchers.IO) {
-            searchText.combine(listState) { text, _ ->
-                if (text.isBlank()) {
-                    listState.value
-                } else {
-                    listState.value.filter {
+        viewModelScope.launch(Dispatchers.Main) {
+            searchText.combine(_originalServiceProviders) { text, _ ->
+                if (text.isBlank()&&selectedCity.value.isBlank()) {
+                    _originalServiceProviders.value
+                }else if (text.isBlank()&&selectedCity.value.isBlank()||text.isBlank()&&selectedCity.value.isNotBlank()){
+                    categoryFiltered.value
+
+                }
+                else {
+                    _originalServiceProviders.value.filter {
                         it.username.contains(text)
                     }
                 }
             }.collect { filteredList ->
                 _serviceProviders.value = filteredList
+
             }
         }
     }
+
 
     fun dismissDialog() {
         showDialog.value = false
@@ -77,20 +85,19 @@ var serviceName by mutableStateOf("")
     fun onSearchTextChange(text: String) {
         _searchText.value = text
     }
-   private fun getSearchProvidersList(id:Int){
-       try {
-           viewModelScope.launch (Dispatchers.IO){
-               val list = findProviderRepo.getProvidersList(id)
-               list.forEach {
-                   it.image= BASE_URL+it.image
-               }
-               listState.value=list
-
-           }
-       }catch (e:Exception){
-           Log.d("test", "getSearchProvidersList: ${e.toString()}")
-       }
-
+    private fun getSearchProvidersList(id: Int) {
+        try {
+            viewModelScope.launch(Dispatchers.IO) {
+                val list = findProviderRepo.getProvidersList(id)
+                list.forEach {
+                    it.image = BASE_URL + it.image
+                }
+                _originalServiceProviders.value = list
+                _serviceProviders.value = list
+            }
+        } catch (e: Exception) {
+            Log.d("test", "getSearchProvidersList: ${e.toString()}")
+        }
     }
 
 }

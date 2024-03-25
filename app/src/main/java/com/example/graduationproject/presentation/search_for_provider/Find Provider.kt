@@ -84,10 +84,9 @@ fun FindProvider(
     if (findProviderViewModel.showDialog.value) {
         CustomDialog(modifier = modifier
             .size(height = 350.dp, width = 400.dp), onConfirmButtonClick = {
-
-            findProviderViewModel.dismissDialog()
-        }, onDismissButtonClick = {
             findProviderViewModel.categoryFilteration()
+           findProviderViewModel.dismissDialog()
+        }, onDismissButtonClick = {
             findProviderViewModel.dismissDialog()
         }, confirmButtonText = "confirm", dismissButtonText = "dismiss"
         ) {
@@ -121,7 +120,8 @@ fun FindProvider(
                 findProviderViewModel.serviceName,
                 findProviderViewModel.selectedCity.value,
                 searchText,
-                onSearchTextChanged = { findProviderViewModel.onSearchTextChange(searchText) },
+                onSearchTextChanged = {it->
+                    findProviderViewModel.onSearchTextChange(it) },
                 onShowDialog = {
                     findProviderViewModel.showDialog.value = true
                 }
@@ -141,7 +141,7 @@ fun TopFavouriteItem(
     serviceName: String,
     selectedCity: String,
     searchText: String,
-    onSearchTextChanged: () -> Unit,
+    onSearchTextChanged: (String) -> Unit,
     onShowDialog: () -> Unit
 ) {
     Row(
@@ -165,7 +165,7 @@ fun TopFavouriteItem(
     TextField(
         leadingIcon = { Icon(Icons.Outlined.Search, contentDescription = "") },
         value = searchText,
-        onValueChange = { onSearchTextChanged() },
+        onValueChange =   { newText -> onSearchTextChanged(newText) },
         modifier = Modifier
             .fillMaxWidth()
             .padding(10.dp), colors = TextFieldDefaults.colors(
