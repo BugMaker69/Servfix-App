@@ -25,8 +25,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowRight
+import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.Handshake
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarOutline
 import androidx.compose.material.icons.outlined.Search
@@ -85,6 +87,7 @@ fun FindProvider(
         CustomDialog(modifier = modifier
             .size(height = 350.dp, width = 400.dp), onConfirmButtonClick = {
             findProviderViewModel.categoryFilteration()
+            findProviderViewModel.showRemoveIcon()
            findProviderViewModel.dismissDialog()
         }, onDismissButtonClick = {
             findProviderViewModel.dismissDialog()
@@ -98,10 +101,10 @@ fun FindProvider(
                     findProviderViewModel.expandend.value = !findProviderViewModel.expandend.value
                 },
                 selectedCity = findProviderViewModel.selectedCity.value,
-                onExpandedDismiss = { findProviderViewModel.expandend.value = false },
+                onExpandedDismiss = { findProviderViewModel.changeExpandedValue() },
                 onDropMenuClick = { selectionOption ->
                     findProviderViewModel.selectedCity.value = selectionOption
-                    findProviderViewModel.expandend.value = false
+                    findProviderViewModel.changeExpandedValue()
                 },
                 onRateClick = { starRating ->
                     findProviderViewModel.rating = starRating
@@ -124,7 +127,11 @@ fun FindProvider(
                     findProviderViewModel.onSearchTextChange(it) },
                 onShowDialog = {
                     findProviderViewModel.showDialog.value = true
-                }
+                },
+                onRemoveFilterClick = {findProviderViewModel.removeFilter()
+                                      findProviderViewModel.showRemoveIcon.value=false
+                                      }
+                , showRemoveIcon = findProviderViewModel.showRemoveIcon.value
 
             )
         }
@@ -142,7 +149,9 @@ fun TopFavouriteItem(
     selectedCity: String,
     searchText: String,
     onSearchTextChanged: (String) -> Unit,
-    onShowDialog: () -> Unit
+    onShowDialog: () -> Unit,
+    showRemoveIcon:Boolean,
+    onRemoveFilterClick:()->Unit
 ) {
     Row(
         modifier = Modifier
@@ -159,6 +168,13 @@ fun TopFavouriteItem(
         )
         Icon(imageVector = Icons.Filled.LocationOn, contentDescription = "location")
         Text(text = selectedCity)
+        Spacer(modifier = Modifier.weight(1f))
+if(showRemoveIcon){
+    Icon(imageVector = Icons.Filled.Cancel, contentDescription ="Cancel",Modifier.padding(horizontal = 10.dp).clickable {
+        onRemoveFilterClick()
+    })
+}
+
 
 
     }

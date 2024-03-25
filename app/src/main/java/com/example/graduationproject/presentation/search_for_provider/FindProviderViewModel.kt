@@ -23,6 +23,7 @@ class FindProviderViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
 var serviceName by mutableStateOf("")
    var selectedCity = mutableStateOf("")
     var expandend = mutableStateOf(false)
+    var showRemoveIcon= mutableStateOf(false)
     var showDialog = mutableStateOf(false)
     private val _searchText = MutableStateFlow("")
     val searchText = _searchText.asStateFlow()
@@ -32,8 +33,20 @@ var serviceName by mutableStateOf("")
      var _serviceProviders = MutableStateFlow(listOf<ReturnedProviderData>())
     private val _originalServiceProviders = MutableStateFlow(listOf<ReturnedProviderData>())
 
-    var rating by mutableIntStateOf(1)
+    var rating by mutableIntStateOf(0)
+fun showRemoveIcon(){
+    if (selectedCity.value.isNotBlank()||rating!=0){
+        showRemoveIcon.value=true
 
+    }
+}
+    fun removeFilter(){
+        _serviceProviders.value=_originalServiceProviders.value
+        selectedCity.value=""
+    }
+    fun changeExpandedValue(){
+        expandend.value = ! expandend.value
+    }
 
     init {
       val id= savedStateHandle.get<Int>("id")
@@ -50,7 +63,8 @@ var serviceName by mutableStateOf("")
     fun categoryFilteration() {
         viewModelScope.launch(Dispatchers.IO) {
             _serviceProviders.value = _originalServiceProviders.value.filter {
-                it.city == selectedCity.value && it.ratings.toDouble() <= rating.toDouble()
+                it.city == selectedCity.value && it.ratings.toDouble() <= rating.toDouble()||it.ratings.toDouble() <= rating.toDouble()
+
             }
             categoryFiltered.value=_serviceProviders.value
         }
