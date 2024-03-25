@@ -3,6 +3,7 @@ package com.example.graduationproject.presentation.search_for_provider
 import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
@@ -30,6 +31,7 @@ var serviceName by mutableStateOf("")
     private val _isSearching = MutableStateFlow(false)
     val isSearching = _isSearching.asStateFlow()
      var _serviceProviders = MutableStateFlow(listOf<ReturnedProviderData>())
+    var rating by mutableIntStateOf(1)
 
 
     init {
@@ -43,7 +45,17 @@ var serviceName by mutableStateOf("")
     }
     private val BASE_URL = "https://p2kjdbr8-8000.uks1.devtunnels.ms/api"
 
-    fun listFilteration() {
+    fun categoryFilteration(){
+        viewModelScope.launch (Dispatchers.IO){
+            _serviceProviders.value
+                .filter {
+                it.city==selectedCity.value && it.ratings.toDouble()<=rating.toDouble()
+
+            }
+        }
+    }
+
+    private fun listFilteration() {
         viewModelScope.launch(Dispatchers.IO) {
             searchText.combine(listState) { text, _ ->
                 if (text.isBlank()) {
@@ -66,16 +78,19 @@ var serviceName by mutableStateOf("")
         _searchText.value = text
     }
    private fun getSearchProvidersList(id:Int){
-        viewModelScope.launch (Dispatchers.IO){
-        val list = findProviderRepo.getProvidersList(id)
-            list.forEach {
-                it.image= BASE_URL+it.image
-            }
-            listState.value=list
-            if (listState.value.isNotEmpty()){
-//                category.value=listState.value.get(0).profession
-            }
-        }
+       try {
+           viewModelScope.launch (Dispatchers.IO){
+               val list = findProviderRepo.getProvidersList(id)
+               list.forEach {
+                   it.image= BASE_URL+it.image
+               }
+               listState.value=list
+
+           }
+       }catch (e:Exception){
+           Log.d("test", "getSearchProvidersList: ${e.toString()}")
+       }
+
     }
 
 }

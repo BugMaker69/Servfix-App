@@ -7,18 +7,25 @@ import androidx.compose.foundation.Indication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Message
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.StarHalf
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
@@ -55,8 +62,46 @@ import androidx.compose.ui.unit.sp
 import com.example.graduationproject.ui.BottomAppBar
 import com.example.graduationproject.R
 import com.example.graduationproject.ui.theme.DarkBlue
+import com.example.graduationproject.ui.theme.OrangeRate
+import kotlin.math.roundToInt
 
+@Composable
+fun RatingBar(rating: Double, modifier: Modifier) {
+    val roundedRating = (rating * 2).roundToInt() / 2.0
+    val fullStars = roundedRating.toInt()
+    val halfStar = if (roundedRating - fullStars >= 0.5) 1 else 0
 
+    Row(modifier = modifier.fillMaxSize(), horizontalArrangement = Arrangement.Start) {
+        repeat(fullStars) {
+            Icon(
+                imageVector = Icons.Filled.Star,
+                contentDescription = null,
+                tint = OrangeRate
+            )
+        }
+
+        if (halfStar == 1) {
+            Icon(
+                imageVector = Icons.Filled.StarHalf,
+                contentDescription = null,
+                tint = OrangeRate
+            )
+        }
+
+        repeat(5 - fullStars - halfStar) {
+            Icon(
+                imageVector = Icons.Filled.Star,
+                contentDescription = null,
+                tint = Color.LightGray
+            )
+        }
+
+        // Add space between stars
+        if (fullStars + halfStar != 5) {
+            Spacer(modifier = modifier.width(6.dp))
+        }
+    }
+}
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CustomTextField(

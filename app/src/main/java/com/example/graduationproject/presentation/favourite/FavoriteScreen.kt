@@ -46,6 +46,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.graduationproject.R
+import com.example.graduationproject.presentation.common.RatingBar
 import com.example.graduationproject.ui.theme.LightBlue
 import com.example.graduationproject.ui.theme.OrangeRate
 import kotlin.math.roundToInt
@@ -192,43 +193,7 @@ fun FavoriteItem(onCardClick: () -> Unit) {
 }
 
 
-@Composable
-fun RatingBar(rating: Double, modifier: Modifier) {
-    val roundedRating = (rating * 2).roundToInt() / 2.0
-    val fullStars = roundedRating.toInt()
-    val halfStar = if (roundedRating - fullStars >= 0.5) 1 else 0
 
-    Row(modifier = modifier.fillMaxSize(), horizontalArrangement = Arrangement.Start) {
-        repeat(fullStars) {
-            Icon(
-                imageVector = Icons.Filled.Star,
-                contentDescription = null,
-                tint = OrangeRate
-            )
-        }
-
-        if (halfStar == 1) {
-            Icon(
-                imageVector = Icons.Filled.StarHalf,
-                contentDescription = null,
-                tint = OrangeRate
-            )
-        }
-
-        repeat(5 - fullStars - halfStar) {
-            Icon(
-                imageVector = Icons.Filled.Star,
-                contentDescription = null,
-                tint = Color.LightGray
-            )
-        }
-
-        // Add space between stars
-        if (fullStars + halfStar != 5) {
-            Spacer(modifier = modifier.width(6.dp))
-        }
-    }
-}
 
 
 @Preview
