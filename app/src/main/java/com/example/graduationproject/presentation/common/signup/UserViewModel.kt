@@ -2,7 +2,6 @@ package com.example.graduationproject.presentation.common.signup
 
 import android.app.Activity
 import android.content.Context
-import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.getValue
@@ -14,8 +13,10 @@ import androidx.lifecycle.viewModelScope
 import com.example.graduationproject.R
 import com.example.graduationproject.data.AddProviderRepository
 import com.example.graduationproject.data.LoginRequest
+import com.example.graduationproject.data.LoginResponse
 import com.example.graduationproject.data.Register
-import com.example.graduationproject.data.Test
+import com.example.graduationproject.data.ReturnedProviderData
+import com.example.graduationproject.data.ReturnedUserData
 import com.example.graduationproject.data.retrofit.RetrofitClient
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
@@ -26,10 +27,9 @@ import com.google.firebase.auth.PhoneAuthProvider
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import retrofit2.Response
 import java.util.concurrent.TimeUnit
 
-class UserViewModel(ctx:Context): ViewModel() {
+class UserViewModel(ctx: Context) : ViewModel() {
     private val apiService = RetrofitClient.userRegisterationApiService()
 
 
@@ -62,15 +62,15 @@ class UserViewModel(ctx:Context): ViewModel() {
         passwordError = password1.isEmpty()
     }
 
-    fun onLoginClick() {
-        if (email.isEmpty()) {
-            emailError = true
-        }
-        if (password.isEmpty()) {
-            passwordError = true
-        }
+    /*    fun onLoginClick() {
+            if (email.isEmpty()) {
+                emailError = true
+            }
+            if (password.isEmpty()) {
+                passwordError = true
+            }
 
-    }
+        }*/
 
     //  SIGNUP
     var userName by mutableStateOf("")
@@ -187,7 +187,8 @@ class UserViewModel(ctx:Context): ViewModel() {
 
     val phoneNumberregex = "^01[0|1|2|5]\\d{8}$".toRegex()
     val Emailregex = "^[a-zA-Z]{3,}.*@.*\\.[a-zA-Z]+".toRegex()
-//    val fullnameregex = "^[a-zA-Z]{3,} [a-zA-Z]{3,}".toRegex()
+
+    //    val fullnameregex = "^[a-zA-Z]{3,} [a-zA-Z]{3,}".toRegex()
     val fullnameregex = "^[a-zA-Z]{3,}(\\s+[a-zA-Z]{3,})+".toRegex()
     val passwordregex = "^(?=.*[A-Z])(?=.*[^\\s\\w])[A-Za-z\\d[^\\s\\w]]{8,}$".toRegex()
 
@@ -352,22 +353,22 @@ class UserViewModel(ctx:Context): ViewModel() {
         isLoading.value = false
     }
 
-/*    fun handleGalleryResultForIdImage(context: Context, uri: Uri) {
-        context.contentResolver.openInputStream(uri)?.use { inputStream ->
-            idImageFile = BitmapFactory.decodeStream(inputStream)
+    /*    fun handleGalleryResultForIdImage(context: Context, uri: Uri) {
+            context.contentResolver.openInputStream(uri)?.use { inputStream ->
+                idImageFile = BitmapFactory.decodeStream(inputStream)
+            }
+            idImageFileError = false
+            showText = false
+            stopLoading()
         }
-        idImageFileError = false
-        showText = false
-        stopLoading()
-    }
 
 
-    var workImageFile by mutableStateOf<Bitmap?>(null)
-    fun handleGalleryResultForWork(context: Context, uri: Uri) {
-        context.contentResolver.openInputStream(uri)?.use { inputStream ->
-            workImageFile = BitmapFactory.decodeStream(inputStream)
-        }
-    }*/
+        var workImageFile by mutableStateOf<Bitmap?>(null)
+        fun handleGalleryResultForWork(context: Context, uri: Uri) {
+            context.contentResolver.openInputStream(uri)?.use { inputStream ->
+                workImageFile = BitmapFactory.decodeStream(inputStream)
+            }
+        }*/
 
     fun thirdSignUpFinish() {
         if (imageUri == null) {
@@ -390,54 +391,49 @@ class UserViewModel(ctx:Context): ViewModel() {
         username: String,
     ) {
         addProviderRepository.UploadProvider(
-            address =  address,
-            city =  city,
-            email =  email,
-            fixed_salary =  fixed_salary,
-            id_image =  id_image,
-            password =  password,
-            phone =  phone,
-            profession =  profession,
-            username =  username,
+            address = address,
+            city = city,
+            email = email,
+            fixed_salary = fixed_salary,
+            id_image = id_image,
+            password = password,
+            phone = phone,
+            profession = profession,
+            username = username,
         )
 
     }
 
-    fun providerRegister(){
+
+    fun providerRegister() {
         prepareProvideRegister(
-            address =  address,
-            city =  selectedCityValue,
-            email =  emailN,
-            fixed_salary =  fixedSalary,
-            id_image =  imageUri!!,
-            password =  passwordN,
-            phone =  phone,
-            profession =  selectedServiceValue,
-            username =  userName,
+            address = address,
+            city = selectedCityValue,
+            email = emailN,
+            fixed_salary = fixedSalary,
+            id_image = imageUri!!,
+            password = passwordN,
+            phone = phone,
+            profession = selectedServiceValue,
+            username = userName,
         )
     }
 
+    /*
+        fun provideRegister() {
 
-
-
-
-
-
-/*
-    fun provideRegister() {
-
-        */
-/*        val provideRegisterData = ProviderData(
-                    address = address,
-                    city=selectedCityValue,
-                    email=emailN,
-                    fixed_salary=fixedSalary,
-                    id_image=idImageBitmap!!,
-                    password=passwordN,
-                    phone=phone,
-                    profession=selectedServiceValue,
-                    username=userName
-                )*//*
+            */
+    /*        val provideRegisterData = ProviderData(
+                        address = address,
+                        city=selectedCityValue,
+                        email=emailN,
+                        fixed_salary=fixedSalary,
+                        id_image=idImageBitmap!!,
+                        password=passwordN,
+                        phone=phone,
+                        profession=selectedServiceValue,
+                        username=userName
+                    )*//*
 
 
         val byteArrayOutputStream = ByteArrayOutputStream()
@@ -538,30 +534,164 @@ class UserViewModel(ctx:Context): ViewModel() {
         }
     }
 
-    fun login() {
-        val loginRequest = LoginRequest(username = email, password = password)
-        viewModelScope.launch {
-            val response = apiService.login(loginRequest)
+    var token: LoginResponse? by mutableStateOf<LoginResponse?>(null)
+    var returnedProviderData: ReturnedProviderData? by mutableStateOf<ReturnedProviderData?>(null)
+    var returnedUserData: ReturnedUserData? by mutableStateOf<ReturnedUserData?>(null)
+    var error:String? by mutableStateOf(null)
+//private val _returnedProviderData = MutableStateFlow<ReturnedProviderData?>(null)
+//    val returnedProviderData: StateFlow<ReturnedProviderData?> = _returnedProviderData
 
-            if (response.isSuccessful) {
-                val loginResponse = response.body()
-                if (loginResponse != null) {
-                    Log.d("bqq", "login: ${loginResponse.refresh + " wait" + loginResponse.access}")
-                    // Save the tokens
-                } else {
-                    Log.d("bqq", "error1")
-                }
-            } else {
-                Log.d(
-                    "bqq",
-                    "error2, HTTP status code: ${response.code()}, error body: ${
-                        response.errorBody()?.string()
-                    }"
+    fun login() {
+        if (email.isEmpty()) {
+            emailError = true
+        }
+        if (password.isEmpty()) {
+            passwordError = true
+        }
+        if (email.isNotEmpty() && password.isNotEmpty()) {
+            viewModelScope.launch {
+                token = addProviderRepository.login(
+                    loginRequest = LoginRequest(
+                        username = email,
+                        password = password
+                    )
                 )
+                if (token == null) {
+                    error = "Incorrect Email Or Password"
+                    return@launch
+                }
+                else
+                    error = null
+                try {
+                    returnedProviderData =
+                        addProviderRepository.getProviderData(token?.access ?: "")
+                    Log.d(
+                        "TAG",
+                        "getProviderData: data40 ${returnedProviderData?.email}   ${returnedProviderData?.id}   ${returnedProviderData?.username}  "
+                    )
+                } catch (e: Exception) {
+                    Log.d(
+                        "EEERRROOORRR",
+                        "Provider Error: ${e.cause} ||  ${e.message} ||  ${e.localizedMessage} ||  ${e.stackTrace} ||  ${e.suppressed} ||  ${e} || "
+                    )
+                }
+
+                try {
+                    returnedUserData = addProviderRepository.getUserData(token?.access ?: "")
+                    Log.d(
+                        "TAG",
+                        "getProviderData: data40 ${returnedUserData?.email}   ${returnedUserData?.id}   ${returnedUserData?.username}  "
+                    )
+                } catch (e: Exception) {
+                    Log.d(
+                        "EEERRROOORRR",
+                        "User Error: ${e.cause} ||  ${e.message} ||  ${e.localizedMessage} ||  ${e.stackTrace} ||  ${e.suppressed} ||  ${e} || "
+                    )
+                }
+
+
+//                val data = addProviderRepository.getProviderData(token?.access ?: "")
+//                _returnedProviderData.value = data
+//                Log.d("TAG", "getProviderData: data40 ${_returnedProviderData.value?.email}   ${_returnedProviderData.value?.id}   ${_returnedProviderData.value?.username}  ")
+
+//                delay(5000)
+//                getProviderData(token?.access ?: "")
+//                returnedProviderData= token?.let { getProviderData(it.access ) }
+                Log.d("TAG", "getProviderData: token data ${token?.access}")
+//                Log.d("TAG", "getProviderData: token data function ${getProviderData(token?.access ?: "")}")
+//                Log.d("TAG", "getProviderData: data ${returnedProviderData?.value} ")
+//                Log.d("TAG", "getProviderData: data ${returnedProviderData.value?.email}   ${returnedProviderData.value?.id}   ${returnedProviderData.value?.username}  ")
+//                Log.d("TAG", "getProviderData: data ${returnedProviderData?.value}   ${returnedProviderData?.id}   ${returnedProviderData?.username}  ")
 
             }
         }
 
     }
+
+
+
+    fun getDataFromServer(){
+        userName = returnedProviderData?.username ?: userName
+        selectedCityValue = returnedProviderData?.city ?: selectedCityValue
+        address = returnedProviderData?.address ?: address
+        emailN = returnedProviderData?.email ?: emailN
+        phone = returnedProviderData?.phone ?: phone
+        selectedServiceValue = returnedProviderData?.profession ?: selectedServiceValue
+        fixedSalary = (returnedProviderData?.fixed_salary ?: fixedSalary).toString()
+    }
+
+    init {
+        getDataFromServer()
+    }
+
+
+    fun updateProviderData(){
+
+        val updateProviderData = addProviderRepository.updateProviderData(
+            token = token!!.access,
+            address =  address,
+            city =  selectedCityValue,
+            email =  emailN,
+            fixed_salary =  fixedSalary,
+            image =  imageUri!!,
+            password =  passwordN,
+            phone =  phone,
+            profession =  selectedServiceValue,
+            username =  userName,
+            ratings = "5",
+            service_id = 1,
+            user = 1,
+        )
+
+    }
+
+
+
+    /*
+        fun getProviderData(token: String) {
+            viewModelScope.launch {
+                val data = addProviderRepository.getProviderData(token)
+                _returnedProviderData.value = data
+                Log.d("TAG", "getProviderData: data40 ${_returnedProviderData.value?.email}   ${_returnedProviderData.value?.id}   ${_returnedProviderData.value?.username}  ")
+            }
+        }*/
+
+    /*    fun getProviderData(token: String): ReturnedProviderData? {
+    //        var x:ReturnedProviderData? by mutableStateOf<ReturnedProviderData?>(null)
+            viewModelScope.launch {
+                returnedProviderData = addProviderRepository.getProviderData(token)
+            Log.d("TAG", "getProviderData: data40 ${returnedProviderData?.email}   ${returnedProviderData?.id}   ${returnedProviderData?.username}  ")
+            }
+            return returnedProviderData
+        }*/
+
+
+    /*
+        fun login() {
+            val loginRequest = LoginRequest(username = email, password = password)
+            viewModelScope.launch {
+                val response = apiService.login(loginRequest)
+
+                if (response.isSuccessful) {
+                    val loginResponse = response.body()
+                    if (loginResponse != null) {
+                        Log.d("bqq", "login: ${loginResponse.refresh + " wait" + loginResponse.access}")
+                        // Save the tokens
+                    } else {
+                        Log.d("bqq", "error1")
+                    }
+                } else {
+                    Log.d(
+                        "bqq",
+                        "error2, HTTP status code: ${response.code()}, error body: ${
+                            response.errorBody()?.string()
+                        }"
+                    )
+
+                }
+            }
+
+        }
+    */
 }
 

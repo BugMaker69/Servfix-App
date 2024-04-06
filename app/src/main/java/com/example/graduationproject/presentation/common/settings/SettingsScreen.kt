@@ -48,6 +48,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.graduationproject.ui.BottomAppBar
 import com.example.graduationproject.R
 import com.example.graduationproject.presentation.accountinfo.ProviderAccountInfo
@@ -476,16 +477,16 @@ fun SettingsTopBar(
 //}
 
 
-@Preview(showBackground = true)
+/*@Preview(showBackground = true)
 @Composable
 fun ProviderAccountInfoDetailsPreview() {
     ProviderAccountInfoDetails(Modifier, {}, {})
-}
+}*/
 
 @Preview(showBackground = true)
 @Composable
 fun ProviderAccountInfoPreview() {
-    ProviderAccountInfo(Modifier, {})
+    ProviderAccountInfo(Modifier, {}, viewModel())
 }
 
 @Preview(showBackground = true)

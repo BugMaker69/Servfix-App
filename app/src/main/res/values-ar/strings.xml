@@ -91,7 +91,7 @@
     <string name="cancel">إلغاء</string>
     <string name="messages">الرسائل</string>
     <string name="remove_favorite">حذف من المفضلة</string>
-
+    <string name="incorrect_email_or_password">Incorrect Email Or Password</string>
 
 
     <string-array name="egypt_governorates">

@@ -107,7 +107,7 @@ fun NotifiPostItems(
 @Composable
 fun NotifiPostItemDetail(
     modifier: Modifier = Modifier,
-
+    onNotifiPostItemDetailToOpenIt:()->Unit,
     ) {
 
     Card(
@@ -121,7 +121,7 @@ fun NotifiPostItemDetail(
         Box(
             modifier = Modifier
                 .clip(RoundedCornerShape(8.dp))
-                .clickable { Log.d("CustomUI", "CustomUI: Clicked") }
+                .clickable { onNotifiPostItemDetailToOpenIt() }
 
         ) {
             Icon(imageVector = Icons.Filled.ArrowBackIosNew, contentDescription = "Go Back")
@@ -411,7 +411,7 @@ fun NotifiPostItemPreview() {
 @Preview(showBackground = true)
 @Composable
 fun NotifiPostItemDetailPreview() {
-    NotifiPostItemDetail()
+    NotifiPostItemDetail(onNotifiPostItemDetailToOpenIt={})
 }
 
 

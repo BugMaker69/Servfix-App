@@ -264,6 +264,7 @@ fun ServixApp(
                     onAccountInfoDetailsClick = {
                         navController.navigate(ServixScreens.ProviderAccountInfoDetails.name)
                     },
+                    userViewModel = userViewModel
                 )
             }
             composable(ServixScreens.ProviderAccountInfoDetails.name) {
@@ -271,7 +272,8 @@ fun ServixApp(
                     modifier = Modifier.padding(innerPadding),
 
                     onSaveChangesClick = { /*TODO*/ },
-                    onPhotoChangeClick = {}
+                    onPhotoChangeClick = {},
+                    userViewModel = userViewModel
                 )
             }
             composable(ServixScreens.FirstSignup.name) {
