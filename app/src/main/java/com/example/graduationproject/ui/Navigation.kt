@@ -271,7 +271,10 @@ fun ServixApp(
                 ProviderAccountInfoDetailsScreen(
                     modifier = Modifier.padding(innerPadding),
 
-                    onSaveChangesClick = { /*TODO*/ },
+                    onSaveChangesClick = {
+                                         userViewModel.updateProviderData()
+                        navController.navigate(ServixScreens.Settings.name)
+                                         },
                     onPhotoChangeClick = {},
                     userViewModel = userViewModel
                 )

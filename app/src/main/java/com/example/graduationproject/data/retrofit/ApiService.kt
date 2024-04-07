@@ -72,9 +72,9 @@ interface ApiService {
         @Part("phone") phone: RequestBody,
         @Part("city") city: RequestBody,
         @Part("profession") profession: RequestBody,
-        @Part("ratings") ratings: RequestBody,
+/*        @Part("ratings") ratings: RequestBody,
         @Part("service_id") service_id: RequestBody,
-        @Part("user") user: RequestBody,
+        @Part("user") user: RequestBody,*/
         @Part("fixed_salary") fixed_salary: RequestBody,
         @Part image: MultipartBody.Part
     ): Call<ResponseBody>

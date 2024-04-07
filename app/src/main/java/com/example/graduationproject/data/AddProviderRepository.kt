@@ -170,9 +170,9 @@ class AddProviderRepository constructor(private val ctx: Context) {
         phone: String,
         profession: String,
         username: String,
-        ratings : String,
-        service_id : Int,
-        user : Int,
+//        ratings : String,
+//        service_id : Int,
+//        user : Int,
     ) {
 
         val fileToSend = prepareFilePart("image", image)
@@ -208,7 +208,7 @@ class AddProviderRepository constructor(private val ctx: Context) {
             "text/plain".toMediaTypeOrNull(),
             username
         )
-        val ratingsRequestBody: RequestBody = RequestBody.create(
+/*        val ratingsRequestBody: RequestBody = RequestBody.create(
             "text/plain".toMediaTypeOrNull(),
             ratings
         )
@@ -219,7 +219,7 @@ class AddProviderRepository constructor(private val ctx: Context) {
         val userRequestBody: RequestBody = RequestBody.create(
             "text/plain".toMediaTypeOrNull(),
             user.toString()
-        )
+        )*/
 
         RetrofitClient.userRegisterationApiService().updateProviderData(
             token = "Bearer $token",
@@ -231,9 +231,9 @@ class AddProviderRepository constructor(private val ctx: Context) {
             username = usernameRequestBody,
             profession = professionRequestBody,
             phone = phoneRequestBody,
-            ratings = ratingsRequestBody,
+/*            ratings = ratingsRequestBody,
             service_id = service_idRequestBody,
-            user = userRequestBody,
+            user = userRequestBody,*/
             image = fileToSend
         ).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {

@@ -537,9 +537,10 @@ class UserViewModel(ctx: Context) : ViewModel() {
     var token: LoginResponse? by mutableStateOf<LoginResponse?>(null)
     var returnedProviderData: ReturnedProviderData? by mutableStateOf<ReturnedProviderData?>(null)
     var returnedUserData: ReturnedUserData? by mutableStateOf<ReturnedUserData?>(null)
-    var error:String? by mutableStateOf(null)
+    var error: String? by mutableStateOf(null)
 //private val _returnedProviderData = MutableStateFlow<ReturnedProviderData?>(null)
 //    val returnedProviderData: StateFlow<ReturnedProviderData?> = _returnedProviderData
+private val BASE_URL = "https://p2kjdbr8-8000.uks1.devtunnels.ms/api"
 
     fun login() {
         if (email.isEmpty()) {
@@ -559,12 +560,21 @@ class UserViewModel(ctx: Context) : ViewModel() {
                 if (token == null) {
                     error = "Incorrect Email Or Password"
                     return@launch
-                }
-                else
+                } else
                     error = null
                 try {
                     returnedProviderData =
                         addProviderRepository.getProviderData(token?.access ?: "")
+                    returnedProviderData?.let {
+                        userName = it.username
+                        address = it.address
+                        selectedCityValue = it.city
+                        emailN = it.email
+                        phone = it.phone
+                        fixedSalary = it.fixed_salary.toString()
+                        selectedServiceValue = it.profession
+                        imageUri = Uri.parse( BASE_URL + it.image)
+                    }
                     Log.d(
                         "TAG",
                         "getProviderData: data40 ${returnedProviderData?.email}   ${returnedProviderData?.id}   ${returnedProviderData?.username}  "
@@ -609,42 +619,80 @@ class UserViewModel(ctx: Context) : ViewModel() {
     }
 
 
-
-    fun getDataFromServer(){
-        userName = returnedProviderData?.username ?: userName
-        selectedCityValue = returnedProviderData?.city ?: selectedCityValue
-        address = returnedProviderData?.address ?: address
-        emailN = returnedProviderData?.email ?: emailN
-        phone = returnedProviderData?.phone ?: phone
-        selectedServiceValue = returnedProviderData?.profession ?: selectedServiceValue
-        fixedSalary = (returnedProviderData?.fixed_salary ?: fixedSalary).toString()
+    fun clearAllData() {
+        userName = ""
+        address = ""
+        emailN = ""
+        phone = ""
+        passwordN = ""
+        passwordConf = ""
+        eyeIconPress = false
+        eyeIconPressC = false
+        expanded = false
+        selectedCityIndex = -1
+        selectedCityValue = ""
+        textfieldSize = Size.Zero
+        userNameError = false
+        cityError = false
+        addressError = false
+        emailNError = false
+        phoneError = false
+        passwordNError = false
+        passwordConfError = false
+        isPasswordNFocused.value = false
+        isUsernameFocused.value = false
+        isPhoneNumberFocused.value = false
+        isEmailNFocused.value = false
+        fixedSalary = ""
+        expandedService = false
+        selectedServiceIndex = -1
+        selectedServiceValue = ""
+        textfieldServiceSize = Size.Zero
+        phoneChange = ""
+        newPassword = ""
+        newPasswordConf = ""
+        newPasswordNError = false
+        newPasswordConfError = false
+        isNewPasswordFocused.value = false
     }
 
-    init {
-        getDataFromServer()
-    }
+
+    /*    fun getDataFromServer(){
+            userName = returnedProviderData?.username ?: userName
+            selectedCityValue = returnedProviderData?.city ?: selectedCityValue
+            address = returnedProviderData?.address ?: address
+            emailN = returnedProviderData?.email ?: emailN
+            phone = returnedProviderData?.phone ?: phone
+            selectedServiceValue = returnedProviderData?.profession ?: selectedServiceValue
+            fixedSalary = (returnedProviderData?.fixed_salary ?: fixedSalary).toString()
+        }
+
+        init {
+            getDataFromServer()
+        }*/
 
 
-    fun updateProviderData(){
+    fun updateProviderData() {
 
         val updateProviderData = addProviderRepository.updateProviderData(
             token = token!!.access,
-            address =  address,
-            city =  selectedCityValue,
-            email =  emailN,
-            fixed_salary =  fixedSalary,
-            image =  imageUri!!,
-            password =  passwordN,
-            phone =  phone,
-            profession =  selectedServiceValue,
-            username =  userName,
-            ratings = "5",
+            address = address,
+            city = selectedCityValue,
+            email = emailN,
+            fixed_salary = fixedSalary,
+            image = imageUri!!,
+            password = passwordN,
+            phone = phone,
+            profession = selectedServiceValue,
+            username = userName,
+/*            ratings = "5",
             service_id = 1,
-            user = 1,
+            user = 1,*/
         )
 
-    }
 
+
+    }
 
 
     /*

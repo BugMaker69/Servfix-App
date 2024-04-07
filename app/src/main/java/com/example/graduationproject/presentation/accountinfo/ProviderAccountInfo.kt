@@ -1,6 +1,10 @@
 package com.example.graduationproject.presentation.accountinfo
 
 import android.annotation.SuppressLint
+import android.net.Uri
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -35,6 +39,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
@@ -48,6 +53,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
+import coil.compose.rememberImagePainter
 import com.example.graduationproject.R
 import com.example.graduationproject.presentation.common.CustomButtonAndText
 import com.example.graduationproject.presentation.common.CustomTextField
@@ -55,6 +61,7 @@ import com.example.graduationproject.presentation.common.signup.DisplayRequireme
 import com.example.graduationproject.presentation.common.signup.UserViewModel
 import com.example.graduationproject.ui.theme.DarkBlue
 import com.example.graduationproject.ui.theme.LightBrown
+import kotlin.math.log
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -127,7 +134,9 @@ fun ProviderAccountInfo(
 
         Box(modifier = Modifier.padding(16.dp), contentAlignment = Alignment.TopCenter) {
             Image(
-                painter = painterResource(id = R.drawable.servix_logo),
+                painter = if (userViewModel.imageUri != null) rememberImagePainter(data = userViewModel.imageUri)!! else painterResource(
+                    id = R.drawable.ic_default_account_pic
+                ),
                 contentDescription = "",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.size(100.dp),
@@ -148,7 +157,7 @@ fun ProviderAccountInfo(
         )
 
         Text(
-            text = userViewModel.returnedProviderData?.username ?: "",
+            text = userViewModel.userName,
             modifier = Modifier
                 .fillMaxWidth(.9f)
                 .padding(horizontal = 16.dp, vertical = 8.dp),
@@ -175,7 +184,7 @@ fun ProviderAccountInfo(
         )
 
         Text(
-            text = userViewModel.returnedProviderData?.phone ?: "",
+            text = userViewModel.phone,
             modifier = Modifier
                 .fillMaxWidth(.9f)
                 .padding(horizontal = 16.dp, vertical = 8.dp),
@@ -200,7 +209,7 @@ fun ProviderAccountInfo(
         )
 
         Text(
-            text = userViewModel.returnedProviderData?.email ?: "",
+            text = userViewModel.emailN,
             modifier = Modifier
                 .fillMaxWidth(.9f)
                 .padding(horizontal = 16.dp, vertical = 8.dp),
@@ -253,7 +262,7 @@ fun ProviderAccountInfo(
         )
 
         Text(
-            text = userViewModel.returnedProviderData?.fixed_salary.toString() ?: "",
+            text = userViewModel.fixedSalary,
             modifier = Modifier
                 .fillMaxWidth(.9f)
                 .padding(horizontal = 16.dp, vertical = 8.dp),
@@ -265,49 +274,6 @@ fun ProviderAccountInfo(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
         )
-
-        /*        Spacer(modifier = Modifier.height(32.dp))
-
-
-                Text(
-                    text = "Number of transaction with customer",
-                    modifier = Modifier
-                        .fillMaxWidth(.9f)
-                        .padding(horizontal = 8.dp),
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                )
-
-                Text(
-                    text = "5",
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
-                        .border(shape = RectangleShape, color = Color.Black, width = 2.dp)
-                        .padding(horizontal = 16.dp, vertical = 8.dp),
-                    fontSize = 16.sp,
-
-                    )
-
-                Divider(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                )
-
-                Spacer(modifier = Modifier.height(32.dp))*/
-
-//        TextField(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(horizontal = 16.dp)
-//            ,
-//            value = "Helli",
-//            onValueChange = {},
-//            colors = TextFieldDefaults.colors(
-//                unfocusedContainerColor = Color.Transparent,
-//                unfocusedIndicatorColor = Color.Black.copy(alpha = .2f)
-//            )
-//        )
 
     }
 
@@ -332,7 +298,9 @@ fun ProviderAccountInfoDetails(
     val emailFocusRequester = remember { FocusRequester() }
     val services = context.resources.getStringArray(R.array.services).toList()
 
-//    userViewModel.getDataFromServer()
+    val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
+        userViewModel.imageUri = uri
+    }
 
     Column(
         modifier = modifier
@@ -351,14 +319,18 @@ fun ProviderAccountInfoDetails(
 
             Box(modifier = Modifier.size(130.dp)) {
                 Image(
-                    painter = painterResource(id = R.drawable.servix_logo),
+                    painter = if (userViewModel.imageUri != null) rememberImagePainter(data = userViewModel.imageUri)!! else painterResource(
+                        id = R.drawable.ic_default_account_pic
+                    ),
                     contentDescription = "",
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier.size(100.dp),
+                    modifier = Modifier
+                        .size(100.dp)
+                        .clip(RoundedCornerShape(12.dp)),
                     alignment = Alignment.TopCenter,
                 )
                 IconButton(
-                    onClick = onPhotoChangeClick,
+                    onClick = { launcher.launch("image/*") },
                     Modifier
                         .padding(16.dp)
                         .border(
@@ -403,14 +375,6 @@ fun ProviderAccountInfoDetails(
             fieldValue = userViewModel.userName
         )
 
-        /*        OutlinedTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
-            value = "",
-            onValueChange = {},
-            placeholder = { Text(text = "UserName") }
-        )*/
 
         // TODO City DropDownMenu
 
@@ -445,7 +409,7 @@ fun ProviderAccountInfoDetails(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = if (userViewModel.returnedProviderData?.city?.isNotEmpty() == true) userViewModel.returnedProviderData!!.city else "City",
+                text = if (userViewModel.selectedCityValue.isNotEmpty()) userViewModel.selectedCityValue else "City",
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
                     .weight(7f)
@@ -482,16 +446,6 @@ fun ProviderAccountInfoDetails(
             }
         }
 
-
-        /*        OutlinedTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
-            value = "",
-            onValueChange = {},
-            placeholder = { Text(text = "City") }
-        )*/
-
         Text(
             text = "Address",
             modifier = Modifier
@@ -505,20 +459,11 @@ fun ProviderAccountInfoDetails(
             modifier = Modifier.focusRequester(addressFocusRequester),
 
             fieldName = R.string.address,
-            fieldValue = userViewModel.returnedProviderData?.address ?: "",
+            fieldValue = userViewModel.address,
             onValueChange = { userViewModel.onAddressChanged(it) },
             isError = userViewModel.addressError,
 
             )
-
-        /*        OutlinedTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
-            value = "",
-            onValueChange = {},
-            placeholder = { Text(text = "Address") }*/
-
 
         Text(
             text = "Email",
@@ -548,16 +493,6 @@ fun ProviderAccountInfoDetails(
             fieldValue = userViewModel.emailN
         )
 
-
-        /*        OutlinedTextField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp),
-                    value = "",
-                    onValueChange = {},
-                    placeholder = { Text(text = "Email") }
-                )*/
-
         Text(
             text = "Phone Number",
             modifier = Modifier
@@ -576,7 +511,7 @@ fun ProviderAccountInfoDetails(
                 },
 
             fieldName = R.string.phone,
-            fieldValue = userViewModel.returnedProviderData?.phone ?: "",
+            fieldValue = userViewModel.phone,
             onValueChange = { userViewModel.onPhoneChanged(it) },
             isError = userViewModel.phoneError,
 
@@ -588,14 +523,6 @@ fun ProviderAccountInfoDetails(
             fieldValue = userViewModel.phone
         )
 
-        /*        OutlinedTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
-            value = "",
-            onValueChange = {},
-            placeholder = { Text(text = "Phone") }*/
-//        )
         // TODO Service DropDownMenu
         Text(
             text = "Service",
@@ -626,7 +553,7 @@ fun ProviderAccountInfoDetails(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = if (userViewModel.selectedServiceValue.isNotEmpty()) userViewModel.returnedProviderData!!.profession else "Your Service",
+                text = if (userViewModel.selectedServiceValue.isNotEmpty()) userViewModel.selectedServiceValue else "Your Service",
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
                     .weight(7f)
@@ -662,15 +589,6 @@ fun ProviderAccountInfoDetails(
         }
 
 
-        /*        OutlinedTextField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp),
-                    value = "",
-                    onValueChange = {},
-                    placeholder = { Text(text = "Service") }
-                )*/
-
         Text(
             text = "Fixed Fees",
             modifier = Modifier
@@ -684,35 +602,10 @@ fun ProviderAccountInfoDetails(
             modifier = Modifier
                 .padding(horizontal = 8.dp),
             fieldName = R.string.fixed_salary,
-            fieldValue = userViewModel.returnedProviderData?.fixed_salary.toString(),
+            fieldValue = userViewModel.fixedSalary,
             onValueChange = { userViewModel.onFixedSalaryChanged(it) },
         )
 
-
-        /*        OutlinedTextField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp),
-                    value = "",
-                    onValueChange = {},
-                    placeholder = { Text(text = "Fixed Fees") }
-                )*/
-
-        /*        // TODO  My Work File Upload
-                Text(
-                    text = "My Work",
-                    modifier = Modifier
-                        .fillMaxWidth(.9f)
-                        .padding(8.dp),
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                )
-
-
-
-
-
-                AddNeWorkToProfileItem()*/
 
         CustomButtonAndText(
             text = R.string.done,
@@ -721,7 +614,11 @@ fun ProviderAccountInfoDetails(
                 .padding(vertical = 16.dp, horizontal = 4.dp),
             backgroundColor = DarkBlue,
             contentColor = Color.White,
-            onClick = onSaveChangesClick
+            onClick = {
+                Log.d("TAG", "ProviderAccountInfoDetails: $userViewModel || ${userViewModel.userName} || ${userViewModel.phone} || ${userViewModel.emailN} ||")
+                Log.d("WHY","IMageURI ${userViewModel.imageUri}")
+                onSaveChangesClick()
+            }
         )
 
     }
