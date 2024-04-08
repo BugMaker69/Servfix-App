@@ -36,6 +36,7 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -53,6 +54,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
+import coil.compose.AsyncImage
 import coil.compose.rememberImagePainter
 import com.example.graduationproject.R
 import com.example.graduationproject.presentation.common.CustomButtonAndText
@@ -134,7 +136,7 @@ fun ProviderAccountInfo(
 
         Box(modifier = Modifier.padding(16.dp), contentAlignment = Alignment.TopCenter) {
             Image(
-                painter = if (userViewModel.imageUri != null) rememberImagePainter(data = userViewModel.imageUri)!! else painterResource(
+                painter = if (userViewModel.returnedProviderData?.image != null) rememberImagePainter(data = Uri.parse( userViewModel.returnedProviderData!!.image.toString()))!! else painterResource(
                     id = R.drawable.ic_default_account_pic
                 ),
                 contentDescription = "",
@@ -157,7 +159,7 @@ fun ProviderAccountInfo(
         )
 
         Text(
-            text = userViewModel.userName,
+            text = userViewModel.returnedProviderData?.username ?: "",
             modifier = Modifier
                 .fillMaxWidth(.9f)
                 .padding(horizontal = 16.dp, vertical = 8.dp),
@@ -184,7 +186,7 @@ fun ProviderAccountInfo(
         )
 
         Text(
-            text = userViewModel.phone,
+            text = userViewModel.returnedProviderData?.phone ?: "",
             modifier = Modifier
                 .fillMaxWidth(.9f)
                 .padding(horizontal = 16.dp, vertical = 8.dp),
@@ -209,7 +211,7 @@ fun ProviderAccountInfo(
         )
 
         Text(
-            text = userViewModel.emailN,
+            text = userViewModel.returnedProviderData?.email ?: "",
             modifier = Modifier
                 .fillMaxWidth(.9f)
                 .padding(horizontal = 16.dp, vertical = 8.dp),
@@ -262,7 +264,7 @@ fun ProviderAccountInfo(
         )
 
         Text(
-            text = userViewModel.fixedSalary,
+            text = userViewModel.returnedProviderData?.fixed_salary.toString() ?: "",
             modifier = Modifier
                 .fillMaxWidth(.9f)
                 .padding(horizontal = 16.dp, vertical = 8.dp),
@@ -300,6 +302,11 @@ fun ProviderAccountInfoDetails(
 
     val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
         userViewModel.imageUri = uri
+    }
+    val BASE_URL = "https://p2kjdbr8-8000.uks1.devtunnels.ms/api"
+
+    LaunchedEffect(key1 = true) {
+        userViewModel.getData()
     }
 
     Column(

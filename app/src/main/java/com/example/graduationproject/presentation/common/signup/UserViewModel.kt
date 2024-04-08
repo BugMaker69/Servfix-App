@@ -562,7 +562,9 @@ private val BASE_URL = "https://p2kjdbr8-8000.uks1.devtunnels.ms/api"
                     return@launch
                 } else
                     error = null
-                try {
+
+                getData()
+/*                try {
                     returnedProviderData =
                         addProviderRepository.getProviderData(token?.access ?: "")
                     returnedProviderData?.let {
@@ -597,7 +599,7 @@ private val BASE_URL = "https://p2kjdbr8-8000.uks1.devtunnels.ms/api"
                         "EEERRROOORRR",
                         "User Error: ${e.cause} ||  ${e.message} ||  ${e.localizedMessage} ||  ${e.stackTrace} ||  ${e.suppressed} ||  ${e} || "
                     )
-                }
+                }*/
 
 
 //                val data = addProviderRepository.getProviderData(token?.access ?: "")
@@ -656,6 +658,46 @@ private val BASE_URL = "https://p2kjdbr8-8000.uks1.devtunnels.ms/api"
         isNewPasswordFocused.value = false
     }
 
+    fun getData(){
+        viewModelScope.launch {
+            try {
+                returnedProviderData =
+                    addProviderRepository.getProviderData(token?.access ?: "")
+                returnedProviderData?.let {
+                    userName = it.username
+                    address = it.address
+                    selectedCityValue = it.city
+                    emailN = it.email
+                    phone = it.phone
+                    fixedSalary = it.fixed_salary.toString()
+                    selectedServiceValue = it.profession
+                    imageUri = Uri.parse(BASE_URL + it.image)
+                }
+                Log.d(
+                    "TAG",
+                    "getProviderData: data40 ${returnedProviderData?.email}   ${returnedProviderData?.id}   ${returnedProviderData?.username}  "
+                )
+            } catch (e: Exception) {
+                Log.d(
+                    "EEERRROOORRR",
+                    "Provider Error: ${e.cause} ||  ${e.message} ||  ${e.localizedMessage} ||  ${e.stackTrace} ||  ${e.suppressed} ||  ${e} || "
+                )
+            }
+
+            try {
+                returnedUserData = addProviderRepository.getUserData(token?.access ?: "")
+                Log.d(
+                    "TAG",
+                    "getProviderData: data40 ${returnedUserData?.email}   ${returnedUserData?.id}   ${returnedUserData?.username}  "
+                )
+            } catch (e: Exception) {
+                Log.d(
+                    "EEERRROOORRR",
+                    "User Error: ${e.cause} ||  ${e.message} ||  ${e.localizedMessage} ||  ${e.stackTrace} ||  ${e.suppressed} ||  ${e} || "
+                )
+            }
+        }
+    }
 
     /*    fun getDataFromServer(){
             userName = returnedProviderData?.username ?: userName

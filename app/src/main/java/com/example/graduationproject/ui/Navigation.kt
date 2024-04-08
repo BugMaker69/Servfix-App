@@ -198,6 +198,8 @@ fun ServixApp(
             composable(ServixScreens.Settings.name) {
                 SettingsScreen(innerPadding,
                     onAccountInfoClick = {
+                        /*                        //TODO NEED TO BE HANDLED IN BETTER WAY USING SUCH DATA STORE
+                        userViewModel.getData()*/
                         if (userTypeViewModel.userType.value == UserType.OwnerPerson) {
                             navController.navigate(ServixScreens.UserAccountInfo.name)
                         } else {
