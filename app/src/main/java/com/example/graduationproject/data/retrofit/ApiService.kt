@@ -38,10 +38,16 @@ interface ApiService {
     suspend fun getProvidersSearch(@Path("id") id: Int): List<ReturnedProviderData>
 
     @PUT("api/userinfo/update")
-    suspend fun updateUserData(
+    fun updateUserData(
         @Header("Authorization") token: String,
-        @Body userData: RequsetUpdateData
-    ): ReturnedUserData
+
+        @Part("username") username: RequestBody,
+        @Part("email") email: RequestBody,
+        @Part("address") address: RequestBody,
+        @Part("phone") phone: RequestBody,
+        @Part("city") city: RequestBody,
+        @Part image: MultipartBody.Part
+    ): Call<ResponseBody>
 
     @Multipart
     @POST("/api/provider_register/")

@@ -18,6 +18,7 @@ import com.example.graduationproject.data.Register
 import com.example.graduationproject.data.ReturnedProviderData
 import com.example.graduationproject.data.ReturnedUserData
 import com.example.graduationproject.data.retrofit.RetrofitClient
+import com.example.graduationproject.presentation.common.UserType
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
@@ -541,7 +542,7 @@ class UserViewModel(ctx: Context) : ViewModel() {
 //private val _returnedProviderData = MutableStateFlow<ReturnedProviderData?>(null)
 //    val returnedProviderData: StateFlow<ReturnedProviderData?> = _returnedProviderData
 private val BASE_URL = "https://p2kjdbr8-8000.uks1.devtunnels.ms/api"
-
+var accounType by mutableStateOf(UserType.OwnerPerson)
     fun login() {
         if (email.isEmpty()) {
             emailError = true
@@ -673,6 +674,7 @@ private val BASE_URL = "https://p2kjdbr8-8000.uks1.devtunnels.ms/api"
                     selectedServiceValue = it.profession
                     imageUri = Uri.parse(BASE_URL + it.image)
                 }
+                accounType = UserType.HirePerson
                 Log.d(
                     "TAG",
                     "getProviderData: data40 ${returnedProviderData?.email}   ${returnedProviderData?.id}   ${returnedProviderData?.username}  "
@@ -686,6 +688,16 @@ private val BASE_URL = "https://p2kjdbr8-8000.uks1.devtunnels.ms/api"
 
             try {
                 returnedUserData = addProviderRepository.getUserData(token?.access ?: "")
+                returnedUserData?.let {
+                    userName = it.username
+                    emailN = it.email
+                    selectedCityValue = it.city
+                    address = it.address
+                    phone = it.phone
+                    imageUri = Uri.parse(BASE_URL + it.image)
+                }
+                accounType = UserType.OwnerPerson
+
                 Log.d(
                     "TAG",
                     "getProviderData: data40 ${returnedUserData?.email}   ${returnedUserData?.id}   ${returnedUserData?.username}  "
@@ -730,6 +742,21 @@ private val BASE_URL = "https://p2kjdbr8-8000.uks1.devtunnels.ms/api"
 /*            ratings = "5",
             service_id = 1,
             user = 1,*/
+        )
+
+
+
+    }
+    fun updateUserData() {
+
+        val updateUserData = addProviderRepository.updateUserData(
+            token = token!!.access,
+            address = address,
+            city = selectedCityValue,
+            email = emailN,
+            image = imageUri!!,
+            phone = phone,
+            username = userName,
         )
 
 

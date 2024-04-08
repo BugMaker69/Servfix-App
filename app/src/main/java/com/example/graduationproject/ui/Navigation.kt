@@ -104,11 +104,19 @@ fun ServixApp(
         topBar = {
             when (navController.currentBackStackEntryAsState().value?.destination?.route) {
                 ServixScreens.ProviderAccountInfo.name, ServixScreens.ProviderAccountInfoDetails.name, ServixScreens.UserAccountInfo.name -> {
-                    SettingsTopBar(onBackButtonOnTopNavBar = { }, showBack = true, scrollBarBehavior = scrollBehavior)
+                    SettingsTopBar(
+                        onBackButtonOnTopNavBar = { },
+                        showBack = true,
+                        scrollBarBehavior = scrollBehavior
+                    )
                 }
 
                 ServixScreens.Settings.name -> {
-                    SettingsTopBar(onBackButtonOnTopNavBar = { }, showBack = false,scrollBarBehavior = scrollBehavior)
+                    SettingsTopBar(
+                        onBackButtonOnTopNavBar = { },
+                        showBack = false,
+                        scrollBarBehavior = scrollBehavior
+                    )
                 }
 
                 ServixScreens.Home.name, ServixScreens.FindProvider.name + "/{id}" + "/{serviceName}", ServixScreens.Favorite.name -> HomeTopBar(
@@ -137,7 +145,7 @@ fun ServixApp(
                     ServixScreens.FindProvider.name + "/{id}" + "/{serviceName}"
                 )
             )
-                BottomAppBar( navController = navController)
+                BottomAppBar(navController = navController)
         }
     ) { innerPadding ->
         NavHost(
@@ -200,7 +208,7 @@ fun ServixApp(
                     onAccountInfoClick = {
                         /*                        //TODO NEED TO BE HANDLED IN BETTER WAY USING SUCH DATA STORE
                         userViewModel.getData()*/
-                        if (userTypeViewModel.userType.value == UserType.OwnerPerson) {
+                        if (userTypeViewModel.userType.value == UserType.OwnerPerson || userViewModel.accounType == UserType.OwnerPerson) {
                             navController.navigate(ServixScreens.UserAccountInfo.name)
                         } else {
                             navController.navigate(ServixScreens.ProviderAccountInfo.name)
@@ -234,7 +242,8 @@ fun ServixApp(
             }
             //  Todo How To Handle UserInfo And ProviderInfo ?!
             composable(ServixScreens.UserAccountInfo.name) {
-                UserAccountInfoScreen(innerPadding,
+                UserAccountInfoScreen(
+                    innerPadding,
                     onAccountInfoDetailsClick = {
                         navController.navigate(ServixScreens.UserAccountInfoDetails.name)
                     },
@@ -244,7 +253,8 @@ fun ServixApp(
                     //  TODO Not Handled Yet It's Wrong
                     onBottomNavigationItemClick = {
                         navController.navigate(ServixScreens.Settings.name)
-                    }
+                    },
+                    userViewModel = userViewModel
                 )
             }
             composable(ServixScreens.UserAccountInfoDetails.name) {
@@ -256,8 +266,10 @@ fun ServixApp(
                     onBottomNavigationItemClick = {},
                     onPhotoChangeClick = {},
                     onSaveChangesClick = {
+                        userViewModel.updateUserData()
                         navController.navigate(ServixScreens.Settings.name)
-                    }
+                    },
+                    userViewModel = userViewModel
                 )
             }
             composable(ServixScreens.ProviderAccountInfo.name) {
@@ -274,9 +286,9 @@ fun ServixApp(
                     modifier = Modifier.padding(innerPadding),
 
                     onSaveChangesClick = {
-                                         userViewModel.updateProviderData()
+                        userViewModel.updateProviderData()
                         navController.navigate(ServixScreens.Settings.name)
-                                         },
+                    },
                     onPhotoChangeClick = {},
                     userViewModel = userViewModel
                 )

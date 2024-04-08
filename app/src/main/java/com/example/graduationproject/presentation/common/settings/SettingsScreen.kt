@@ -495,17 +495,19 @@ fun NewPasswordScreenPreview() {
     NewPasswordScreen(Modifier, {})
 }
 
-@Preview(showBackground = true)
+/*@Preview(showBackground = true)
 @Composable
 fun UserAccountInfoDetailsPreview() {
-    UserAccountInfoDetails(Modifier, {}, {})
-}
+    UserAccountInfoDetails(Modifier, {}, {}, viewModel())
+}*/
 
+/*
 @Preview(showBackground = true)
 @Composable
 fun UserAccountInfoPreview() {
-    UserAccountInfo(Modifier, {})
+    UserAccountInfo(Modifier, {}, viewModel())
 }
+*/
 
 @Preview(showBackground = true)
 @Composable

@@ -116,7 +116,7 @@ class AddProviderRepository constructor(private val ctx: Context) {
     private fun prepareFilePart(partName: String, fileUri: Uri): MultipartBody.Part {
         val file: File = FileUtils.getFile(ctx, fileUri)
         val requestFile: RequestBody = RequestBody.create(
-            ctx.contentResolver.getType(fileUri)!!.toMediaTypeOrNull(), file
+            ctx.contentResolver.getType(fileUri)?.toMediaTypeOrNull(), file
         )
         return MultipartBody.Part.createFormData(partName, file.name, requestFile)
     }
@@ -234,6 +234,81 @@ class AddProviderRepository constructor(private val ctx: Context) {
 /*            ratings = ratingsRequestBody,
             service_id = service_idRequestBody,
             user = userRequestBody,*/
+            image = fileToSend
+        ).enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+
+                if (response.body() != null && response.isSuccessful) {
+                    try {
+
+                        if (response.code() == 201) {
+                            serverResponse.value = "Updated"
+                            Log.d("Updated", "onResponse: Updated ${response} ||  ${response.code()} ||  ${response.body()} ||  ${response.errorBody()} ||  ${response.isSuccessful} ||  ||  ${response.message()} ||  ||  ${response.headers()} ||  ||  ${response.raw()} || ")
+
+                        } else {
+                            Log.d("Error", "onResponse: Updated Error ${response} ||  ${response.code()} ||  ${response.body()} ||  ${response.errorBody()} ||  ${response.isSuccessful} ||  ||  ${response.message()} ||  ||  ${response.headers()} ||  ||  ${response.raw()} || ")
+
+                            connectionError.value = response.errorBody().toString()
+                        }
+                    } catch (e: Exception) {
+                        Log.d("Catched Error Updated", "onResponse: Updated Catched Error  ${response} ||  ${response.code()} ||  ${response.body()} ||  ${response.errorBody()} ||  ${response.isSuccessful} ||  ||  ${response.message()} ||  ||  ${response.headers()} ||  ||  ${response.raw()} || ")
+
+                        connectionError.value = e.message.toString()
+                    }
+                }
+                Log.d("onFailure Error Updated", "onResponse: Updated Nothing Happen Why ")
+                Log.d("onFailure Error Updated", "onResponse: Updated onFailure Error ${response} ||  ${response.isSuccessful} ||  ${response.message()} ||  ${response.code()} ||  ${response.errorBody()} ||  ${response.headers()} ||  ${response.raw()} || ")
+
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                Log.d("onFailure Error Updated", "onResponse: Updated onFailure Error ${t} ||  ${t.message} ||  ${t.cause} ||  ${t.localizedMessage} ||  ${t.stackTrace} ||  ${t.suppressed} || ")
+
+                connectionError.value = t.message.toString()
+            }
+        })
+    }
+
+
+    fun updateUserData(
+        token: String,
+        address: String,
+        city: String,
+        email: String,
+        image: Uri,
+        phone: String,
+        username: String,
+    ) {
+
+        val fileToSend = prepareFilePart("image", image)
+        val addressRequestBody: RequestBody = RequestBody.create(
+            "text/plain".toMediaTypeOrNull(),
+            address
+        )
+        val cityRequestBody: RequestBody = RequestBody.create(
+            "text/plain".toMediaTypeOrNull(),
+            city
+        )
+        val emailRequestBody: RequestBody = RequestBody.create(
+            "text/plain".toMediaTypeOrNull(),
+            email
+        )
+        val phoneRequestBody: RequestBody = RequestBody.create(
+            "text/plain".toMediaTypeOrNull(),
+            phone
+        )
+        val usernameRequestBody: RequestBody = RequestBody.create(
+            "text/plain".toMediaTypeOrNull(),
+            username
+        )
+
+        RetrofitClient.userRegisterationApiService().updateUserData(
+            token = "Bearer $token",
+            address = addressRequestBody,
+            city = cityRequestBody,
+            email = emailRequestBody,
+            username = usernameRequestBody,
+            phone = phoneRequestBody,
             image = fileToSend
         ).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
