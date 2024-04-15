@@ -28,6 +28,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.Image
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
@@ -67,6 +68,7 @@ fun ShareProblemScreen(
     val context = LocalContext.current
 
     val services = context.resources.getStringArray(R.array.services).toList()
+    val locations = context.resources.getStringArray(R.array.egypt_governorates).toList()
 
 
     val galleryLauncher =
@@ -157,7 +159,7 @@ fun ShareProblemScreen(
 
                     Column(
                         Modifier
-                            .fillMaxWidth()
+                            .fillMaxWidth(.6f)
                             .padding(horizontal = 4.dp),
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.Start
@@ -199,6 +201,51 @@ fun ShareProblemScreen(
 
                     }
 
+                    Icon(imageVector = Icons.Default.LocationOn, contentDescription = "")
+                    Column(
+                        Modifier
+//                            .fillMaxWidth()
+                            .padding(horizontal = 4.dp),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.Start
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .clickable {
+                                    serviceViewModel.expandDropDownMenuLocation =
+                                        !serviceViewModel.expandDropDownMenuLocation
+                                }
+                                .padding(start = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(text = if (serviceViewModel.selectedSentToLocationValue != "") serviceViewModel.selectedSentToLocationValue else "Location?")
+                            /*
+                        if (serviceViewModel.expandDropDownMenu) {
+                            Icon(Icons.Default.ExpandLess, contentDescription = "Arrow Icon")
+                        } else {
+                            Icon(Icons.Default.ExpandMore, contentDescription = "Arrow Icon")
+                        }
+*/
+                        }
+
+                        DropdownMenu(
+                            expanded = serviceViewModel.expandDropDownMenuLocation,
+                            onDismissRequest = { serviceViewModel.expandDropDownMenuLocation = false }
+                            ,
+                        ) {
+                            locations.forEachIndexed { index, location ->
+                                DropdownMenuItem(
+                                    text = { Text(text = location) },
+                                    onClick = {
+                                        serviceViewModel.selectedSentToLocationIndex = index
+                                        serviceViewModel.selectedSentToLocationValue = location
+                                        serviceViewModel.expandDropDownMenuLocation = false
+                                    }
+                                )
+                            }
+                        }
+//                    Text(text = "Location")
+                    }
                 }
 
                 Box(

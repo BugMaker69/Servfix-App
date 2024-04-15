@@ -7,8 +7,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -310,6 +312,80 @@ fun DeleteAccountScreen(
 
 }
 
+
+
+@Composable
+fun SecurityScreen(
+    modifier: Modifier = Modifier,
+    onDonePasswordClick:()->Unit
+) {
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(8.dp)
+            .verticalScroll(rememberScrollState()),
+    ) {
+        var eyeIconPress by remember { mutableStateOf(false) }
+
+        Text(
+            text = "Security",
+            modifier = Modifier
+                .fillMaxWidth(.9f)
+                .padding(8.dp),
+            fontSize = 32.sp,
+            fontWeight = FontWeight.Bold,
+        )
+
+        Spacer(modifier = Modifier.height(128.dp))
+
+        Text(
+            text = "Password",
+            modifier = Modifier
+                .fillMaxWidth(.9f)
+                .padding(8.dp),
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold,
+        )
+
+        OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            value = "",
+            onValueChange = {},
+            placeholder = { Text(text = "Password") },
+            trailingIcon = {
+                IconButton(onClick = {
+                    eyeIconPress = !eyeIconPress
+                }) {
+                    Icon(
+                        imageVector = if (eyeIconPress) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
+                        contentDescription = "",
+                        tint = Color.Black,
+                    )
+                }
+            },
+            visualTransformation = if (eyeIconPress) PasswordVisualTransformation() else VisualTransformation.None
+        )
+
+        Spacer(modifier = Modifier.height(128.dp))
+
+        Button(
+            onClick = onDonePasswordClick,
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(containerColor = DarkBlue),
+            shape = RoundedCornerShape(8.dp)
+        ) {
+            Text(text = "Done")
+        }
+
+    }
+
+}
+
+
+
 @Composable
 fun NewPasswordScreen(
     modifier: Modifier = Modifier,
@@ -508,6 +584,12 @@ fun UserAccountInfoPreview() {
     UserAccountInfo(Modifier, {}, viewModel())
 }
 */
+
+@Preview(showBackground = true)
+@Composable
+fun SecurityScreenPreview() {
+    SecurityScreen(Modifier,{})
+}
 
 @Preview(showBackground = true)
 @Composable
