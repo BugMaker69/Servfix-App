@@ -44,7 +44,6 @@ import com.example.graduationproject.presentation.common.signup.SignupFirstScree
 import com.example.graduationproject.presentation.common.signup.SignupSecondScreen
 import com.example.graduationproject.presentation.common.signup.SignupThirdScreen
 import com.example.graduationproject.presentation.common.signup.UserViewModel
-import com.example.graduationproject.presentation.common.signup.ViewModelFactory
 import com.example.graduationproject.presentation.favourite.FavoriteScreen
 import com.example.graduationproject.presentation.notification.NotificationScreen
 import com.example.graduationproject.presentation.notification.NotificationTopBar
@@ -53,9 +52,12 @@ import com.example.graduationproject.presentation.otp.OtpScreen
 import com.example.graduationproject.presentation.search_for_provider.FindProvider
 import com.example.graduationproject.presentation.userservice.ShareProblemScreen
 import com.example.graduationproject.presentation.userservice.UserHomeScreen
+import com.example.graduationproject.presentation.viewprofile.ViewProfileScreen
+import com.example.graduationproject.presentation.viewprofile.ViewProfileViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.system.exitProcess
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -63,8 +65,9 @@ fun ServixApp(
     navController: NavHostController = rememberNavController()
 ) {
     val context = LocalContext.current
-    val userViewModel: UserViewModel = viewModel(factory = ViewModelFactory(context))
+    val userViewModel: UserViewModel = viewModel()
     val userTypeViewModel: UserTypeViewModel = viewModel()
+    val viewProfileViewModel:ViewProfileViewModel= viewModel()
     var isBackPressedOnce by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
@@ -168,26 +171,35 @@ fun ServixApp(
             ) {
                 FindProvider(
                     modifier = Modifier.padding(innerPadding),
+                    viewProfileClick = {navController.navigate(ServixScreens.ViewProfile.name)},
                 )
+            }
+            composable(ServixScreens.ViewProfile.name){
+                ViewProfileScreen(modifier =Modifier.padding(innerPadding), viewProfileViewModel = viewProfileViewModel)
+
             }
             composable(ServixScreens.Favorite.name) {
                 FavoriteScreen(modifier = Modifier.padding(innerPadding))
             }
             composable(ServixScreens.Login.name) {
                 Login(
-                    onLoginClick = {
-                        userViewModel.login()
+                        onLoginClick = {
+                            userViewModel.login()
+                            if (userViewModel.token != null) {
+                                coroutineScope.launch {
+                                    navController.navigate(ServixScreens.Home.name)
+                                }
 
-                        navController.navigate(ServixScreens.Home.name)
-                    },
-                    onSignupClick = {
-                        navController.navigate(ServixScreens.BeforeSignup.name)
-                    },
-                    onForgetPasswordClick = {
-                        navController.navigate(ServixScreens.ForgotPassword.name)
-                    },
-                    userViewModel = userViewModel
-                )
+                            }
+                        },
+                        onSignupClick = {
+                            navController.navigate(ServixScreens.BeforeSignup.name)
+                        },
+                        onForgetPasswordClick = {
+                            navController.navigate(ServixScreens.ForgotPassword.name)
+                        },
+                        userViewModel = userViewModel
+                    )
             }
             composable(ServixScreens.BeforeSignup.name) {
                 BeforeSignup(

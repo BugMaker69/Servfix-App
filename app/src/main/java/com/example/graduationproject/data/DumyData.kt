@@ -68,7 +68,29 @@ data class LoginResponse(
     val refresh: String,
     val access: String
 )
+data class ViewProfileData (
 
+    @SerializedName("provider" ) var provider : Provider?         = Provider(),
+    @SerializedName("works"    ) var works    : ArrayList<String> = arrayListOf()
+
+)
+data class Provider (
+
+    @SerializedName("phone"        ) var phone       : String? = null,
+    @SerializedName("username"     ) var username    : String? = null,
+    @SerializedName("password"     ) var password    : String? = null,
+    @SerializedName("email"        ) var email       : String? = null,
+    @SerializedName("fixed_salary" ) var fixedSalary : String? = null,
+    @SerializedName("image"        ) var image       : String? = null,
+    @SerializedName("ratings"      ) var ratings     : String? = null,
+    @SerializedName("city"         ) var city        : String? = null,
+    @SerializedName("address"      ) var address     : String? = null,
+    @SerializedName("id"           ) var id          : Int?    = null,
+    @SerializedName("user"         ) var user        : Int?    = null,
+    @SerializedName("profession"   ) var profession  : String? = null,
+    @SerializedName("service_id"   ) var serviceId   : Int?    = null
+
+)
 
 data class ReturnedUserData(
     val address: String,
@@ -102,7 +124,7 @@ data class ProviderData(
     val address: String,
     val city: String,
     val email: String,
-    val fixed_salary: Double,
+    val fixed_salary: String,
     val id_image: String,
     val password: String,
     val phone: String,
@@ -116,7 +138,7 @@ data class ReturnedProviderData(
     val address: String,
     val city: String,
     val email: String,
-    val fixed_salary: Double,
+    val fixed_salary: String,
     val id: Int,
     var image: Any,
     val password: String,

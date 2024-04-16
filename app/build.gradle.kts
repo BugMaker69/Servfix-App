@@ -104,7 +104,7 @@ dependencies {
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
 
 
-    implementation("io.coil-kt:coil-compose:1.4.0")
+    implementation("io.coil-kt:coil-compose:2.6.0")
 
     //hilt
     implementation("com.google.dagger:hilt-android:2.51")
@@ -112,7 +112,7 @@ dependencies {
     kapt("com.google.dagger:hilt-android-compiler:2.51")
     //coil
     implementation("io.coil-kt:coil-compose:2.6.0")
-
-
+ //data store
+    implementation ("androidx.datastore:datastore-preferences:1.0.0")
 
 }

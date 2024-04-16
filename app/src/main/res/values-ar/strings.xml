@@ -92,6 +92,8 @@
     <string name="messages">الرسائل</string>
     <string name="remove_favorite">حذف من المفضلة</string>
     <string name="incorrect_email_or_password">Incorrect Email Or Password</string>
+    <string name="call">مكالمة</string>
+    <string name="chat">محادثة</string>
 
 
     <string-array name="egypt_governorates">

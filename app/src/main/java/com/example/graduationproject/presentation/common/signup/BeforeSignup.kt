@@ -81,7 +81,6 @@ fun BeforeSignup(
                     userTypeViewModel.userType.value = UserType.OwnerPerson
                     onHireClick()
                 },
-                colors = CardDefaults.cardColors(containerColor = Color.White),
                 elevation = CardDefaults.cardElevation(16.dp),
                 modifier = Modifier
                     .fillMaxSize()
@@ -134,7 +133,6 @@ fun BeforeSignup(
                     userTypeViewModel.userType.value = UserType.HirePerson
                     onBecomeClick()
                 },
-                colors = CardDefaults.cardColors(containerColor = Color.White),
                 elevation = CardDefaults.cardElevation(16.dp),
                 modifier = Modifier.padding(4.dp)
             ) {

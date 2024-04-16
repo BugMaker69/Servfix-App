@@ -1,13 +1,18 @@
-package com.example.graduationproject.data
+package com.example.graduationproject.data.repositories
 
-import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.MutableLiveData
+import com.example.graduationproject.MyApplication
+import com.example.graduationproject.data.LoginRequest
+import com.example.graduationproject.data.LoginResponse
+import com.example.graduationproject.data.ReturnedProviderData
+import com.example.graduationproject.data.ReturnedUserData
 import com.example.graduationproject.data.retrofit.RetrofitClient
+import com.example.graduationproject.utils.DataStoreToken
 import com.example.graduationproject.utils.FileUtils
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -19,12 +24,12 @@ import retrofit2.Response
 import java.io.File
 
 
-class AddProviderRepository constructor(private val ctx: Context) {
+class AddProviderRepository  {
 
     val connectionError = MutableLiveData("")
     val serverResponse = MutableLiveData("")
 
-
+var dataStoreToken=DataStoreToken()
     fun restAddProductVariables() {
         connectionError.value = ""
         serverResponse.value = ""
@@ -114,9 +119,9 @@ class AddProviderRepository constructor(private val ctx: Context) {
     }
 
     private fun prepareFilePart(partName: String, fileUri: Uri): MultipartBody.Part {
-        val file: File = FileUtils.getFile(ctx, fileUri)
+        val file: File = FileUtils.getFile(MyApplication.getApplicationContext(), fileUri)
         val requestFile: RequestBody = RequestBody.create(
-            ctx.contentResolver.getType(fileUri)?.toMediaTypeOrNull(), file
+            MyApplication.getApplicationContext().contentResolver.getType(fileUri)?.toMediaTypeOrNull(), file
         )
         return MultipartBody.Part.createFormData(partName, file.name, requestFile)
     }
@@ -130,6 +135,8 @@ class AddProviderRepository constructor(private val ctx: Context) {
             if (loginResponse != null) {
                 Log.d("bqq", "login: ${loginResponse.refresh + " wait" + loginResponse.access}")
                 // Save the tokens
+                dataStoreToken.saveToken(loginResponse.access)
+
             } else {
                 Log.d("bqq", "error1")
             }
@@ -149,12 +156,12 @@ class AddProviderRepository constructor(private val ctx: Context) {
 
     suspend fun getProviderData(token: String): ReturnedProviderData? {
         val response =
-            RetrofitClient.userRegisterationApiService().getReturnedProviderData("Bearer $token")
+            RetrofitClient.userRegisterationApiService().getReturnedProviderData("Bearer $dataStoreToken")
         return response
     }
     suspend fun getUserData(token: String): ReturnedUserData? {
         val response =
-            RetrofitClient.userRegisterationApiService().getReturnedUserData("Bearer $token")
+            RetrofitClient.userRegisterationApiService().getReturnedUserData("Bearer $dataStoreToken")
         return response
     }
 
@@ -222,7 +229,7 @@ class AddProviderRepository constructor(private val ctx: Context) {
         )*/
 
         RetrofitClient.userRegisterationApiService().updateProviderData(
-            token = "Bearer $token",
+            token = "Bearer $dataStoreToken",
             address = addressRequestBody,
             city = cityRequestBody,
             email = emailRequestBody,
@@ -303,7 +310,7 @@ class AddProviderRepository constructor(private val ctx: Context) {
         )
 
         RetrofitClient.userRegisterationApiService().updateUserData(
-            token = "Bearer $token",
+            token = "Bearer $dataStoreToken",
             address = addressRequestBody,
             city = cityRequestBody,
             email = emailRequestBody,

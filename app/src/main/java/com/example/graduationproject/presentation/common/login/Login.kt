@@ -15,12 +15,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,6 +35,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
@@ -47,8 +51,9 @@ import com.example.graduationproject.presentation.common.CustomButtonAndText
 import com.example.graduationproject.presentation.common.CustomTextField
 import com.example.graduationproject.R
 import com.example.graduationproject.presentation.common.signup.UserViewModel
+import com.example.graduationproject.ui.theme.Black
 import com.example.graduationproject.ui.theme.DarkBlue
-
+import com.example.graduationproject.ui.theme.White
 
 
 @Composable
@@ -59,6 +64,7 @@ fun Login(
     onLoginClick: () -> Unit,
     userViewModel: UserViewModel
 ) {
+
     var press by remember { mutableStateOf(false) }
     userViewModel.isPasswordForget = false
     Column(
@@ -70,6 +76,7 @@ fun Login(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+
         Box(contentAlignment = Alignment.TopCenter) {
                 Image(
                     painter = painterResource(id = R.drawable.servix_frame),
@@ -105,7 +112,7 @@ fun Login(
                         Icon(
                             imageVector = if (press) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
                             contentDescription = "",
-                            tint = Color.Black,
+                            tint = Black,
                         )
                     }
                 },
@@ -133,12 +140,12 @@ fun Login(
                 text = R.string.login,
                 indication = rememberRipple(),
                 onClick = {
-//                    userViewModel.login()
-//                    userViewModel.getProviderData(userViewModel.token?.access ?: "")
-                    onLoginClick()
+                    if (userViewModel.email.isNotEmpty() && userViewModel.password.isNotEmpty()){
+                        onLoginClick()
+                    }
                           },
                 backgroundColor = DarkBlue,
-                contentColor = Color.White,
+                contentColor = White,
                 shape = RoundedCornerShape(36.dp)
             )
         }

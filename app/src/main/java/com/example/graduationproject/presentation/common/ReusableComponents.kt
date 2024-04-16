@@ -194,7 +194,7 @@ fun CustomButtonAndText(
     indication: Indication? = null,
     shape: Shape = RoundedCornerShape(4.dp),
     backgroundColor: Color = Color.Transparent,
-    contentColor: Color = Color.LightGray,
+    contentColor: Color = Color.White,
     style: TextStyle = TextStyle(),
     alignment: Alignment = Alignment.Center
 ) {

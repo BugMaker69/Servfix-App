@@ -105,7 +105,6 @@ fun NotificationItem(
             .fillMaxWidth()
             .padding(8.dp),
         onClick = onNotificationItemClick,
-        colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(8.dp),
         shape = RoundedCornerShape(32.dp)
     ) {

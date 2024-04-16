@@ -3,7 +3,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -13,17 +12,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.example.graduationproject.data.retrofit.TestScreenForApi
+import androidx.lifecycle.lifecycleScope
 import com.example.graduationproject.presentation.favourite.FavoriteScreen
 import com.example.graduationproject.presentation.search_for_provider.FindProvider
-import com.example.graduationproject.presentation.userservice.UserHomeScreen
-
+import com.example.graduationproject.presentation.viewprofile.ViewProfileScreen
+import com.example.graduationproject.presentation.viewprofile.ViewProfileViewModel
 
 import com.example.graduationproject.ui.theme.GraduationProjectTheme
 import com.example.graduationproject.ui.ServixApp
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
 
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         installSplashScreen()
@@ -44,7 +45,13 @@ class MainActivity : ComponentActivity() {
 //                        ShareProblem(Modifier,{},{})
 //                        BeforeSignup(onBecomeClick = { /*TODO*/ }, onHireClick = { /*TODO*/ }) {}
                      //   TestScreenForApi()
-                      ServixApp()
+                       ServixApp()
+                     //   ViewProfileScreen(modifier = Modifier.padding(20.dp
+                      //  ), viewProfileViewModel = ViewProfileViewModel() )
+                //        FavoriteScreen(modifier = Modifier)
+
+                     //   FavoriteScreen(modifier = )
+                  //      ImagePickerScreen()
 //                        UserHomeScreen(
 //                            onNotificationClick = { /*TODO*/ },
 //                            onMessageClick = { /*TODO*/ },
@@ -52,7 +59,7 @@ class MainActivity : ComponentActivity() {
 //                            onServiceItemClick = { /*TODO*/ },
 //                            onBottomNavigationItemClick = {}
 //                        )
-                 //   FindProvider(Modifier,{},{},{})
+                 //  FindProvider(Modifier)
                         //OnBoardingScreen(){
 //                        ServicesHomePage()
 //                        ExpandableOutlinedTextField(

@@ -115,7 +115,6 @@ fun ServicesItem(
         modifier = Modifier
             .fillMaxSize()
             .clickable { onServiceItemClick() }
-            .background(Color.White)
             .padding(14.dp)
             .border(width = 2.dp, color = LightBlue, shape = RoundedCornerShape(32.dp)),
         shape = RoundedCornerShape(32.dp)

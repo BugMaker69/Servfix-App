@@ -35,7 +35,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 
-import androidx.compose.ui.graphics.Color
 
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
@@ -134,7 +133,6 @@ fun FavoriteItem(onCardClick: () -> Unit) {
         Card(
             shape = RectangleShape,
             elevation = CardDefaults.cardElevation(80.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White),
             modifier = Modifier
                 .fillMaxSize()
                 .align(Alignment.Center)

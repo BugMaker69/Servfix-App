@@ -7,6 +7,7 @@ import com.example.graduationproject.data.RequsetUpdateData
 import com.example.graduationproject.data.ReturnedProviderData
 import com.example.graduationproject.data.ReturnedUserData
 import com.example.graduationproject.data.ServicesCategories
+import com.example.graduationproject.data.ViewProfileData
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -30,6 +31,8 @@ interface ApiService {
 
     @POST("/api/token/")
     suspend fun login(@Body loginRequest: LoginRequest): Response<LoginResponse>
+    @GET("api/selec_provider/{id}")
+    suspend fun viewProviderProfile(@Path("id") id: Int,@Header("Authorization") token: String): ViewProfileData
 
     @GET("api/userinfo/")
     suspend fun getReturnedUserData(@Header("Authorization") token: String): ReturnedUserData

@@ -23,4 +23,5 @@ enum class ServixScreens {
     ShareProblemScreen,
     Favorite,
 FindProvider,
+    ViewProfile
 }

@@ -327,8 +327,7 @@ fun ProviderAccountInfoDetails(
             Box(modifier = Modifier.size(130.dp)) {
                 Image(
                     painter = if (userViewModel.imageUri != null) rememberImagePainter(data = userViewModel.imageUri)!! else painterResource(
-                        id = R.drawable.ic_default_account_pic
-                    ),
+                        id = R.drawable.ic_default_account_pic                    ),
                     contentDescription = "",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier

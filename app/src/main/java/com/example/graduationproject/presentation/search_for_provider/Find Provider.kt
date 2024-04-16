@@ -76,6 +76,7 @@ import com.example.graduationproject.ui.theme.OrangeRate
 @Composable
 fun FindProvider(
     modifier: Modifier,
+    viewProfileClick: () -> Unit
 
     ) {
     val findProviderViewModel: FindProviderViewModel = viewModel()
@@ -136,7 +137,7 @@ fun FindProvider(
             )
         }
         items(serviceProviders) {
-            ProviderItem(Modifier, it)
+            ProviderItem(Modifier, it) { viewProfileClick() }
         }
 
     }
@@ -209,12 +210,13 @@ if(showRemoveIcon){
 }
 
 @Composable
-fun ProviderItem(modifier: Modifier, state: ReturnedProviderData) {
+fun ProviderItem(modifier: Modifier, state: ReturnedProviderData,viewProfileClick:()->Unit) {
     Card(
-        colors = CardDefaults.cardColors(containerColor = White),
         modifier = modifier
             .fillMaxSize()
-            .padding(vertical = 8.dp, horizontal = 10.dp),
+            .padding(vertical = 8.dp, horizontal = 10.dp).clickable {
+                              viewProfileClick()
+            },
         elevation = CardDefaults.cardElevation(15.dp)
     ) {
         Row(modifier = modifier.fillMaxSize()) {
@@ -464,11 +466,11 @@ fun RatingBar(rating: Int, modifier: Modifier = Modifier, onRateClick: (Int) -> 
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun ProviderItemPrev() {
-    GraduationProjectTheme {
-        FindProvider(Modifier)
-
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun ProviderItemPrev() {
+//    GraduationProjectTheme {
+//        FindProvider(Modifier)
+//
+//    }
+//}

@@ -1,7 +1,6 @@
 package com.example.graduationproject.presentation.common.signup
 
 import android.app.Activity
-import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.getValue
@@ -11,7 +10,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.graduationproject.R
-import com.example.graduationproject.data.AddProviderRepository
+import com.example.graduationproject.data.repositories.AddProviderRepository
 import com.example.graduationproject.data.LoginRequest
 import com.example.graduationproject.data.LoginResponse
 import com.example.graduationproject.data.Register
@@ -30,10 +29,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
-class UserViewModel(ctx: Context) : ViewModel() {
+class UserViewModel() : ViewModel() {
+    private val addProviderRepository = AddProviderRepository()
     private val apiService = RetrofitClient.userRegisterationApiService()
-
-
     lateinit var callbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks
     var verificationID by mutableStateOf("")
     var mAuth: FirebaseAuth = FirebaseAuth.getInstance();
@@ -379,7 +377,7 @@ class UserViewModel(ctx: Context) : ViewModel() {
     }
 
 
-    private val addProviderRepository = AddProviderRepository(ctx)
+
     fun prepareProvideRegister(
         address: String,
         city: String,
@@ -560,47 +558,51 @@ var accounType by mutableStateOf(UserType.OwnerPerson)
                 )
                 if (token == null) {
                     error = "Incorrect Email Or Password"
-                    return@launch
-                } else
+                } else {
                     error = null
-
-                getData()
-/*                try {
-                    returnedProviderData =
-                        addProviderRepository.getProviderData(token?.access ?: "")
-                    returnedProviderData?.let {
-                        userName = it.username
-                        address = it.address
-                        selectedCityValue = it.city
-                        emailN = it.email
-                        phone = it.phone
-                        fixedSalary = it.fixed_salary.toString()
-                        selectedServiceValue = it.profession
-                        imageUri = Uri.parse( BASE_URL + it.image)
-                    }
-                    Log.d(
-                        "TAG",
-                        "getProviderData: data40 ${returnedProviderData?.email}   ${returnedProviderData?.id}   ${returnedProviderData?.username}  "
-                    )
-                } catch (e: Exception) {
-                    Log.d(
-                        "EEERRROOORRR",
-                        "Provider Error: ${e.cause} ||  ${e.message} ||  ${e.localizedMessage} ||  ${e.stackTrace} ||  ${e.suppressed} ||  ${e} || "
-                    )
+                //    addProviderRepository.dataStoreToken.saveToken(token!!.access.toString())
+                    getData()
                 }
+            }
+        }
+    }
 
-                try {
-                    returnedUserData = addProviderRepository.getUserData(token?.access ?: "")
-                    Log.d(
-                        "TAG",
-                        "getProviderData: data40 ${returnedUserData?.email}   ${returnedUserData?.id}   ${returnedUserData?.username}  "
-                    )
-                } catch (e: Exception) {
-                    Log.d(
-                        "EEERRROOORRR",
-                        "User Error: ${e.cause} ||  ${e.message} ||  ${e.localizedMessage} ||  ${e.stackTrace} ||  ${e.suppressed} ||  ${e} || "
-                    )
-                }*/
+    /*                try {
+                        returnedProviderData =
+                            addProviderRepository.getProviderData(token?.access ?: "")
+                        returnedProviderData?.let {
+                            userName = it.username
+                            address = it.address
+                            selectedCityValue = it.city
+                            emailN = it.email
+                            phone = it.phone
+                            fixedSalary = it.fixed_salary.toString()
+                            selectedServiceValue = it.profession
+                            imageUri = Uri.parse( BASE_URL + it.image)
+                        }
+                        Log.d(
+                            "TAG",
+                            "getProviderData: data40 ${returnedProviderData?.email}   ${returnedProviderData?.id}   ${returnedProviderData?.username}  "
+                        )
+                    } catch (e: Exception) {
+                        Log.d(
+                            "EEERRROOORRR",
+                            "Provider Error: ${e.cause} ||  ${e.message} ||  ${e.localizedMessage} ||  ${e.stackTrace} ||  ${e.suppressed} ||  ${e} || "
+                        )
+                    }
+
+                    try {
+                        returnedUserData = addProviderRepository.getUserData(token?.access ?: "")
+                        Log.d(
+                            "TAG",
+                            "getProviderData: data40 ${returnedUserData?.email}   ${returnedUserData?.id}   ${returnedUserData?.username}  "
+                        )
+                    } catch (e: Exception) {
+                        Log.d(
+                            "EEERRROOORRR",
+                            "User Error: ${e.cause} ||  ${e.message} ||  ${e.localizedMessage} ||  ${e.stackTrace} ||  ${e.suppressed} ||  ${e} || "
+                        )
+                    }*/
 
 
 //                val data = addProviderRepository.getProviderData(token?.access ?: "")
@@ -610,16 +612,7 @@ var accounType by mutableStateOf(UserType.OwnerPerson)
 //                delay(5000)
 //                getProviderData(token?.access ?: "")
 //                returnedProviderData= token?.let { getProviderData(it.access ) }
-                Log.d("TAG", "getProviderData: token data ${token?.access}")
-//                Log.d("TAG", "getProviderData: token data function ${getProviderData(token?.access ?: "")}")
-//                Log.d("TAG", "getProviderData: data ${returnedProviderData?.value} ")
-//                Log.d("TAG", "getProviderData: data ${returnedProviderData.value?.email}   ${returnedProviderData.value?.id}   ${returnedProviderData.value?.username}  ")
-//                Log.d("TAG", "getProviderData: data ${returnedProviderData?.value}   ${returnedProviderData?.id}   ${returnedProviderData?.username}  ")
 
-            }
-        }
-
-    }
 
 
     fun clearAllData() {
@@ -663,7 +656,7 @@ var accounType by mutableStateOf(UserType.OwnerPerson)
         viewModelScope.launch {
             try {
                 returnedProviderData =
-                    addProviderRepository.getProviderData(token?.access ?: "")
+                    addProviderRepository.getProviderData(addProviderRepository.dataStoreToken.getToken())
                 returnedProviderData?.let {
                     userName = it.username
                     address = it.address
@@ -687,7 +680,7 @@ var accounType by mutableStateOf(UserType.OwnerPerson)
             }
 
             try {
-                returnedUserData = addProviderRepository.getUserData(token?.access ?: "")
+                returnedUserData = addProviderRepository.getUserData(addProviderRepository.dataStoreToken.getToken())
                 returnedUserData?.let {
                     userName = it.username
                     emailN = it.email

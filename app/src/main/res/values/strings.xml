@@ -93,6 +93,10 @@
     <string name="messages">Messages</string>
     <string name="remove_favorite">Remove From favourite ?</string>
     <string name="incorrect_email_or_password">Incorrect Email Or Password</string>
+    <string name="call">Call</string>
+    <string name="chat">Chat</string>
+
+
 
 
     <string-array name="egypt_governorates">
