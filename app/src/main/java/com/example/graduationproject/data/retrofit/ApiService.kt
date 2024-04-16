@@ -1,5 +1,6 @@
 package com.example.graduationproject.data.retrofit
 
+import com.example.graduationproject.data.FavouritesList
 import com.example.graduationproject.data.LoginRequest
 import com.example.graduationproject.data.LoginResponse
 import com.example.graduationproject.data.Register
@@ -8,12 +9,14 @@ import com.example.graduationproject.data.ReturnedProviderData
 import com.example.graduationproject.data.ReturnedUserData
 import com.example.graduationproject.data.ServicesCategories
 import com.example.graduationproject.data.ViewProfileData
+import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Multipart
@@ -28,11 +31,21 @@ interface ApiService {
 
     @GET("/api/get_service/")
     suspend fun getServices(): ServicesCategories
+    @GET("/api/show_all_favourites")
+    suspend fun showFavourites(@Header("Authorization") token: String): FavouritesList
+
+
+    @POST("/api/favourite/{id}")
+    suspend fun addFavorite(@Path("id") id:Int,@Header("Authorization") token: String)
+
+    @DELETE("/api/delete_fav/{id}")
+    suspend fun deleteFavorite(@Path("id") id:Int,@Header("Authorization") token: String)
 
     @POST("/api/token/")
     suspend fun login(@Body loginRequest: LoginRequest): Response<LoginResponse>
     @GET("api/selec_provider/{id}")
     suspend fun viewProviderProfile(@Path("id") id: Int,@Header("Authorization") token: String): ViewProfileData
+
 
     @GET("api/userinfo/")
     suspend fun getReturnedUserData(@Header("Authorization") token: String): ReturnedUserData

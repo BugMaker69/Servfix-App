@@ -76,10 +76,11 @@ import com.example.graduationproject.ui.theme.OrangeRate
 @Composable
 fun FindProvider(
     modifier: Modifier,
-    viewProfileClick: () -> Unit
+    viewProfileClick: (Int) -> Unit,
 
     ) {
-    val findProviderViewModel: FindProviderViewModel = viewModel()
+    val findProviderViewModel:FindProviderViewModel= viewModel()
+
 
     val serviceProviders by findProviderViewModel._serviceProviders.collectAsState()
 
@@ -137,7 +138,8 @@ fun FindProvider(
             )
         }
         items(serviceProviders) {
-            ProviderItem(Modifier, it) { viewProfileClick() }
+            ProviderItem(Modifier, it) {id->
+                viewProfileClick (id)}
         }
 
     }
@@ -210,12 +212,12 @@ if(showRemoveIcon){
 }
 
 @Composable
-fun ProviderItem(modifier: Modifier, state: ReturnedProviderData,viewProfileClick:()->Unit) {
+fun ProviderItem(modifier: Modifier, state: ReturnedProviderData,viewProfileClick:(Int)->Unit) {
     Card(
         modifier = modifier
             .fillMaxSize()
             .padding(vertical = 8.dp, horizontal = 10.dp).clickable {
-                              viewProfileClick()
+                              viewProfileClick(state.id)
             },
         elevation = CardDefaults.cardElevation(15.dp)
     ) {
@@ -288,19 +290,7 @@ fun ProviderItem(modifier: Modifier, state: ReturnedProviderData,viewProfileClic
                     Text(
                         state.ratings, modifier = Modifier.weight(0.3f)
                     )
-                    Divider(
-                        color = Gray, modifier = modifier
-                            .padding(horizontal = 4.dp, vertical = 4.dp)
-                            .width(1.dp)
-                            .height(15.dp)
 
-                    )
-                    Icon(imageVector = Icons.Filled.Handshake, contentDescription = "")
-                    Text(
-                        text = "100 ",
-
-                        modifier = modifier.weight(0.7f)
-                    )
 
                 }
 

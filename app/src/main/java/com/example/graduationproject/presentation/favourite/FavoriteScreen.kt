@@ -7,66 +7,84 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 
 import androidx.compose.foundation.lazy.LazyColumn
-
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.filled.StarHalf
+
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 
 
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.SubcomposeAsyncImage
 import com.example.graduationproject.R
+import com.example.graduationproject.data.ReturnedProviderData
 import com.example.graduationproject.presentation.common.RatingBar
 import com.example.graduationproject.ui.theme.LightBlue
-import com.example.graduationproject.ui.theme.OrangeRate
-import kotlin.math.roundToInt
 
 @Composable
 fun FavoriteScreen(modifier: Modifier) {
-    val favouriteViewModer: FavouriteViewModel = viewModel()
+    val favouriteViewModel: FavouriteViewModel = viewModel()
+    val lista by favouriteViewModel.providersFavList.collectAsState()
+
+//    Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
+//        if (lista.value.isEmpty())
+//            CircularProgressIndicator(color= Color.Black, modifier = modifier.padding(vertical = 10.dp))
+//    }
+
     LazyColumn(
         modifier = modifier.fillMaxSize(),
         contentPadding = PaddingValues(top = 8.dp)
     ) {
-        items(10) {
-            FavoriteItem {
-                favouriteViewModer.showDialog.value = true
+
+
+        items(lista) { state->
+            FavoriteItem(state) {id->
+               favouriteViewModel.id=id
+                favouriteViewModel.showDialog.value = true
+
 
             }
         }
     }
-    if (favouriteViewModer.showDialog.value) {
-FavouriteAlertDialog(onConfirmClick = {}, onDismissClick = {
-    favouriteViewModer.showDialog.value = false
+    if (favouriteViewModel.showDialog.value) {
+FavouriteAlertDialog(onConfirmClick = {
+favouriteViewModel.deleteFavourite(favouriteViewModel.id)
+    favouriteViewModel.showDialog.value=false
+
+}, onDismissClick = {
+    favouriteViewModel.showDialog.value = false
 })
     }
 }
@@ -95,7 +113,7 @@ Button(onClick = {onDismissClick()}) {
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun FavoriteItem(onCardClick: () -> Unit) {
+fun FavoriteItem(state:ReturnedProviderData,onCardClick: (Int) -> Unit) {
 //    val shape = object : Shape {
 //        override fun createOutline(
 //            size: Size,
@@ -137,7 +155,7 @@ fun FavoriteItem(onCardClick: () -> Unit) {
                 .fillMaxSize()
                 .align(Alignment.Center)
                 .combinedClickable(onLongClick = {
-                    onCardClick()
+                    onCardClick(state.id)
                 }) {
 
                 }
@@ -146,7 +164,7 @@ fun FavoriteItem(onCardClick: () -> Unit) {
             Box(modifier = Modifier.fillMaxSize()) {
                 RatingBar(rating = 3.7, modifier = Modifier.padding(10.dp))
                 Text(
-                    text = "Electricity",
+                    text = state.profession,
                     Modifier
                         .padding(10.dp)
                         .align(Alignment.TopEnd)
@@ -155,9 +173,9 @@ fun FavoriteItem(onCardClick: () -> Unit) {
 
             }
             Text(
-                text = "Ahmed Ramadan", modifier = Modifier
+                text = state.username, modifier = Modifier
                     .align(Alignment.CenterHorizontally)
-                    .padding(vertical = 10.dp)
+                    .padding(top = 50.dp), fontSize = 30.sp, fontWeight = FontWeight.Bold
             )
             Row(
                 Modifier.fillMaxSize(),
@@ -165,28 +183,48 @@ fun FavoriteItem(onCardClick: () -> Unit) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
 
-                Text(text = "01025659292", Modifier.padding(10.dp))
+                Text(text = state.phone, Modifier.padding(10.dp))
 
 
 
-                Text(text = "Alexandria", Modifier.padding(10.dp))
+                Text(text = state.city, Modifier.padding(10.dp))
 
             }
 
 
         }
-
-        Image(
-            modifier = Modifier
-                .size(100.dp)
-                .align(Alignment.TopCenter)
-                .offset(y = (-50).dp) // Adjust this value as needed
-                .clip(CircleShape),
-            contentScale = ContentScale.Crop,
+        SubcomposeAsyncImage(
+            model = state.image,
+            clipToBounds = true,
+            contentDescription = "",
             alignment = Alignment.Center,
-            painter = painterResource(id = R.drawable.person),
-            contentDescription = ""
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .size(120.dp)
+                .align(Alignment.TopCenter)
+                .offset(y = (-50).dp)
+                .offset(x = (15).dp)
+
+            ,
+            loading = { CircularProgressIndicator(Modifier.wrapContentSize()) },
+           error = {
+           Image(
+                    painter = painterResource(id = R.drawable.ic_become),
+                    contentDescription = ""
+                )
+         }
         )
+//        Image(
+//            modifier = Modifier
+//                .size(100.dp)
+//                .align(Alignment.TopCenter)
+//                .offset(y = (-50).dp) // Adjust this value as needed
+//                .clip(CircleShape),
+//            contentScale = ContentScale.Crop,
+//            alignment = Alignment.Center,
+//            painter = painterResource(id = R.drawable.person),
+//            contentDescription = ""
+//        )
     }
 }
 

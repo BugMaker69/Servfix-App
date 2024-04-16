@@ -2,23 +2,7 @@ package com.example.graduationproject.data
 
 import com.google.gson.annotations.SerializedName
 
-data class ServiceProviderCard(
-    val name: String = "Ahmed Ramadan",
-    val location: String = "Alexandria",
-    val rate: Double = 5.1,
-    val transactionsNum: Int = 100,
-    val fee: Double = 400.00,
-    val feeType: String = "Fixed Fee",
-    val category: String = "smith"
-) {
-    fun doesMatchSearchQuery(query: String): Boolean {
-        val matchingCombinations = listOf(
-            name, "${name.first()}"
-        )
-        return matchingCombinations.any { it.contains(query, ignoreCase = true) }
-    }
 
-}
 //"phone": "01210437593",
 //"username": "ahmed3",
 //"password": "pbkdf2_sha256$720000$hl4aP6I59Zbn2hXOoL2Bn9$Hym+ki7gkES5pmAz34YWCTl3Sn90qJMv4S9/DSl56jw=",
@@ -34,20 +18,6 @@ data class ServiceProviderCard(
 //"service_id": 2
 //data class (val phone:String,val userName:String,val fixed_salary: String,val image: Any,val ratings: String,val city: String,val address: String,val profession: String)
 
-data class ServiceProviderSearch(
-
-    @SerializedName("phone") var phone: String,
-    @SerializedName("username") var username: String,
-    @SerializedName("password") var password: String,
-    @SerializedName("email") var email: String,
-    @SerializedName("fixed_salary") var fixed_salary: String,
-    @SerializedName("ratings") var ratings: String,
-    @SerializedName("city") var city: String,
-    @SerializedName("address") var address: String,
-    @SerializedName("profession") var profession: String,
-    @SerializedName("service_id") var serviceId: Int
-
-)
 
 data class Register(
     @SerializedName("username") val userName: String = "",
@@ -153,6 +123,10 @@ data class ServicesCategories (
 
     @SerializedName("service" ) var service : ArrayList<Services> = arrayListOf()
 
+)
+data class FavouritesList(
+    @SerializedName("provider_favourite")
+    val providerFavourite: List<ReturnedProviderData>,
 )
 
 data class Services(

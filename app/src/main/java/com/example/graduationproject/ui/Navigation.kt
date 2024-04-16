@@ -50,6 +50,7 @@ import com.example.graduationproject.presentation.notification.NotificationTopBa
 import com.example.graduationproject.presentation.on_boarding.OnBoardingScreen
 import com.example.graduationproject.presentation.otp.OtpScreen
 import com.example.graduationproject.presentation.search_for_provider.FindProvider
+import com.example.graduationproject.presentation.search_for_provider.FindProviderViewModel
 import com.example.graduationproject.presentation.userservice.ShareProblemScreen
 import com.example.graduationproject.presentation.userservice.UserHomeScreen
 import com.example.graduationproject.presentation.viewprofile.ViewProfileScreen
@@ -143,6 +144,7 @@ fun ServixApp(
                     ServixScreens.Settings.name,
                     ServixScreens.Favorite.name,
                     ServixScreens.Home.name,
+                    ServixScreens.ViewProfile.name+ "/{pid}",
                     ServixScreens.ProviderAccountInfo.name,
                     ServixScreens.ProviderAccountInfoDetails.name,
                     ServixScreens.FindProvider.name + "/{id}" + "/{serviceName}"
@@ -171,11 +173,15 @@ fun ServixApp(
             ) {
                 FindProvider(
                     modifier = Modifier.padding(innerPadding),
-                    viewProfileClick = {navController.navigate(ServixScreens.ViewProfile.name)},
+                    viewProfileClick = {pid->
+                        navController.navigate(ServixScreens.ViewProfile.name+ "/$pid")},
                 )
             }
-            composable(ServixScreens.ViewProfile.name){
-                ViewProfileScreen(modifier =Modifier.padding(innerPadding), viewProfileViewModel = viewProfileViewModel)
+            composable(ServixScreens.ViewProfile.name+"/{pid}",arguments = listOf(
+                navArgument("pid") {
+                    type = NavType.IntType
+                })){
+                ViewProfileScreen(modifier =Modifier.padding(innerPadding))
 
             }
             composable(ServixScreens.Favorite.name) {
