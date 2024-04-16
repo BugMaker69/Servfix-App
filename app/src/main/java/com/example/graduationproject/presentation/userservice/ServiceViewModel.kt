@@ -45,6 +45,7 @@ class ServiceViewModel : ViewModel() {
     //  Share Problem   Handle Text
 
     var expandDropDownMenu by mutableStateOf(false)
+    var expandDropDownMenuLocation by mutableStateOf(false)
     var postText by mutableStateOf("")
     val maxPostTextLength = 500
 
@@ -58,6 +59,8 @@ class ServiceViewModel : ViewModel() {
     //  DropdownMenu Of Service Inside Share Problem
     var selectedSentToServiceIndex by mutableStateOf(-1)
     var selectedSentToServiceValue by mutableStateOf("")
+    var selectedSentToLocationIndex by mutableStateOf(-1)
+    var selectedSentToLocationValue by mutableStateOf("")
     var textfieldSentToServiceSize by mutableStateOf(Size.Zero)
 
 
