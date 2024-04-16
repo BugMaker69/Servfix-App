@@ -30,7 +30,7 @@ var showDialog = mutableStateOf(false)
     fun deleteFavourite(id: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             repo.deleteFavourite(id)
-            showAllFavourites() // Refresh the list after deletion
+            showAllFavourites()
         }
     }
 
