@@ -18,6 +18,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -45,12 +46,14 @@ import com.example.graduationproject.presentation.common.signup.SignupSecondScre
 import com.example.graduationproject.presentation.common.signup.SignupThirdScreen
 import com.example.graduationproject.presentation.common.signup.UserViewModel
 import com.example.graduationproject.presentation.favourite.FavoriteScreen
+import com.example.graduationproject.presentation.favourite.FavouriteViewModel
 import com.example.graduationproject.presentation.notification.NotificationScreen
 import com.example.graduationproject.presentation.notification.NotificationTopBar
 import com.example.graduationproject.presentation.on_boarding.OnBoardingScreen
 import com.example.graduationproject.presentation.otp.OtpScreen
 import com.example.graduationproject.presentation.search_for_provider.FindProvider
 import com.example.graduationproject.presentation.search_for_provider.FindProviderViewModel
+import com.example.graduationproject.presentation.userservice.ServiceViewModel
 import com.example.graduationproject.presentation.userservice.ShareProblemScreen
 import com.example.graduationproject.presentation.userservice.UserHomeScreen
 import com.example.graduationproject.presentation.viewprofile.ViewProfileScreen
@@ -66,9 +69,7 @@ fun ServixApp(
     navController: NavHostController = rememberNavController()
 ) {
     val context = LocalContext.current
-    val userViewModel: UserViewModel = viewModel()
     val userTypeViewModel: UserTypeViewModel = viewModel()
-    val viewProfileViewModel:ViewProfileViewModel= viewModel()
     var isBackPressedOnce by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
@@ -153,6 +154,9 @@ fun ServixApp(
                 BottomAppBar(navController = navController)
         }
     ) { innerPadding ->
+
+        val userViewModel: UserViewModel = hiltViewModel()
+
         NavHost(
             navController = navController,
             startDestination = if (isFirstLaunch) ServixScreens.OnBoarding.name else ServixScreens.Login.name
@@ -171,21 +175,29 @@ fun ServixApp(
                     }
                 )
             ) {
+                val findProviderViewModel : FindProviderViewModel = hiltViewModel()
+
                 FindProvider(
                     modifier = Modifier.padding(innerPadding),
                     viewProfileClick = {pid->
                         navController.navigate(ServixScreens.ViewProfile.name+ "/$pid")},
+                    findProviderViewModel = findProviderViewModel
                 )
             }
             composable(ServixScreens.ViewProfile.name+"/{pid}",arguments = listOf(
                 navArgument("pid") {
                     type = NavType.IntType
                 })){
-                ViewProfileScreen(modifier =Modifier.padding(innerPadding))
+                val viewProfileViewModel: ViewProfileViewModel = hiltViewModel()
+
+
+                ViewProfileScreen(modifier =Modifier.padding(innerPadding), viewProfileViewModel = viewProfileViewModel)
 
             }
             composable(ServixScreens.Favorite.name) {
-                FavoriteScreen(modifier = Modifier.padding(innerPadding))
+                val favouriteViewModel:FavouriteViewModel= hiltViewModel()
+
+                FavoriteScreen(modifier = Modifier.padding(innerPadding), favouriteViewModel = favouriteViewModel)
             }
             composable(ServixScreens.Login.name) {
                 Login(
@@ -397,6 +409,8 @@ fun ServixApp(
                 )
             }
             composable(ServixScreens.Home.name) {
+                val serviceViewmodel:ServiceViewModel= hiltViewModel()
+
                 UserHomeScreen(
                     modifier = Modifier.padding(innerPadding),
 
@@ -407,6 +421,7 @@ fun ServixApp(
                         navController.navigate(ServixScreens.FindProvider.name + "/$id" + "/$serviceName")
 
                     },
+                    serviceViewModel = serviceViewmodel
 
                     )
             }

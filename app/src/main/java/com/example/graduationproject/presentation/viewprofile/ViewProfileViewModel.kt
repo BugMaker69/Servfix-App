@@ -10,19 +10,19 @@ import com.example.graduationproject.data.Provider
 import com.example.graduationproject.data.ReturnedProviderData
 import com.example.graduationproject.data.ViewProfileData
 import com.example.graduationproject.data.repositories.ViewProfileRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-
-class ViewProfileViewModel(savedStateHandle2: SavedStateHandle): ViewModel() {
-    val repo : ViewProfileRepository =ViewProfileRepository()
+import javax.inject.Inject
+@HiltViewModel
+class ViewProfileViewModel @Inject constructor(val repo : ViewProfileRepository,savedStateHandle: SavedStateHandle): ViewModel() {
 
     val profile= mutableStateOf(Provider())
     val isFavourite= mutableStateOf(false)
     private val BASE_URL = "https://p2kjdbr8-8000.uks1.devtunnels.ms/api"
 
     init {
-        val id = savedStateHandle2.get<Int>("pid")
+        val id = savedStateHandle.get<Int>("pid")
         viewModelScope.launch {
             if (id != null) {
                 getData(id)

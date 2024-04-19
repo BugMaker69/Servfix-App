@@ -56,9 +56,9 @@ fun UserHomeScreen(
     modifier: Modifier = Modifier,
     onTextFieldClick: () -> Unit,
     onServiceItemClick: (Int,String) -> Unit,
+     serviceViewModel: ServiceViewModel
 
 ) {
-    val serviceViewModel: ServiceViewModel = viewModel()
 
 
     ServicesHomePage(
@@ -74,7 +74,7 @@ fun UserHomeScreen(
 @Composable
 fun ServicesHomePage(
     modifier: Modifier = Modifier,
-    vm: ServiceViewModel = ServiceViewModel(),
+    vm: ServiceViewModel ,
     onTextFieldClick: () -> Unit,
     onServiceItemClick: (Int,String) -> Unit,
 ) {

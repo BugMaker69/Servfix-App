@@ -2,14 +2,16 @@ package com.example.graduationproject.data.repositories
 
 import com.example.graduationproject.data.FavouritesList
 import com.example.graduationproject.data.ReturnedProviderData
+import com.example.graduationproject.data.retrofit.ApiService
 import com.example.graduationproject.data.retrofit.RetrofitClient
 import com.example.graduationproject.utils.DataStoreToken
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class FavouriteRepository {
-    val apiService = RetrofitClient.userRegisterationApiService()
-    val dataStoreToken= DataStoreToken()
+@Singleton
+class FavouriteRepository @Inject constructor(val apiService:ApiService,val dataStoreToken: DataStoreToken){
 
     suspend fun showAllFavourites(): Flow<FavouritesList> {
         return flow {

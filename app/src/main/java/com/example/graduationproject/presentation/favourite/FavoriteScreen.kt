@@ -54,8 +54,8 @@ import com.example.graduationproject.presentation.common.RatingBar
 import com.example.graduationproject.ui.theme.LightBlue
 
 @Composable
-fun FavoriteScreen(modifier: Modifier) {
-    val favouriteViewModel: FavouriteViewModel = viewModel()
+fun FavoriteScreen(modifier: Modifier, favouriteViewModel: FavouriteViewModel
+) {
     val lista by favouriteViewModel.providersFavList.collectAsState()
 
 //    Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {

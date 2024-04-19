@@ -14,13 +14,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.graduationproject.data.Services
 import com.example.graduationproject.data.repositories.UserServicesRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.UUID
+import javax.inject.Inject
 
-class ServiceViewModel : ViewModel() {
+@HiltViewModel
+class ServiceViewModel @Inject constructor(val userServicesRep: UserServicesRepository): ViewModel() {
     var servicesState = mutableStateOf(emptyList<Services>())
-    private val userServicesRep: UserServicesRepository = UserServicesRepository()
 
     init {
         getServicesList()

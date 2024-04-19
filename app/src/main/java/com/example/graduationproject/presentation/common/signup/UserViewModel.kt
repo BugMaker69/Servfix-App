@@ -16,6 +16,7 @@ import com.example.graduationproject.data.LoginResponse
 import com.example.graduationproject.data.Register
 import com.example.graduationproject.data.ReturnedProviderData
 import com.example.graduationproject.data.ReturnedUserData
+import com.example.graduationproject.data.retrofit.ApiService
 import com.example.graduationproject.data.retrofit.RetrofitClient
 import com.example.graduationproject.presentation.common.UserType
 import com.google.firebase.FirebaseException
@@ -24,17 +25,19 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
-
-class UserViewModel() : ViewModel() {
-    private val addProviderRepository = AddProviderRepository()
-    private val apiService = RetrofitClient.userRegisterationApiService()
+import javax.inject.Inject
+@HiltViewModel
+class UserViewModel @Inject constructor(    val addProviderRepository : AddProviderRepository,
+                                            val apiService :ApiService,
+                                            var mAuth: FirebaseAuth
+) : ViewModel() {
     lateinit var callbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks
     var verificationID by mutableStateOf("")
-    var mAuth: FirebaseAuth = FirebaseAuth.getInstance();
     var otpText by mutableStateOf("")
     var sucsess by mutableStateOf(false)
     var failed by mutableStateOf(false)

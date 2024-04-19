@@ -11,15 +11,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.graduationproject.data.ReturnedProviderData
 import com.example.graduationproject.data.repositories.FindProviderSearchReopsitory
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @SuppressLint("SuspiciousIndentation")
-class FindProviderViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
-    private val findProviderRepo:FindProviderSearchReopsitory= FindProviderSearchReopsitory()
+@HiltViewModel
+class FindProviderViewModel @Inject constructor(val findProviderRepo:FindProviderSearchReopsitory,savedStateHandle: SavedStateHandle) : ViewModel() {
 var serviceName by mutableStateOf("")
    var selectedCity = mutableStateOf("")
     var expandend = mutableStateOf(false)

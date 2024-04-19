@@ -77,13 +77,12 @@ import com.example.graduationproject.ui.theme.OrangeRate
 fun FindProvider(
     modifier: Modifier,
     viewProfileClick: (Int) -> Unit,
+     findProviderViewModel:FindProviderViewModel
 
     ) {
-    val findProviderViewModel:FindProviderViewModel= viewModel()
 
 
     val serviceProviders by findProviderViewModel._serviceProviders.collectAsState()
-
     val searchText by findProviderViewModel.searchText.collectAsState()
     if (findProviderViewModel.showDialog.value) {
         CustomDialog(modifier = modifier

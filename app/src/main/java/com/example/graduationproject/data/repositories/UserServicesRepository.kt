@@ -1,11 +1,13 @@
 package com.example.graduationproject.data.repositories
 
 import com.example.graduationproject.data.Services
+import com.example.graduationproject.data.retrofit.ApiService
 import com.example.graduationproject.data.retrofit.RetrofitClient
+import javax.inject.Inject
+import javax.inject.Singleton
 
-
-class UserServicesRepository {
-    private val apiService= RetrofitClient.userRegisterationApiService()
+@Singleton
+class UserServicesRepository @Inject constructor(val apiService:ApiService){
 
 suspend fun getServicesList():List<Services>{
     return apiService.getServices().service

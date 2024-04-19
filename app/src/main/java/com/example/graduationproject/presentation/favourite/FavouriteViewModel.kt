@@ -9,13 +9,15 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.graduationproject.data.ReturnedProviderData
 import com.example.graduationproject.data.repositories.FavouriteRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class FavouriteViewModel(): ViewModel() {
-    val repo =FavouriteRepository()
+@HiltViewModel
+class FavouriteViewModel @Inject constructor(val repo:FavouriteRepository): ViewModel() {
     var id by mutableStateOf(0)
 var showDialog = mutableStateOf(false)
     private val BASE_URL = "https://p2kjdbr8-8000.uks1.devtunnels.ms/api"

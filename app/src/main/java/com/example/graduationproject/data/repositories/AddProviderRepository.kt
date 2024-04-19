@@ -22,14 +22,15 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
+import javax.inject.Inject
+import javax.inject.Singleton
 
-
-class AddProviderRepository  {
+@Singleton
+class AddProviderRepository @Inject constructor(val dataStoreToken:DataStoreToken) {
 
     val connectionError = MutableLiveData("")
     val serverResponse = MutableLiveData("")
 
-var dataStoreToken=DataStoreToken()
     fun restAddProductVariables() {
         connectionError.value = ""
         serverResponse.value = ""

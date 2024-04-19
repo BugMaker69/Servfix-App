@@ -48,8 +48,7 @@ import com.example.graduationproject.ui.theme.White
 
 
 @Composable
-fun ViewProfileScreen(modifier: Modifier){
-    val viewProfileViewModel: ViewProfileViewModel = viewModel()
+fun ViewProfileScreen(modifier: Modifier,viewProfileViewModel:ViewProfileViewModel){
 
     Box(modifier =Modifier.fillMaxSize()){
         Column(
