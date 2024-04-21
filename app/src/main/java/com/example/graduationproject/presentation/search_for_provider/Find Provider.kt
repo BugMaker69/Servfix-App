@@ -1,7 +1,6 @@
 package com.example.graduationproject.presentation.search_for_provider
 
 import android.content.res.Configuration
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -20,6 +19,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
@@ -62,16 +62,18 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+
 import coil.compose.SubcomposeAsyncImage
 import com.example.graduationproject.R
 import com.example.graduationproject.data.ReturnedProviderData
 import com.example.graduationproject.presentation.common.CustomDialog
-import com.example.graduationproject.ui.theme.GraduationProjectTheme
 import com.example.graduationproject.ui.theme.OrangeRate
+
+
 
 @Composable
 fun FindProvider(
@@ -81,14 +83,13 @@ fun FindProvider(
 
     ) {
 
-
-    val serviceProviders by findProviderViewModel._serviceProviders.collectAsState()
     val searchText by findProviderViewModel.searchText.collectAsState()
+    val lista= findProviderViewModel.lista.collectAsLazyPagingItems()
     if (findProviderViewModel.showDialog.value) {
         CustomDialog(modifier = modifier
             .size(height = 350.dp, width = 400.dp), onConfirmButtonClick = {
-            findProviderViewModel.categoryFilteration()
             findProviderViewModel.showRemoveIcon()
+            findProviderViewModel.categoryFilteration()
            findProviderViewModel.dismissDialog()
         }, onDismissButtonClick = {
             findProviderViewModel.dismissDialog()
@@ -124,23 +125,26 @@ fun FindProvider(
                 findProviderViewModel.serviceName,
                 findProviderViewModel.selectedCity.value,
                 searchText,
-                onSearchTextChanged = {it->
-                    findProviderViewModel.onSearchTextChange(it) },
+                onSearchTextChanged = { it ->
+                    findProviderViewModel.onSearchTextChange(it)
+                },
                 onShowDialog = {
                     findProviderViewModel.showDialog.value = true
                 },
-                onRemoveFilterClick = {findProviderViewModel.removeFilter()
-                                      findProviderViewModel.showRemoveIcon.value=false
-                                      }
-                , showRemoveIcon = findProviderViewModel.showRemoveIcon.value
+                onRemoveFilterClick = {
+                    findProviderViewModel.removeFilter()
+                    findProviderViewModel.showRemoveIcon.value = false
+                }, showRemoveIcon = findProviderViewModel.showRemoveIcon.value
 
             )
         }
-        items(serviceProviders) {
-            ProviderItem(Modifier, it) {id->
-                viewProfileClick (id)}
-        }
-
+items(lista.itemCount){index->
+    val item=lista[index]
+    item?.let{provider->
+                ProviderItem(Modifier, provider) {id->
+                    viewProfileClick (id)}
+            }
+}
     }
 
 }
@@ -172,9 +176,12 @@ fun TopFavouriteItem(
         Text(text = selectedCity)
         Spacer(modifier = Modifier.weight(1f))
 if(showRemoveIcon){
-    Icon(imageVector = Icons.Filled.Cancel, contentDescription ="Cancel",Modifier.padding(horizontal = 10.dp).clickable {
-        onRemoveFilterClick()
-    })
+    Icon(imageVector = Icons.Filled.Cancel, contentDescription ="Cancel",
+        Modifier
+            .padding(horizontal = 10.dp)
+            .clickable {
+                onRemoveFilterClick()
+            })
 }
 
 
@@ -215,8 +222,9 @@ fun ProviderItem(modifier: Modifier, state: ReturnedProviderData,viewProfileClic
     Card(
         modifier = modifier
             .fillMaxSize()
-            .padding(vertical = 8.dp, horizontal = 10.dp).clickable {
-                              viewProfileClick(state.id)
+            .padding(vertical = 8.dp, horizontal = 10.dp)
+            .clickable {
+                viewProfileClick(state.id)
             },
         elevation = CardDefaults.cardElevation(15.dp)
     ) {

@@ -38,6 +38,7 @@ data class LoginResponse(
     val refresh: String,
     val access: String
 )
+data class  SearchProviders(@SerializedName("providers" ) var providers:List<ReturnedProviderData>)
 data class ViewProfileData (
 
     @SerializedName("provider" ) var provider : Provider?         = Provider(),

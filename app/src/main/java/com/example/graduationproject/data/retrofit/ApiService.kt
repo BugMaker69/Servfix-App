@@ -4,12 +4,11 @@ import com.example.graduationproject.data.FavouritesList
 import com.example.graduationproject.data.LoginRequest
 import com.example.graduationproject.data.LoginResponse
 import com.example.graduationproject.data.Register
-import com.example.graduationproject.data.RequsetUpdateData
 import com.example.graduationproject.data.ReturnedProviderData
 import com.example.graduationproject.data.ReturnedUserData
 import com.example.graduationproject.data.ServicesCategories
 import com.example.graduationproject.data.ViewProfileData
-import kotlinx.coroutines.flow.Flow
+import com.example.graduationproject.data.SearchProviders
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -24,6 +23,7 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface ApiService {
     @POST("/api/register/")
@@ -31,27 +31,42 @@ interface ApiService {
 
     @GET("/api/get_service/")
     suspend fun getServices(): ServicesCategories
+
     @GET("/api/show_all_favourites")
     suspend fun showFavourites(@Header("Authorization") token: String): FavouritesList
 
 
     @POST("/api/favourite/{id}")
-    suspend fun addFavorite(@Path("id") id:Int,@Header("Authorization") token: String)
+    suspend fun addFavorite(@Path("id") id: Int, @Header("Authorization") token: String)
 
     @DELETE("/api/delete_fav/{id}")
-    suspend fun deleteFavorite(@Path("id") id:Int,@Header("Authorization") token: String)
+    suspend fun deleteFavorite(@Path("id") id: Int, @Header("Authorization") token: String)
 
     @POST("/api/token/")
     suspend fun login(@Body loginRequest: LoginRequest): Response<LoginResponse>
+
     @GET("api/selec_provider/{id}")
-    suspend fun viewProviderProfile(@Path("id") id: Int,@Header("Authorization") token: String): ViewProfileData
+    suspend fun viewProviderProfile(
+        @Path("id") id: Int,
+        @Header("Authorization") token: String
+    ): ViewProfileData
 
 
     @GET("api/userinfo/")
     suspend fun getReturnedUserData(@Header("Authorization") token: String): ReturnedUserData
 
+    @GET("/api/get_providers/{id}")
+    suspend fun getProvidersSearch(@Header("Authorization") token: String,
+                                   @Path("id") id: Int ,
+                                   @Query("keyword") keyword:String ,
+                                   @Query("minRate") rate:Int,
+                                   @Query("place") place :String,
+                                   @Query("page") page:Int
+
+    ):SearchProviders
+
     @GET("api/all/{id}")
-    suspend fun getProvidersSearch(@Path("id") id: Int): List<ReturnedProviderData>
+    suspend fun getProviders(@Path("id") id: Int, @Query("page") page: Int): SearchProviders
 
     @PUT("api/userinfo/update")
     fun updateUserData(
@@ -94,9 +109,9 @@ interface ApiService {
         @Part("phone") phone: RequestBody,
         @Part("city") city: RequestBody,
         @Part("profession") profession: RequestBody,
-/*        @Part("ratings") ratings: RequestBody,
-        @Part("service_id") service_id: RequestBody,
-        @Part("user") user: RequestBody,*/
+        /*        @Part("ratings") ratings: RequestBody,
+                @Part("service_id") service_id: RequestBody,
+                @Part("user") user: RequestBody,*/
         @Part("fixed_salary") fixed_salary: RequestBody,
         @Part image: MultipartBody.Part
     ): Call<ResponseBody>

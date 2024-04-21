@@ -62,7 +62,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.system.exitProcess
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ServixApp(
@@ -73,7 +72,6 @@ fun ServixApp(
     var isBackPressedOnce by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-
 
     BackHandler {
         if (navController.previousBackStackEntry != null) {
@@ -99,26 +97,25 @@ fun ServixApp(
             }
             sharedPreferences.edit().putBoolean("isFirstLaunch", false).apply()
 
-
         }
     }
-
     Scaffold(
-
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             when (navController.currentBackStackEntryAsState().value?.destination?.route) {
                 ServixScreens.ProviderAccountInfo.name, ServixScreens.ProviderAccountInfoDetails.name, ServixScreens.UserAccountInfo.name -> {
                     SettingsTopBar(
-                        onBackButtonOnTopNavBar = { },
+                        onBackButtonOnTopNavBar = {                         navController.popBackStack()
+                        },
                         showBack = true,
                         scrollBarBehavior = scrollBehavior
                     )
                 }
 
+
                 ServixScreens.Settings.name -> {
                     SettingsTopBar(
-                        onBackButtonOnTopNavBar = { },
+                        onBackButtonOnTopNavBar = {navController.popBackStack() },
                         showBack = false,
                         scrollBarBehavior = scrollBehavior
                     )
@@ -130,7 +127,8 @@ fun ServixApp(
                     scrollBarBehavior = scrollBehavior
                 )
 
-                ServixScreens.Notification.name -> NotificationTopBar { }
+                ServixScreens.Notification.name -> NotificationTopBar {                        navController.popBackStack()
+                }
 
 
             }
@@ -205,7 +203,13 @@ fun ServixApp(
                             userViewModel.login()
                             if (userViewModel.token != null) {
                                 coroutineScope.launch {
-                                    navController.navigate(ServixScreens.Home.name)
+                                    navController.navigate(ServixScreens.Home.name){
+                                        popUpTo(ServixScreens.Login.name){
+                                            inclusive=true
+                                        }
+
+                                    }
+
                                 }
 
                             }
@@ -263,11 +267,7 @@ fun ServixApp(
                         }
                     },
                     onSecurityClick = {},
-                    onBackButtonOnTopNavBar = { navController.popBackStack() },
-                    onBottomNavigationItemClick = {
-                        navController.navigate(it)
-                        Log.d("NAVHOST", "ServixApp NAVHOST: $it")
-                    }
+
                 )
             }
             //  Todo How To Handle UserInfo And ProviderInfo ?!
@@ -403,7 +403,7 @@ fun ServixApp(
                         if (userViewModel.isPasswordForget) {
                             navController.navigate(ServixScreens.AfterPassword.name)
                         } else {
-                            navController.navigate(ServixScreens.Home.name)
+                            navController.navigate(ServixScreens.Login.name)
                         }
                     }
                 )
@@ -428,7 +428,6 @@ fun ServixApp(
             composable(ServixScreens.Notification.name) {
                 NotificationScreen(
                     modifier = Modifier.padding(innerPadding),
-                    onBackButtonOnTopNavBar = { navController.popBackStack() },
                     onNotificationItemClick = { /*TODO*/ },
                     notificationDescription = ""
                 )

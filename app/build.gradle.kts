@@ -118,4 +118,7 @@ dependencies {
  //data store
     implementation ("androidx.datastore:datastore-preferences:1.0.0")
 
+    //pagination
+    implementation("androidx.paging:paging-compose-android:3.3.0-beta01")
+
 }

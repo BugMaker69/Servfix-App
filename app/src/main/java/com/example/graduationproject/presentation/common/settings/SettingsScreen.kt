@@ -72,8 +72,6 @@ fun SettingsScreen(
     onDeleteMyAccountClick: () -> Unit,
     onSecurityClick: () -> Unit,
     onSignOutClick: () -> Unit,
-    onBackButtonOnTopNavBar: () -> Unit,
-    onBottomNavigationItemClick: (String) -> Unit,
 ) {
 
     SettingsScreenContent(

@@ -24,11 +24,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.graduationproject.R
 import com.example.graduationproject.ui.theme.DarkBlue
 
 
 data class BottomNavItem(
+    val route:String,
     val title: String,
     val selectedIcon: ImageVector,
     val unselectedIcon: ImageVector,
@@ -40,17 +43,18 @@ data class BottomNavItem(
 fun BottomAppBar(
     navController:NavController,
 ) {
-
-    var selectedIconIndex by rememberSaveable { mutableIntStateOf(0) }
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
 
     val items = listOf(
         BottomNavItem(
-//            title = "Home",
+            route=ServixScreens.Home.name,
             title = stringResource(id = R.string.home),
             selectedIcon = Icons.Filled.Home,
             unselectedIcon = Icons.Outlined.Home,
         ),
         BottomNavItem(
+            route = ServixScreens.Favorite.name,
             title = stringResource(id = R.string.favorite),
             selectedIcon = Icons.Filled.Favorite,
             unselectedIcon = Icons.Outlined.FavoriteBorder,
@@ -58,11 +62,13 @@ fun BottomAppBar(
 
 
         BottomNavItem(
+            route=ServixScreens.Settings.name,
             title = stringResource(id = R.string.settings),
             selectedIcon = Icons.Filled.Settings,
             unselectedIcon = Icons.Outlined.Settings,
         ),
         BottomNavItem(
+            route="",
             title = stringResource(id = R.string.messages),
             selectedIcon = Icons.Filled.Message,
             unselectedIcon = Icons.Outlined.Message,
@@ -73,20 +79,23 @@ fun BottomAppBar(
         contentColor = DarkBlue,
     ) {
 
-        items.forEachIndexed { index, item ->
+        items.forEach { screen ->
 
             NavigationBarItem(
-                selected = selectedIconIndex == index,
+                selected = currentRoute == screen.title,
                 onClick = {
-                    selectedIconIndex = index
 
 
-                    navController.navigate(item.title)
+                    navController.navigate(screen.route){
+                        popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
                 },
                 icon = {
                     Icon(
-                        imageVector = if (selectedIconIndex == index) item.selectedIcon else item.unselectedIcon,
-                        contentDescription = item.title,
+                        imageVector = if (currentRoute == screen.route) screen.selectedIcon else screen.unselectedIcon,
+                        contentDescription = screen.title,
                         tint = Color.Black
                     )
                 },
@@ -94,7 +103,7 @@ fun BottomAppBar(
                     indicatorColor = Color.White,
                     selectedTextColor = Color.Black
                 ),
-                label = { Text(text = item.title) },
+                label = { Text(text = screen.title) },
                 alwaysShowLabel = true,
             )
         }

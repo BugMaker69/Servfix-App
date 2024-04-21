@@ -42,7 +42,6 @@ data class Notification(
 @Composable
 fun NotificationScreen(
     modifier: Modifier = Modifier,
-    onBackButtonOnTopNavBar: () -> Unit,
     onNotificationItemClick: () -> Unit,
     notificationDescription: String,
 ) {
@@ -161,7 +160,6 @@ fun NotificationItemsPreview() {
 fun NotificationScreenPreview() {
     NotificationScreen(
         Modifier,
-        {},
         {},
         notificationDescription = "said accepted your service and wants to solve your problem"
     )
