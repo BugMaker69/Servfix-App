@@ -1,8 +1,13 @@
 package com.example.graduationproject.data.retrofit
 
+import com.example.graduationproject.data.AllNotification
 import com.example.graduationproject.data.FavouritesList
+import com.example.graduationproject.data.GetPostData
+import com.example.graduationproject.data.GetPostsForProvider
+import com.example.graduationproject.data.GetWorks
 import com.example.graduationproject.data.LoginRequest
 import com.example.graduationproject.data.LoginResponse
+import com.example.graduationproject.data.NewOldPassword
 import com.example.graduationproject.data.Register
 import com.example.graduationproject.data.RequsetUpdateData
 import com.example.graduationproject.data.ReturnedProviderData
@@ -100,6 +105,60 @@ interface ApiService {
         @Part("fixed_salary") fixed_salary: RequestBody,
         @Part image: MultipartBody.Part
     ): Call<ResponseBody>
+
+    @Multipart
+    @POST("/notification/post_create")
+    suspend fun shareCreatePost(
+        @Header("Authorization") token: String,
+
+        @Part("city") city: RequestBody,
+        @Part("service_name") serviceName:RequestBody,
+        @Part("problem_description") problemDescription:RequestBody,
+
+        @Part image:MultipartBody.Part?
+//        @Part image:List<MultipartBody.Part>?
+    ):Call<ResponseBody>
+
+    @GET("/notifi/allnotification/")
+    suspend fun getAllNotifications(
+        @Header("Authorization") token: String,
+    ):AllNotification
+
+    @GET("/notification/get_post_by_id/{id}")
+    suspend fun getPostById(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int
+    ): GetPostData
+
+    @GET("/notification/provider/posts/")
+    suspend fun getPostsForProvider(
+        @Header("Authorization") token: String
+    ):GetPostsForProvider
+
+    @POST("/api/change_password")
+    fun changePassword(
+        @Header("Authorization") token: String,
+        @Body changePassword:NewOldPassword
+    ):Call<ResponseBody>
+
+    @GET("/api/all_work")
+    fun getAllWorks(
+        @Header("Authorization") token: String
+    ):GetWorks
+
+    @DELETE("/api/all_work/{id}")
+    fun deleteWork(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int
+    ):Call<ResponseBody>
+
+    @Multipart
+    @DELETE("/api/add_work/")
+    fun addWork(
+        @Header("Authorization") token: String,
+        @Part image: MultipartBody.Part
+    ):Call<ResponseBody>
+
 
 
 }

@@ -13,12 +13,16 @@ import androidx.compose.ui.geometry.Size
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.graduationproject.data.Services
+import com.example.graduationproject.data.repositories.AddProviderRepository
 import com.example.graduationproject.data.repositories.UserServicesRepository
+import com.example.graduationproject.data.retrofit.RetrofitClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.UUID
 
 class ServiceViewModel : ViewModel() {
+    private val addProviderRepository = AddProviderRepository()
+    private val apiService = RetrofitClient.userRegisterationApiService()
     var servicesState = mutableStateOf(emptyList<Services>())
     private val userServicesRep: UserServicesRepository = UserServicesRepository()
 
@@ -67,20 +71,23 @@ class ServiceViewModel : ViewModel() {
     //  Share Problem   Handle Photos
 
     val isLoading = mutableStateOf(false)
-    val maxImages = 5
+//    val maxImages = 5
     val launchCamera = mutableStateOf(false)
     val permissionDenied = mutableStateOf(false)
-    val imageMap = mutableStateMapOf<String, Bitmap>()
+//    val imageMap = mutableStateMapOf<String, Uri>()
 
 
-    fun addImage(id: String, bitmap: Bitmap) {
-        if (imageMap.size < maxImages) {
-            imageMap[id] = bitmap
-        }
-    }
-
-    fun removeImage(id: String) {
-        imageMap.remove(id)
+//    fun addImage(id: String, uri: Uri) {
+//        if (imageMap.size < maxImages) {
+//            imageMap[id] = uri
+//        }
+//    }
+//
+//    fun removeImage(id: String) {
+//        imageMap.remove(id)
+//    }
+    fun removeImage() {
+        imageUri=null
     }
 
     fun startLoading() {
@@ -91,20 +98,21 @@ class ServiceViewModel : ViewModel() {
         isLoading.value = false
     }
 
+    var imageUri by mutableStateOf<Uri?>(null)
 
-    fun handleGalleryResult(context: Context, uris: List<Uri>) {
-        uris.mapNotNull { uri ->
-            context.contentResolver.openInputStream(uri)?.use { inputStream ->
-                Pair(uri.toString(), BitmapFactory.decodeStream(inputStream))
-            }
-        }.forEach { (id, bitmap) ->
-            addImage(id, bitmap)
-        }
-        stopLoading()
-    }
+//    fun handleGalleryResult(context: Context, uris: List<Uri>) {
+//        uris.mapNotNull { uri ->
+//            context.contentResolver.openInputStream(uri)?.use { inputStream ->
+//                Pair(uri.toString(), uri)
+//            }
+//        }.forEach { (id, uri) ->
+//            addImage(id, uri)
+//        }
+//        stopLoading()
+//    }
 
-    fun handleCameraResult(bitmap: Bitmap?) {
-        bitmap?.let { addImage(UUID.randomUUID().toString(), it) }
+    fun handleCameraResult(uri: Uri?) {
+        uri?.let { imageUri = it }
         stopLoading()
     }
 
@@ -116,5 +124,21 @@ class ServiceViewModel : ViewModel() {
             permissionDenied.value = true
         }
     }
+
+
+    fun shareCreatePost(){
+        viewModelScope.launch {
+        Log.d("shareCreatePost Token ", "shareCreatePost: ${addProviderRepository.dataStoreToken.getToken()} || ")
+        Log.d("shareCreatePost Data ", "shareCreatePost: ${selectedSentToLocationValue} ||  ${selectedSentToServiceValue} ||   ${postText} ||   ${imageUri} ||  ")
+            addProviderRepository.shareCreatePost(
+                token = addProviderRepository.dataStoreToken.getToken(),
+                city = selectedSentToLocationValue,
+                service_name = selectedSentToServiceValue,
+                problem_description = postText,
+                image = imageUri!!
+            )
+        }
+    }
+
 
 }

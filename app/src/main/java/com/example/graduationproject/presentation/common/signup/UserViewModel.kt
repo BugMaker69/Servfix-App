@@ -537,10 +537,10 @@ class UserViewModel() : ViewModel() {
     var returnedProviderData: ReturnedProviderData? by mutableStateOf<ReturnedProviderData?>(null)
     var returnedUserData: ReturnedUserData? by mutableStateOf<ReturnedUserData?>(null)
     var error: String? by mutableStateOf(null)
-//private val _returnedProviderData = MutableStateFlow<ReturnedProviderData?>(null)
+    //private val _returnedProviderData = MutableStateFlow<ReturnedProviderData?>(null)
 //    val returnedProviderData: StateFlow<ReturnedProviderData?> = _returnedProviderData
-private val BASE_URL = "https://p2kjdbr8-8000.uks1.devtunnels.ms/api"
-var accounType by mutableStateOf(UserType.OwnerPerson)
+    private val BASE_URL = "https://p2kjdbr8-8000.uks1.devtunnels.ms/api"
+    var accounType by mutableStateOf(UserType.OwnerPerson)
     fun login() {
         if (email.isEmpty()) {
             emailError = true
@@ -560,7 +560,7 @@ var accounType by mutableStateOf(UserType.OwnerPerson)
                     error = "Incorrect Email Or Password"
                 } else {
                     error = null
-                //    addProviderRepository.dataStoreToken.saveToken(token!!.access.toString())
+                    //    addProviderRepository.dataStoreToken.saveToken(token!!.access.toString())
                     getData()
                 }
             }
@@ -655,6 +655,7 @@ var accounType by mutableStateOf(UserType.OwnerPerson)
     fun getData(){
         viewModelScope.launch {
             try {
+                Log.d("Token Value", "${addProviderRepository.dataStoreToken.getToken()} ")
                 returnedProviderData =
                     addProviderRepository.getProviderData(addProviderRepository.dataStoreToken.getToken())
                 returnedProviderData?.let {
@@ -680,6 +681,7 @@ var accounType by mutableStateOf(UserType.OwnerPerson)
             }
 
             try {
+                Log.d("Token Value", "${addProviderRepository.dataStoreToken.getToken()} ")
                 returnedUserData = addProviderRepository.getUserData(addProviderRepository.dataStoreToken.getToken())
                 returnedUserData?.let {
                     userName = it.username
@@ -693,7 +695,7 @@ var accounType by mutableStateOf(UserType.OwnerPerson)
 
                 Log.d(
                     "TAG",
-                    "getProviderData: data40 ${returnedUserData?.email}   ${returnedUserData?.id}   ${returnedUserData?.username}  "
+                    "getUserData: data40 ${returnedUserData?.email}   ${returnedUserData?.id}   ${returnedUserData?.username}  "
                 )
             } catch (e: Exception) {
                 Log.d(
@@ -732,9 +734,9 @@ var accounType by mutableStateOf(UserType.OwnerPerson)
             phone = phone,
             profession = selectedServiceValue,
             username = userName,
-/*            ratings = "5",
-            service_id = 1,
-            user = 1,*/
+            /*            ratings = "5",
+                        service_id = 1,
+                        user = 1,*/
         )
 
 
@@ -804,4 +806,3 @@ var accounType by mutableStateOf(UserType.OwnerPerson)
         }
     */
 }
-

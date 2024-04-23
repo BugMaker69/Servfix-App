@@ -60,6 +60,7 @@ import com.example.graduationproject.presentation.accountinfo.UserAccountInfoDet
 import com.example.graduationproject.presentation.common.CustomButtonAndText
 import com.example.graduationproject.presentation.common.CustomDialog
 import com.example.graduationproject.presentation.common.CustomTopAppBar
+import com.example.graduationproject.presentation.notification.NotificationViewModel
 import com.example.graduationproject.ui.theme.DarkBlue
 
 
@@ -313,6 +314,7 @@ fun DeleteAccountScreen(
 }
 
 
+/*
 
 @Composable
 fun SecurityScreen(
@@ -383,13 +385,15 @@ fun SecurityScreen(
     }
 
 }
+*/
 
 
 
 @Composable
 fun NewPasswordScreen(
     modifier: Modifier = Modifier,
-    onSavePasswordChangeClick: () -> Unit
+    onSavePasswordChangeClick: () -> Unit,
+    notificationViewModel: NotificationViewModel
 ) {
 
     var eyeIconPress by remember { mutableStateOf(false) }
@@ -420,7 +424,7 @@ fun NewPasswordScreen(
         )
 
         Text(
-            text = "Password",
+            text = "Old Password",
             modifier = Modifier
                 .fillMaxWidth(.9f)
                 .padding(8.dp),
@@ -432,9 +436,9 @@ fun NewPasswordScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp),
-            value = "",
-            onValueChange = {},
-            placeholder = { Text(text = "Password") },
+            value = notificationViewModel.oldPassword,
+            onValueChange = {notificationViewModel.onOldPasswordChange(it)},
+            placeholder = { Text(text = "Old Password") },
             trailingIcon = {
                 IconButton(onClick = {
                     eyeIconPress = !eyeIconPress
@@ -450,7 +454,7 @@ fun NewPasswordScreen(
         )
 
         Text(
-            text = "Confirm Password",
+            text = "New Password",
             modifier = Modifier
                 .fillMaxWidth(.9f)
                 .padding(8.dp),
@@ -462,9 +466,9 @@ fun NewPasswordScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp),
-            value = "",
-            onValueChange = {},
-            placeholder = { Text(text = "Confirm Password") },
+            value = notificationViewModel.newPassword,
+            onValueChange = {notificationViewModel.onNewPasswordChange(it)},
+            placeholder = { Text(text = "New Password") },
             trailingIcon = {
                 IconButton(onClick = {
                     eyeIconPressConf = !eyeIconPressConf
@@ -565,11 +569,13 @@ fun ProviderAccountInfoPreview() {
     ProviderAccountInfo(Modifier, {}, viewModel())
 }
 
+/*
 @Preview(showBackground = true)
 @Composable
 fun NewPasswordScreenPreview() {
     NewPasswordScreen(Modifier, {})
 }
+*/
 
 /*@Preview(showBackground = true)
 @Composable
@@ -585,11 +591,13 @@ fun UserAccountInfoPreview() {
 }
 */
 
+/*
 @Preview(showBackground = true)
 @Composable
 fun SecurityScreenPreview() {
     SecurityScreen(Modifier,{})
 }
+*/
 
 @Preview(showBackground = true)
 @Composable

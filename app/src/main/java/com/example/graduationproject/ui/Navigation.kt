@@ -4,9 +4,13 @@ import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -15,9 +19,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -27,6 +33,12 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.graduationproject.BeforeSignup
+import com.example.graduationproject.data.AllNotificationItem
+import com.example.graduationproject.data.NewOldPassword
+import com.example.graduationproject.presentation.AddNeWorkToProfileItems
+import com.example.graduationproject.presentation.NotifiPostItemDetail
+import com.example.graduationproject.presentation.NotifiPostItemDetailByID
+import com.example.graduationproject.presentation.NotifiPostItems
 import com.example.graduationproject.presentation.accountinfo.ProviderAccountInfoDetailsScreen
 import com.example.graduationproject.presentation.accountinfo.ProviderAccountInfoScreen
 import com.example.graduationproject.presentation.accountinfo.UserAccountInfoDetailsScreen
@@ -38,6 +50,7 @@ import com.example.graduationproject.presentation.common.login.AfterPasswordChan
 import com.example.graduationproject.presentation.common.login.FirstScreenOnForgotPasswordChange
 import com.example.graduationproject.presentation.common.login.Login
 import com.example.graduationproject.presentation.common.login.ResetPassword
+import com.example.graduationproject.presentation.common.settings.NewPasswordScreen
 import com.example.graduationproject.presentation.common.settings.SettingsScreen
 import com.example.graduationproject.presentation.common.settings.SettingsTopBar
 import com.example.graduationproject.presentation.common.signup.SignupFirstScreen
@@ -47,10 +60,12 @@ import com.example.graduationproject.presentation.common.signup.UserViewModel
 import com.example.graduationproject.presentation.favourite.FavoriteScreen
 import com.example.graduationproject.presentation.notification.NotificationScreen
 import com.example.graduationproject.presentation.notification.NotificationTopBar
+import com.example.graduationproject.presentation.notification.NotificationViewModel
 import com.example.graduationproject.presentation.on_boarding.OnBoardingScreen
 import com.example.graduationproject.presentation.otp.OtpScreen
 import com.example.graduationproject.presentation.search_for_provider.FindProvider
 import com.example.graduationproject.presentation.search_for_provider.FindProviderViewModel
+import com.example.graduationproject.presentation.userservice.ServiceViewModel
 import com.example.graduationproject.presentation.userservice.ShareProblemScreen
 import com.example.graduationproject.presentation.userservice.UserHomeScreen
 import com.example.graduationproject.presentation.viewprofile.ViewProfileScreen
@@ -68,6 +83,8 @@ fun ServixApp(
     val context = LocalContext.current
     val userViewModel: UserViewModel = viewModel()
     val userTypeViewModel: UserTypeViewModel = viewModel()
+    val serviceViewModel: ServiceViewModel = viewModel()
+    val notificationViewModel: NotificationViewModel = viewModel()
     val viewProfileViewModel:ViewProfileViewModel= viewModel()
     var isBackPressedOnce by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
@@ -193,7 +210,13 @@ fun ServixApp(
                             userViewModel.login()
                             if (userViewModel.token != null) {
                                 coroutineScope.launch {
-                                    navController.navigate(ServixScreens.Home.name)
+                                    if (userViewModel.accounType==UserType.OwnerPerson){
+                                        navController.navigate(ServixScreens.Home.name)
+                                    }
+                                    else{
+                                        navController.navigate(ServixScreens.ProviderHome.name)
+//                                        navController.navigate(ServixScreens.Notification.name)
+                                    }
                                 }
 
                             }
@@ -206,6 +229,34 @@ fun ServixApp(
                         },
                         userViewModel = userViewModel
                     )
+            }
+            composable(ServixScreens.ProviderHome.name){
+                Log.d("getPostsForProvider", "ServixApp: ${notificationViewModel.getPostsForProvider()}")
+                notificationViewModel.getPostsForProvider()
+                Log.d("getPostsForProvider", "ServixApp: ${notificationViewModel.getPostsForProvider}")
+                    NotifiPostItems(
+                        onNotifiPostItemClick = { id ->
+                            Log.d("PostDetailsNotifiPostItems", "ServixApp: id $id ")
+                            navController.navigate(ServixScreens.PostDetails.name + "/$id")
+                        },
+                        getPostsForProvider = notificationViewModel.getPostsForProvider
+                    )
+
+            }
+            composable(ServixScreens.PostDetails.name + "/{id}",
+                arguments =  listOf(
+                navArgument("id"){ type = NavType.IntType }
+            )
+            ){backStackEntry->
+                val itemId = backStackEntry.arguments?.getInt("id")
+                val item = notificationViewModel.getPostsForProvider.find { it.id==itemId }
+                Log.d("PostDetails", "ServixApp: itemId:  ${itemId} || item: ${item}||")
+                if (item !=null) {
+                    NotifiPostItemDetail(
+                        onNotifiPostItemDetailToOpenIt = { /*TODO*/ },
+                        getPostsForProviderItem = item
+                    )
+                }
             }
             composable(ServixScreens.BeforeSignup.name) {
                 BeforeSignup(
@@ -250,7 +301,9 @@ fun ServixApp(
                             restoreState = true
                         }
                     },
-                    onSecurityClick = {},
+                    onSecurityClick = {
+                                      navController.navigate(ServixScreens.NewPasswordScreen.name)
+                    },
                     onBackButtonOnTopNavBar = { navController.popBackStack() },
                     onBottomNavigationItemClick = {
                         navController.navigate(it)
@@ -411,17 +464,71 @@ fun ServixApp(
                     )
             }
             composable(ServixScreens.Notification.name) {
+                Log.d("getAllNotifications", "ServixApp: ${notificationViewModel.getAllNotifications()}")
+                notificationViewModel.getAllNotifications()
+                Log.d("getAllNotifications", "ServixApp: ${notificationViewModel.getAllNotifications}")
                 NotificationScreen(
                     modifier = Modifier.padding(innerPadding),
                     onBackButtonOnTopNavBar = { navController.popBackStack() },
-                    onNotificationItemClick = { /*TODO*/ },
-                    notificationDescription = ""
+                    onNotificationItemClick = {
+//                                              navController.navigate(ServixScreens.AddNeWorkToProfileItems.name)
+                        id->
+                                              notificationViewModel.getPostById(id)
+                        Log.d("getPostById", "ServixApp: ${notificationViewModel.getPostById(id)}")
+                        Log.d("getPostById", "ServixApp: ${id}")
+                        Log.d("getPostById", "ServixApp: ${notificationViewModel.getPostById}")
+//                        id->
+                                              navController.navigate(ServixScreens.NotifiPostItemDetailByID.name + "/$id")
+                    },
+                    allNotification = notificationViewModel.getAllNotifications
                 )
             }
+
+            composable(ServixScreens.NotifiPostItemDetailByID.name + "/{id}", arguments =
+            listOf(
+                navArgument("id"){type = NavType.IntType }
+            )
+            ){ backStackEntry->
+
+                val itemId = backStackEntry.arguments?.getInt("id")
+                val item = notificationViewModel.getPostById.find { it.id == itemId }
+                Log.d("PostDetails", "ServixApp: itemId:  ${itemId} || item: ${item}||")
+                if (item!=null) {
+                    NotifiPostItemDetailByID(
+                        onNotifiPostItemDetailToOpenIt = { /*TODO*/ },
+                        getPostDataItem = item
+                    )
+                }
+            }
+
+            composable(ServixScreens.AddNeWorkToProfileItems.name){
+                notificationViewModel.getAllWorks()
+                AddNeWorkToProfileItems(
+                    onAddWorkToProfileItemOpenPhoto = { /*TODO*/ },
+                    getWorks = notificationViewModel.getAllWorks
+                )
+            }
+
             composable(ServixScreens.ShareProblemScreen.name) {
                 ShareProblemScreen(
                     onCancelClick = { navController.popBackStack() },
-                    onShareClick = { navController.navigate(ServixScreens.Home.name) })
+                    onShareClick = {
+                        serviceViewModel.shareCreatePost()
+                        navController.navigate(ServixScreens.Home.name)
+                    },
+                    serviceViewModel = serviceViewModel
+                    )
+            }
+
+            composable(ServixScreens.NewPasswordScreen.name){
+                NewPasswordScreen(
+                    onSavePasswordChangeClick = {
+                        Log.d("changePassword", "ServixApp:  || ${notificationViewModel.oldPassword} || ${notificationViewModel.newPassword}  ||")
+                                                notificationViewModel.changePassword(NewOldPassword(notificationViewModel.oldPassword,notificationViewModel.newPassword))
+//                        navController.navigate(ServixScreens.Home.name)
+                                                },
+                    notificationViewModel = notificationViewModel
+                )
             }
             composable(ServixScreens.Test.name) {
                 TestScreen()

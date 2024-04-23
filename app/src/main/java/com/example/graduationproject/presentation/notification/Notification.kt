@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -27,6 +28,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.graduationproject.R
+import com.example.graduationproject.data.AllNotification
+import com.example.graduationproject.data.AllNotificationItem
 import com.example.graduationproject.presentation.common.CustomTopAppBar
 
 
@@ -43,15 +46,16 @@ data class Notification(
 fun NotificationScreen(
     modifier: Modifier = Modifier,
     onBackButtonOnTopNavBar: () -> Unit,
-    onNotificationItemClick: () -> Unit,
-    notificationDescription: String,
+    onNotificationItemClick: (Int) -> Unit,
+//    notificationDescription: String,
+    allNotification: List<AllNotificationItem>
 ) {
 
 
         NotificationItems(
             modifier = modifier,
-            onNotificationItemClick = onNotificationItemClick,
-            notificationDescription = notificationDescription
+            onNotificationItemClick = { onNotificationItemClick(it) },
+            allNotification = allNotification
         )
     }
 
@@ -60,16 +64,17 @@ fun NotificationScreen(
 @Composable
 fun NotificationItems(
     modifier: Modifier = Modifier,
-    onNotificationItemClick: () -> Unit,
-    notificationDescription: String
+    onNotificationItemClick: (Int) -> Unit,
+//    notificationDescription: String,
+    allNotification: List<AllNotificationItem>
 ) {
     LazyColumn(
         modifier = modifier
     ) {
-        items(15) {
+        items(allNotification) { item->
             NotificationItem(
-                onNotificationItemClick = onNotificationItemClick,
-                notificationDescription = "said accepted your service and wants to solve your problem"
+                onNotificationItemClick = { onNotificationItemClick(item.post) },
+                allNotificationItem = item
             )
         }
     }
@@ -98,7 +103,8 @@ fun NotificationTopBar(
 fun NotificationItem(
     modifier: Modifier = Modifier,
     onNotificationItemClick: () -> Unit,
-    notificationDescription: String
+//    notificationDescription: String,
+    allNotificationItem: AllNotificationItem
 ) {
     Card(
         modifier = Modifier
@@ -126,13 +132,16 @@ fun NotificationItem(
                     modifier = Modifier.size(50.dp),
                 )
             }
-            Text(text = notificationDescription)
+            Text(text = allNotificationItem.message)
         }
 
     }
 
 
 }
+
+
+/*
 
 @Preview(showBackground = true)
 @Composable
@@ -166,6 +175,7 @@ fun NotificationScreenPreview() {
         notificationDescription = "said accepted your service and wants to solve your problem"
     )
 }
+*/
 
 
 

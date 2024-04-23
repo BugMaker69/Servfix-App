@@ -135,3 +135,47 @@ data class Services(
     var image: String,
     val id: Int
 )
+
+data class AllNotificationItem(
+    val id: Int,
+    val message: String,
+    val post: Int
+)
+
+class AllNotification : ArrayList<AllNotificationItem>()
+
+data class GetPostDataItem(
+    val city: String,
+    val id: Int,
+    val image: String,
+    val problem_description: String,
+    val service_name: String
+)
+
+class GetPostData : ArrayList<GetPostDataItem>()
+
+
+data class NewOldPassword(
+    val old_password: String,
+    val new_password: String
+)
+
+data class GetWorksItem(
+    val id: Int,
+    val image: String,
+    val provider_id: Int
+)
+
+class GetWorks : ArrayList<GetWorksItem>()
+
+
+data class GetPostsForProviderItem(
+    val created_at: String,
+    val id: Int,
+    val image: String,
+    val message: String,
+    val provider: Int,
+    val user: Int
+)
+
+class GetPostsForProvider : ArrayList<GetPostsForProviderItem>()
