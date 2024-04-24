@@ -18,10 +18,11 @@ enum class ServixScreens {
     UserAccountInfoDetails,
     Settings,
     NewPassword,
-    Home,
+    HomeUser,
     Notification,
     ShareProblemScreen,
     Favorite,
 FindProvider,
-    ViewProfile
+    ViewProfile,
+    HomeProvider
 }

@@ -3,6 +3,8 @@ package com.example.graduationproject.data.retrofit
 import com.example.graduationproject.data.FavouritesList
 import com.example.graduationproject.data.LoginRequest
 import com.example.graduationproject.data.LoginResponse
+import com.example.graduationproject.data.RefreshRequest
+import com.example.graduationproject.data.RefreshResponse
 import com.example.graduationproject.data.Register
 import com.example.graduationproject.data.ReturnedProviderData
 import com.example.graduationproject.data.ReturnedUserData
@@ -64,7 +66,8 @@ interface ApiService {
                                    @Query("page") page:Int
 
     ):SearchProviders
-
+@POST("api/token/refresh/")
+suspend fun moreToken(@Body refreshRequest: RefreshRequest): Response<RefreshResponse>
     @GET("api/all/{id}")
     suspend fun getProviders(@Path("id") id: Int, @Query("page") page: Int): SearchProviders
 

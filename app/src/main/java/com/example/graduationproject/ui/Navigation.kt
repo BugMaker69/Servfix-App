@@ -1,5 +1,6 @@
 package com.example.graduationproject.ui
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
@@ -10,6 +11,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,9 +30,12 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.graduationproject.BeforeSignup
+import com.example.graduationproject.presentation.HomeProviderScreen
 import com.example.graduationproject.presentation.accountinfo.ProviderAccountInfoDetailsScreen
 import com.example.graduationproject.presentation.accountinfo.ProviderAccountInfoScreen
+import com.example.graduationproject.presentation.accountinfo.ProviderAccountInfoViewModel
 import com.example.graduationproject.presentation.accountinfo.UserAccountInfoDetailsScreen
+import com.example.graduationproject.presentation.accountinfo.UserAccountInfoViewModel
 import com.example.graduationproject.presentation.accountinfo.UserAccountInfoScreen
 import com.example.graduationproject.presentation.common.HomeTopBar
 import com.example.graduationproject.presentation.common.UserType
@@ -58,10 +63,13 @@ import com.example.graduationproject.presentation.userservice.ShareProblemScreen
 import com.example.graduationproject.presentation.userservice.UserHomeScreen
 import com.example.graduationproject.presentation.viewprofile.ViewProfileScreen
 import com.example.graduationproject.presentation.viewprofile.ViewProfileViewModel
+import com.example.graduationproject.utils.DataStoreToken
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlin.system.exitProcess
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ServixApp(
@@ -72,10 +80,29 @@ fun ServixApp(
     var isBackPressedOnce by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    val dataStoreToken = DataStoreToken()
+    var isLoggedIn = runBlocking { dataStoreToken.getLogin() }
+  //  val userType = runBlocking { dataStoreToken.getUserType() }
+    // Observe user type changes using DataStore Flow
+    var userTypeFlow = dataStoreToken.userType.collectAsState(initial = "")
+    val userType by remember { mutableStateOf("") }
+
+    Log.d("vvv", "ServixApp:up ${userTypeFlow.value} ")
+    Log.d("qqqqqqqqq", "ServixApp: ${isLoggedIn}")
+
+    Log.d("qqqqqqqqq", "ServixApp: ${userType.toString()}")
+    LaunchedEffect(Unit) {
+        val loginResult = dataStoreToken.getLogin()
+        isLoggedIn = loginResult
+        userTypeFlow.value
+    }
 
     BackHandler {
         if (navController.previousBackStackEntry != null) {
-            navController.popBackStack()
+            // Allow back navigation for all screens except Login
+            if (navController.currentBackStackEntry?.destination?.route != ServixScreens.Login.name) {
+                navController.popBackStack()
+            }
         } else if (!isBackPressedOnce) {
             coroutineScope.launch {
                 isBackPressedOnce = true
@@ -87,6 +114,7 @@ fun ServixApp(
             exitProcess(0)
         }
     }
+
     val sharedPreferences = context.getSharedPreferences("onBoarding", Context.MODE_PRIVATE)
     val isFirstLaunch = sharedPreferences.getBoolean("isFirstLaunch", true)
     LaunchedEffect(Unit) {
@@ -105,7 +133,8 @@ fun ServixApp(
             when (navController.currentBackStackEntryAsState().value?.destination?.route) {
                 ServixScreens.ProviderAccountInfo.name, ServixScreens.ProviderAccountInfoDetails.name, ServixScreens.UserAccountInfo.name -> {
                     SettingsTopBar(
-                        onBackButtonOnTopNavBar = {                         navController.popBackStack()
+                        onBackButtonOnTopNavBar = {
+                            navController.popBackStack()
                         },
                         showBack = true,
                         scrollBarBehavior = scrollBehavior
@@ -115,19 +144,20 @@ fun ServixApp(
 
                 ServixScreens.Settings.name -> {
                     SettingsTopBar(
-                        onBackButtonOnTopNavBar = {navController.popBackStack() },
+                        onBackButtonOnTopNavBar = { navController.popBackStack() },
                         showBack = false,
                         scrollBarBehavior = scrollBehavior
                     )
                 }
 
-                ServixScreens.Home.name, ServixScreens.FindProvider.name + "/{id}" + "/{serviceName}", ServixScreens.Favorite.name -> HomeTopBar(
+                ServixScreens.HomeUser.name, ServixScreens.FindProvider.name + "/{id}" + "/{serviceName}", ServixScreens.Favorite.name -> HomeTopBar(
                     onNotificationClick = { navController.navigate(ServixScreens.Notification.name) },
                     onMessageClick = { },
                     scrollBarBehavior = scrollBehavior
                 )
 
-                ServixScreens.Notification.name -> NotificationTopBar {                        navController.popBackStack()
+                ServixScreens.Notification.name -> NotificationTopBar {
+                    navController.popBackStack()
                 }
 
 
@@ -142,22 +172,31 @@ fun ServixApp(
             if (currentRoute in listOf(
                     ServixScreens.Settings.name,
                     ServixScreens.Favorite.name,
-                    ServixScreens.Home.name,
-                    ServixScreens.ViewProfile.name+ "/{pid}",
+                    ServixScreens.HomeUser.name,
+                    ServixScreens.ViewProfile.name + "/{pid}",
                     ServixScreens.ProviderAccountInfo.name,
                     ServixScreens.ProviderAccountInfoDetails.name,
-                    ServixScreens.FindProvider.name + "/{id}" + "/{serviceName}"
+                    ServixScreens.FindProvider.name + "/{id}" + "/{serviceName}",
+                    ServixScreens.HomeProvider.name
                 )
-            )
-                BottomAppBar(navController = navController)
+            ) {
+                BottomAppBar(navController = navController, userTypeFlow.value)
+
+            }
         }
     ) { innerPadding ->
-
         val userViewModel: UserViewModel = hiltViewModel()
+
 
         NavHost(
             navController = navController,
-            startDestination = if (isFirstLaunch) ServixScreens.OnBoarding.name else ServixScreens.Login.name
+            startDestination = if (isFirstLaunch) ServixScreens.OnBoarding.name else {
+                if (isLoggedIn) {
+                    if (userTypeFlow.value == UserType.OwnerPerson.name) ServixScreens.HomeUser.name else ServixScreens.HomeProvider.name
+                } else {
+                    ServixScreens.Login.name
+                }
+            }
         ) {
             composable(ServixScreens.OnBoarding.name) {
                 OnBoardingScreen {
@@ -173,55 +212,78 @@ fun ServixApp(
                     }
                 )
             ) {
-                val findProviderViewModel : FindProviderViewModel = hiltViewModel()
+                val findProviderViewModel: FindProviderViewModel = hiltViewModel()
 
                 FindProvider(
                     modifier = Modifier.padding(innerPadding),
-                    viewProfileClick = {pid->
-                        navController.navigate(ServixScreens.ViewProfile.name+ "/$pid")},
+                    viewProfileClick = { pid ->
+                        navController.navigate(ServixScreens.ViewProfile.name + "/$pid")
+                    },
                     findProviderViewModel = findProviderViewModel
                 )
             }
-            composable(ServixScreens.ViewProfile.name+"/{pid}",arguments = listOf(
-                navArgument("pid") {
-                    type = NavType.IntType
-                })){
+            composable(
+                ServixScreens.ViewProfile.name + "/{pid}", arguments = listOf(
+                    navArgument("pid") {
+                        type = NavType.IntType
+                    })
+            ) {
                 val viewProfileViewModel: ViewProfileViewModel = hiltViewModel()
 
 
-                ViewProfileScreen(modifier =Modifier.padding(innerPadding), viewProfileViewModel = viewProfileViewModel)
+                ViewProfileScreen(
+                    modifier = Modifier.padding(innerPadding),
+                    viewProfileViewModel = viewProfileViewModel
+                )
 
             }
             composable(ServixScreens.Favorite.name) {
-                val favouriteViewModel:FavouriteViewModel= hiltViewModel()
+                val favouriteViewModel: FavouriteViewModel = hiltViewModel()
 
-                FavoriteScreen(modifier = Modifier.padding(innerPadding), favouriteViewModel = favouriteViewModel)
+                FavoriteScreen(
+                    modifier = Modifier.padding(innerPadding),
+                    favouriteViewModel = favouriteViewModel
+                )
             }
             composable(ServixScreens.Login.name) {
-                Login(
-                        onLoginClick = {
-                            userViewModel.login()
-                            if (userViewModel.token != null) {
-                                coroutineScope.launch {
-                                    navController.navigate(ServixScreens.Home.name){
-                                        popUpTo(ServixScreens.Login.name){
-                                            inclusive=true
-                                        }
 
+                Login(
+                    onLoginClick = {
+                        runBlocking {
+                            userViewModel.login()
+delay(4000)
+                            if (dataStoreToken.getToken() != "") {
+                                    Log.d("vvv", "ServixApp: ${userTypeFlow.value}")
+                                    if (userType == UserType.HirePerson.name) {
+                                        navController.navigate(ServixScreens.HomeProvider.name) {
+                                            popUpTo(ServixScreens.Login.name) {
+                                                inclusive = true
+                                            }
+
+                                        }
+                                    } else {
+                                        navController.navigate(ServixScreens.HomeUser.name) {
+                                            popUpTo(ServixScreens.Login.name) {
+                                                inclusive = true
+                                            }
+
+                                        }
                                     }
 
-                                }
+
 
                             }
-                        },
-                        onSignupClick = {
-                            navController.navigate(ServixScreens.BeforeSignup.name)
-                        },
-                        onForgetPasswordClick = {
-                            navController.navigate(ServixScreens.ForgotPassword.name)
-                        },
-                        userViewModel = userViewModel
-                    )
+                        }
+
+                    },
+                    onSignupClick = {
+                        navController.navigate(ServixScreens.BeforeSignup.name)
+                    },
+                    onForgetPasswordClick = {
+                        navController.navigate(ServixScreens.ForgotPassword.name)
+                    },
+                    userViewModel = userViewModel
+                )
             }
             composable(ServixScreens.BeforeSignup.name) {
                 BeforeSignup(
@@ -238,11 +300,12 @@ fun ServixApp(
                 )
             }
             composable(ServixScreens.Settings.name) {
-                SettingsScreen(innerPadding,
+                SettingsScreen(
+                    innerPadding,
                     onAccountInfoClick = {
                         /*                        //TODO NEED TO BE HANDLED IN BETTER WAY USING SUCH DATA STORE
                         userViewModel.getData()*/
-                        if (userTypeViewModel.userType.value == UserType.OwnerPerson || userViewModel.accounType == UserType.OwnerPerson) {
+                        if (userTypeFlow.value == UserType.OwnerPerson.name ) {
                             navController.navigate(ServixScreens.UserAccountInfo.name)
                         } else {
                             navController.navigate(ServixScreens.ProviderAccountInfo.name)
@@ -258,20 +321,29 @@ fun ServixApp(
                         }
                     },
                     onSignOutClick = {
+                        runBlocking {
+                            dataStoreToken.saveLoginState(false)
+                            dataStoreToken.saveToken("")
+                            dataStoreToken.saveUserType("") // Clear user type as well
+                        }
+
+
                         navController.navigate(ServixScreens.Login.name) {
-                            popUpTo(ServixScreens.Settings.name) {
+                            popUpTo(navController.graph.id) {
                                 inclusive = true
                             }
                             launchSingleTop = true
-                            restoreState = true
                         }
                     },
+
                     onSecurityClick = {},
 
-                )
+                    )
             }
             //  Todo How To Handle UserInfo And ProviderInfo ?!
             composable(ServixScreens.UserAccountInfo.name) {
+                val userAccountInfoViewModel: UserAccountInfoViewModel = hiltViewModel()
+
                 UserAccountInfoScreen(
                     innerPadding,
                     onAccountInfoDetailsClick = {
@@ -284,10 +356,12 @@ fun ServixApp(
                     onBottomNavigationItemClick = {
                         navController.navigate(ServixScreens.Settings.name)
                     },
-                    userViewModel = userViewModel
+                    userAccountInfoViewModel = userAccountInfoViewModel
                 )
             }
             composable(ServixScreens.UserAccountInfoDetails.name) {
+                val userAccountInfoViewModel: UserAccountInfoViewModel = hiltViewModel()
+
                 UserAccountInfoDetailsScreen(
                     innerPadding = innerPadding,
                     onBackButtonOnTopNavBar = {
@@ -296,34 +370,38 @@ fun ServixApp(
                     onBottomNavigationItemClick = {},
                     onPhotoChangeClick = {},
                     onSaveChangesClick = {
-                        userViewModel.updateUserData()
+                        userAccountInfoViewModel.updateUserData()
                         navController.navigate(ServixScreens.Settings.name)
-                    },
-                    userViewModel = userViewModel
+                    }, userAccountInfoViewModel = userAccountInfoViewModel
                 )
             }
             composable(ServixScreens.ProviderAccountInfo.name) {
+                val providerAccountInfoViewModel: ProviderAccountInfoViewModel = hiltViewModel()
+
                 ProviderAccountInfoScreen(
                     modifier = Modifier.padding(innerPadding),
                     onAccountInfoDetailsClick = {
                         navController.navigate(ServixScreens.ProviderAccountInfoDetails.name)
                     },
-                    userViewModel = userViewModel
+                    providerAccountInfoViewModel = providerAccountInfoViewModel
                 )
             }
             composable(ServixScreens.ProviderAccountInfoDetails.name) {
+                val providerAccountInfoViewModel: ProviderAccountInfoViewModel = hiltViewModel()
+
                 ProviderAccountInfoDetailsScreen(
                     modifier = Modifier.padding(innerPadding),
 
                     onSaveChangesClick = {
-                        userViewModel.updateProviderData()
+                        providerAccountInfoViewModel.updateProviderData()
                         navController.navigate(ServixScreens.Settings.name)
                     },
                     onPhotoChangeClick = {},
-                    userViewModel = userViewModel
+                    providerAccountInfoViewModel = providerAccountInfoViewModel
                 )
             }
             composable(ServixScreens.FirstSignup.name) {
+
                 SignupFirstScreen(
                     userViewModel,
                     onLoginClick = {
@@ -336,6 +414,7 @@ fun ServixApp(
                 )
             }
             composable(ServixScreens.SecondSignup.name) {
+
                 SignupSecondScreen(
                     userViewModel,
                     onBackClick = {
@@ -359,6 +438,7 @@ fun ServixApp(
                 )
             }
             composable(ServixScreens.SignupThird.name) {
+
                 SignupThirdScreen(onLoginClick = {
                     navController.navigate(ServixScreens.Login.name)
                 }, onFinishClick = {
@@ -370,6 +450,7 @@ fun ServixApp(
                 )
             }
             composable(ServixScreens.ForgotPassword.name) {
+
                 FirstScreenOnForgotPasswordChange(
                     onSendClick = {
                         navController.navigate(ServixScreens.Otp.name)
@@ -382,6 +463,7 @@ fun ServixApp(
                 )
             }
             composable(ServixScreens.ResetPassword.name) {
+
                 ResetPassword(
                     onResetClick = {
                         navController.navigate(ServixScreens.AfterPassword.name)
@@ -397,6 +479,7 @@ fun ServixApp(
                 )
             }
             composable(ServixScreens.Otp.name) {
+
                 OtpScreen(
                     userViewModel = userViewModel,
                     onLoginClick = {
@@ -408,8 +491,8 @@ fun ServixApp(
                     }
                 )
             }
-            composable(ServixScreens.Home.name) {
-                val serviceViewmodel:ServiceViewModel= hiltViewModel()
+            composable(ServixScreens.HomeUser.name) {
+                val serviceViewmodel: ServiceViewModel = hiltViewModel()
 
                 UserHomeScreen(
                     modifier = Modifier.padding(innerPadding),
@@ -423,7 +506,7 @@ fun ServixApp(
                     },
                     serviceViewModel = serviceViewmodel
 
-                    )
+                )
             }
             composable(ServixScreens.Notification.name) {
                 NotificationScreen(
@@ -433,12 +516,18 @@ fun ServixApp(
                 )
             }
             composable(ServixScreens.ShareProblemScreen.name) {
+                val serviceViewModel: ServiceViewModel = hiltViewModel()
                 ShareProblemScreen(
                     onCancelClick = { navController.popBackStack() },
-                    onShareClick = { navController.navigate(ServixScreens.Home.name) })
+                    onShareClick = { navController.navigate(ServixScreens.HomeUser.name) },
+                    serviceViewModel = serviceViewModel
+                )
             }
             composable(ServixScreens.Test.name) {
                 TestScreen()
+            }
+            composable(ServixScreens.HomeProvider.name) {
+                HomeProviderScreen(Modifier.padding(innerPadding))
             }
 
         }

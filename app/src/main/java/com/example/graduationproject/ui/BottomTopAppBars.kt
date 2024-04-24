@@ -17,9 +17,6 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
@@ -27,6 +24,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.graduationproject.R
+import com.example.graduationproject.presentation.common.UserType
 import com.example.graduationproject.ui.theme.DarkBlue
 
 
@@ -38,17 +36,16 @@ data class BottomNavItem(
 )
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BottomAppBar(
-    navController:NavController,
+    navController:NavController,userType: String
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    val items = listOf(
+    val userItems = listOf(
         BottomNavItem(
-            route=ServixScreens.Home.name,
+            route=ServixScreens.HomeUser.name,
             title = stringResource(id = R.string.home),
             selectedIcon = Icons.Filled.Home,
             unselectedIcon = Icons.Outlined.Home,
@@ -74,11 +71,34 @@ fun BottomAppBar(
             unselectedIcon = Icons.Outlined.Message,
         )
     )
+    val providerItems = listOf(
+        BottomNavItem(
+            route=ServixScreens.HomeProvider.name,
+            title = stringResource(id = R.string.home),
+            selectedIcon = Icons.Filled.Home,
+            unselectedIcon = Icons.Outlined.Home,
+        ),
+
+        BottomNavItem(
+            route=ServixScreens.Settings.name,
+            title = stringResource(id = R.string.settings),
+            selectedIcon = Icons.Filled.Settings,
+            unselectedIcon = Icons.Outlined.Settings,
+        ),
+        BottomNavItem(
+            route="",
+            title = stringResource(id = R.string.messages),
+            selectedIcon = Icons.Filled.Message,
+            unselectedIcon = Icons.Outlined.Message,
+        )
+    )
+    val items=if(userType==UserType.OwnerPerson.name) userItems else providerItems
+
+
     NavigationBar(
         containerColor = Color.Transparent,
         contentColor = DarkBlue,
     ) {
-
         items.forEach { screen ->
 
             NavigationBarItem(

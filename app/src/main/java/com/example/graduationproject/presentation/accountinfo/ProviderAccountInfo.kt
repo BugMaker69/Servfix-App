@@ -54,16 +54,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
-import coil.compose.AsyncImage
 import coil.compose.rememberImagePainter
 import com.example.graduationproject.R
 import com.example.graduationproject.presentation.common.CustomButtonAndText
 import com.example.graduationproject.presentation.common.CustomTextField
 import com.example.graduationproject.presentation.common.signup.DisplayRequirements
-import com.example.graduationproject.presentation.common.signup.UserViewModel
 import com.example.graduationproject.ui.theme.DarkBlue
 import com.example.graduationproject.ui.theme.LightBrown
-import kotlin.math.log
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -71,14 +68,15 @@ import kotlin.math.log
 fun ProviderAccountInfoScreen(
     modifier: Modifier,
     onAccountInfoDetailsClick: () -> Unit,
-    userViewModel: UserViewModel
+    providerAccountInfoViewModel: ProviderAccountInfoViewModel
 
 ) {
+    Log.d("whoo", "ProviderAccountInfoDetails: ")
 
     ProviderAccountInfo(
         modifier = modifier,
         onAccountInfoDetailsClick = onAccountInfoDetailsClick,
-        userViewModel = userViewModel
+        providerAccountInfoViewModel = providerAccountInfoViewModel
     )
 }
 
@@ -89,14 +87,14 @@ fun ProviderAccountInfoDetailsScreen(
     modifier: Modifier,
     onSaveChangesClick: () -> Unit,
     onPhotoChangeClick: () -> Unit,
-    userViewModel: UserViewModel
+    providerAccountInfoViewModel: ProviderAccountInfoViewModel
 ) {
 
     ProviderAccountInfoDetails(
         modifier = modifier,
         onSaveChangesClick = onSaveChangesClick,
         onPhotoChangeClick = onPhotoChangeClick,
-        userViewModel = userViewModel
+        providerAccountInfoViewModel = providerAccountInfoViewModel
     )
 
 }
@@ -106,7 +104,7 @@ fun ProviderAccountInfoDetailsScreen(
 fun ProviderAccountInfo(
     modifier: Modifier = Modifier,
     onAccountInfoDetailsClick: () -> Unit,
-    userViewModel: UserViewModel
+    providerAccountInfoViewModel: ProviderAccountInfoViewModel
 ) {
 
     Column(
@@ -136,7 +134,7 @@ fun ProviderAccountInfo(
 
         Box(modifier = Modifier.padding(16.dp), contentAlignment = Alignment.TopCenter) {
             Image(
-                painter = if (userViewModel.returnedProviderData?.image != null) rememberImagePainter(data = Uri.parse( userViewModel.returnedProviderData!!.image.toString()))!! else painterResource(
+                painter = if (providerAccountInfoViewModel.returnedProviderData?.image != null) rememberImagePainter(data = Uri.parse( providerAccountInfoViewModel.returnedProviderData!!.image.toString()))!! else painterResource(
                     id = R.drawable.ic_default_account_pic
                 ),
                 contentDescription = "",
@@ -159,7 +157,7 @@ fun ProviderAccountInfo(
         )
 
         Text(
-            text = userViewModel.returnedProviderData?.username ?: "",
+            text = providerAccountInfoViewModel.userName,
             modifier = Modifier
                 .fillMaxWidth(.9f)
                 .padding(horizontal = 16.dp, vertical = 8.dp),
@@ -186,7 +184,7 @@ fun ProviderAccountInfo(
         )
 
         Text(
-            text = userViewModel.returnedProviderData?.phone ?: "",
+            text = providerAccountInfoViewModel.phone,
             modifier = Modifier
                 .fillMaxWidth(.9f)
                 .padding(horizontal = 16.dp, vertical = 8.dp),
@@ -211,7 +209,7 @@ fun ProviderAccountInfo(
         )
 
         Text(
-            text = userViewModel.returnedProviderData?.email ?: "",
+            text = providerAccountInfoViewModel.emailN,
             modifier = Modifier
                 .fillMaxWidth(.9f)
                 .padding(horizontal = 16.dp, vertical = 8.dp),
@@ -238,7 +236,7 @@ fun ProviderAccountInfo(
 
         //TODO RATE DESIGN
         Text(
-            text = userViewModel.returnedProviderData?.ratings ?: "",
+            text = providerAccountInfoViewModel.rating,
             modifier = Modifier
                 .fillMaxWidth(.9f)
                 .padding(horizontal = 16.dp, vertical = 8.dp),
@@ -264,7 +262,7 @@ fun ProviderAccountInfo(
         )
 
         Text(
-            text = userViewModel.returnedProviderData?.fixed_salary.toString() ?: "",
+            text = providerAccountInfoViewModel.fixedSalary,
             modifier = Modifier
                 .fillMaxWidth(.9f)
                 .padding(horizontal = 16.dp, vertical = 8.dp),
@@ -287,7 +285,7 @@ fun ProviderAccountInfoDetails(
     modifier: Modifier = Modifier,
     onSaveChangesClick: () -> Unit,
     onPhotoChangeClick: () -> Unit,
-    userViewModel: UserViewModel
+    providerAccountInfoViewModel: ProviderAccountInfoViewModel
 
 ) {
     val context = LocalContext.current
@@ -301,13 +299,9 @@ fun ProviderAccountInfoDetails(
     val services = context.resources.getStringArray(R.array.services).toList()
 
     val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
-        userViewModel.imageUri = uri
+        providerAccountInfoViewModel.imageUri = uri
     }
     val BASE_URL = "https://p2kjdbr8-8000.uks1.devtunnels.ms/api"
-
-    LaunchedEffect(key1 = true) {
-        userViewModel.getData()
-    }
 
     Column(
         modifier = modifier
@@ -325,8 +319,9 @@ fun ProviderAccountInfoDetails(
         ) {
 
             Box(modifier = Modifier.size(130.dp)) {
-                Image(
-                    painter = if (userViewModel.imageUri != null) rememberImagePainter(data = userViewModel.imageUri)!! else painterResource(
+            ///edit this
+                 Image(
+                    painter = if (providerAccountInfoViewModel.imageUri != null) rememberImagePainter(data = providerAccountInfoViewModel.imageUri)!! else painterResource(
                         id = R.drawable.ic_default_account_pic                    ),
                     contentDescription = "",
                     contentScale = ContentScale.Crop,
@@ -368,17 +363,17 @@ fun ProviderAccountInfoDetails(
             modifier = Modifier
                 .focusRequester(usernameFocusRequester)
                 .onFocusChanged { focusState ->
-                    userViewModel.isUsernameFocused.value = focusState.isFocused
+                    providerAccountInfoViewModel.isUsernameFocused.value = focusState.isFocused
                 },
             fieldName = R.string.username,
-            fieldValue = userViewModel.userName,
-            onValueChange = { userViewModel.onUserNameChanged(it) },
-            isError = userViewModel.userNameError,
+            fieldValue = providerAccountInfoViewModel.userName,
+            onValueChange = { providerAccountInfoViewModel.onUserNameChanged(it) },
+            isError = providerAccountInfoViewModel.userNameError,
         )
         DisplayRequirements(
-            isFieldFocused = userViewModel.isUsernameFocused.value,
-            requirements = userViewModel.usernameRequirements,
-            fieldValue = userViewModel.userName
+            isFieldFocused = providerAccountInfoViewModel.isUsernameFocused.value,
+            requirements = providerAccountInfoViewModel.usernameRequirements,
+            fieldValue = providerAccountInfoViewModel.userName
         )
 
 
@@ -398,7 +393,9 @@ fun ProviderAccountInfoDetails(
         Row(
             Modifier
                 .fillMaxWidth()
-                .clickable { userViewModel.expanded = !userViewModel.expanded }
+                .clickable {
+                    providerAccountInfoViewModel.expanded = !providerAccountInfoViewModel.expanded
+                }
                 .padding(top = 8.dp, bottom = 16.dp)
                 .defaultMinSize(
                     minWidth = OutlinedTextFieldDefaults.MinWidth,
@@ -410,19 +407,19 @@ fun ProviderAccountInfoDetails(
                     shape = OutlinedTextFieldDefaults.shape
                 )
                 .onGloballyPositioned { coordinates ->
-                    userViewModel.textfieldSize = coordinates.size.toSize()
+                    providerAccountInfoViewModel.textfieldSize = coordinates.size.toSize()
                 },
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = if (userViewModel.selectedCityValue.isNotEmpty()) userViewModel.selectedCityValue else "City",
+                text = if (providerAccountInfoViewModel.selectedCityValue.isNotEmpty()) providerAccountInfoViewModel.selectedCityValue else "City",
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
                     .weight(7f)
             )
 
             Icon(
-                imageVector = if (userViewModel.expanded) Icons.Filled.ArrowDropUp
+                imageVector = if (providerAccountInfoViewModel.expanded) Icons.Filled.ArrowDropUp
                 else Icons.Filled.ArrowDropDown,
                 contentDescription = "",
                 modifier = Modifier.padding(horizontal = 8.dp)
@@ -431,19 +428,19 @@ fun ProviderAccountInfoDetails(
 
 
         DropdownMenu(
-            expanded = userViewModel.expanded,
-            onDismissRequest = { userViewModel.expanded = false },
+            expanded = providerAccountInfoViewModel.expanded,
+            onDismissRequest = { providerAccountInfoViewModel.expanded = false },
             modifier = Modifier
-                .width(with(LocalDensity.current) { userViewModel.textfieldSize.width.toDp() })
+                .width(with(LocalDensity.current) { providerAccountInfoViewModel.textfieldSize.width.toDp() })
 
         ) {
             governorates.forEachIndexed { index, governorate ->
                 DropdownMenuItem(
                     onClick = {
-                        userViewModel.selectedCityIndex = index
-                        userViewModel.selectedCityValue = governorate
-                        userViewModel.expanded = false
-                        userViewModel.cityError = false
+                        providerAccountInfoViewModel.selectedCityIndex = index
+                        providerAccountInfoViewModel.selectedCityValue = governorate
+                        providerAccountInfoViewModel.expanded = false
+                        providerAccountInfoViewModel.cityError = false
                     },
                     text = {
                         Text(text = governorate)
@@ -465,9 +462,9 @@ fun ProviderAccountInfoDetails(
             modifier = Modifier.focusRequester(addressFocusRequester),
 
             fieldName = R.string.address,
-            fieldValue = userViewModel.address,
-            onValueChange = { userViewModel.onAddressChanged(it) },
-            isError = userViewModel.addressError,
+            fieldValue = providerAccountInfoViewModel.address,
+            onValueChange = { providerAccountInfoViewModel.onAddressChanged(it) },
+            isError = providerAccountInfoViewModel.addressError,
 
             )
 
@@ -484,19 +481,19 @@ fun ProviderAccountInfoDetails(
             modifier = Modifier
                 .focusRequester(emailFocusRequester)
                 .onFocusChanged { focusState ->
-                    userViewModel.isEmailNFocused.value = focusState.isFocused
+                    providerAccountInfoViewModel.isEmailNFocused.value = focusState.isFocused
                 },
 
             fieldName = R.string.email,
-            fieldValue = userViewModel.emailN,
-            onValueChange = { userViewModel.onEmailChangedN(it) },
-            isError = userViewModel.emailNError,
+            fieldValue = providerAccountInfoViewModel.emailN,
+            onValueChange = { providerAccountInfoViewModel.onEmailChangedN(it) },
+            isError = providerAccountInfoViewModel.emailNError,
 
             )
         DisplayRequirements(
-            isFieldFocused = userViewModel.isEmailNFocused.value,
-            requirements = userViewModel.emailRequirements,
-            fieldValue = userViewModel.emailN
+            isFieldFocused = providerAccountInfoViewModel.isEmailNFocused.value,
+            requirements = providerAccountInfoViewModel.emailRequirements,
+            fieldValue = providerAccountInfoViewModel.emailN
         )
 
         Text(
@@ -513,20 +510,20 @@ fun ProviderAccountInfoDetails(
             modifier = Modifier
                 .focusRequester(phoneNumberFocusRequester)
                 .onFocusChanged { focusState ->
-                    userViewModel.isPhoneNumberFocused.value = focusState.isFocused
+                    providerAccountInfoViewModel.isPhoneNumberFocused.value = focusState.isFocused
                 },
 
             fieldName = R.string.phone,
-            fieldValue = userViewModel.phone,
-            onValueChange = { userViewModel.onPhoneChanged(it) },
-            isError = userViewModel.phoneError,
+            fieldValue = providerAccountInfoViewModel.phone,
+            onValueChange = { providerAccountInfoViewModel.onPhoneChanged(it) },
+            isError = providerAccountInfoViewModel.phoneError,
 
             )
 
         DisplayRequirements(
-            isFieldFocused = userViewModel.isPhoneNumberFocused.value,
-            requirements = userViewModel.phoneNumberRequirements,
-            fieldValue = userViewModel.phone
+            isFieldFocused = providerAccountInfoViewModel.isPhoneNumberFocused.value,
+            requirements = providerAccountInfoViewModel.phoneNumberRequirements,
+            fieldValue = providerAccountInfoViewModel.phone
         )
 
         // TODO Service DropDownMenu
@@ -542,7 +539,10 @@ fun ProviderAccountInfoDetails(
         Row(
             Modifier
                 .fillMaxWidth()
-                .clickable { userViewModel.expandedService = !userViewModel.expandedService }
+                .clickable {
+                    providerAccountInfoViewModel.expandedService =
+                        !providerAccountInfoViewModel.expandedService
+                }
                 .padding(8.dp)
                 .defaultMinSize(
                     minWidth = OutlinedTextFieldDefaults.MinWidth,
@@ -554,19 +554,19 @@ fun ProviderAccountInfoDetails(
                     shape = OutlinedTextFieldDefaults.shape
                 )
                 .onGloballyPositioned { coordinates ->
-                    userViewModel.textfieldServiceSize = coordinates.size.toSize()
+                    providerAccountInfoViewModel.textfieldServiceSize = coordinates.size.toSize()
                 },
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = if (userViewModel.selectedServiceValue.isNotEmpty()) userViewModel.selectedServiceValue else "Your Service",
+                text = if (providerAccountInfoViewModel.selectedServiceValue.isNotEmpty()) providerAccountInfoViewModel.selectedServiceValue else "Your Service",
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
                     .weight(7f)
             )
 
             Icon(
-                imageVector = if (userViewModel.expandedService) Icons.Filled.ArrowDropUp
+                imageVector = if (providerAccountInfoViewModel.expandedService) Icons.Filled.ArrowDropUp
                 else Icons.Filled.ArrowDropDown,
                 contentDescription = "",
                 modifier = Modifier.padding(horizontal = 8.dp)
@@ -574,18 +574,18 @@ fun ProviderAccountInfoDetails(
         }
 
         DropdownMenu(
-            expanded = userViewModel.expandedService,
-            onDismissRequest = { userViewModel.expandedService = false },
+            expanded = providerAccountInfoViewModel.expandedService,
+            onDismissRequest = { providerAccountInfoViewModel.expandedService = false },
             modifier = Modifier
-                .width(with(LocalDensity.current) { userViewModel.textfieldServiceSize.width.toDp() })
+                .width(with(LocalDensity.current) { providerAccountInfoViewModel.textfieldServiceSize.width.toDp() })
 
         ) {
             services.forEachIndexed { index, service ->
                 DropdownMenuItem(
                     onClick = {
-                        userViewModel.selectedServiceIndex = index
-                        userViewModel.selectedServiceValue = service
-                        userViewModel.expandedService = false
+                        providerAccountInfoViewModel.selectedServiceIndex = index
+                        providerAccountInfoViewModel.selectedServiceValue = service
+                        providerAccountInfoViewModel.expandedService = false
                     },
                     text = {
                         Text(text = service)
@@ -608,8 +608,8 @@ fun ProviderAccountInfoDetails(
             modifier = Modifier
                 .padding(horizontal = 8.dp),
             fieldName = R.string.fixed_salary,
-            fieldValue = userViewModel.fixedSalary,
-            onValueChange = { userViewModel.onFixedSalaryChanged(it) },
+            fieldValue = providerAccountInfoViewModel.fixedSalary,
+            onValueChange = { providerAccountInfoViewModel.onFixedSalaryChanged(it) },
         )
 
 
@@ -621,8 +621,8 @@ fun ProviderAccountInfoDetails(
             backgroundColor = DarkBlue,
             contentColor = Color.White,
             onClick = {
-                Log.d("TAG", "ProviderAccountInfoDetails: $userViewModel || ${userViewModel.userName} || ${userViewModel.phone} || ${userViewModel.emailN} ||")
-                Log.d("WHY","IMageURI ${userViewModel.imageUri}")
+                Log.d("TAG", "ProviderAccountInfoDetails: $providerAccountInfoViewModel || ${providerAccountInfoViewModel.userName} || ${providerAccountInfoViewModel.phone} || ${providerAccountInfoViewModel.emailN} ||")
+                Log.d("WHY","IMageURI ${providerAccountInfoViewModel.imageUri}")
                 onSaveChangesClick()
             }
         )

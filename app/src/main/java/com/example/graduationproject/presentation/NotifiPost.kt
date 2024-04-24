@@ -11,6 +11,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -54,7 +55,6 @@ import com.example.graduationproject.presentation.userservice.ServiceViewModel
 import com.example.graduationproject.ui.theme.DarkBlue
 
 
-//  TODO HARD WRITTEN TEXT,IMAGE NEED TO BE DYNAMIC AND CREATE VIEWMODEL
 
 @Composable
 fun NotifiPostItem(
@@ -87,18 +87,25 @@ fun NotifiPostItem(
     }
 
 }
+@Composable
+fun HomeProviderScreen(modifier:Modifier){
+    Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+
+        Text(text = "this is Home Provider")
+    }
+}
 
 
 @Composable
 fun NotifiPostItems(
-    modifier: Modifier = Modifier,
+    modifier: Modifier ,
     onNotifiPostItemClick: () -> Unit,
 ) {
     LazyColumn(
 
     ) {
         items(10) {
-            NotifiPostItem(Modifier, onNotifiPostItemClick)
+            NotifiPostItem(modifier, onNotifiPostItemClick)
         }
     }
 }

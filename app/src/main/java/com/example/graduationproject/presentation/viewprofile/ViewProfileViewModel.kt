@@ -39,7 +39,7 @@ class ViewProfileViewModel @Inject constructor(val repo : ViewProfileRepository,
     }
 
     fun getData(id:Int) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.Main) {
             val providerProfile = repo.getProviderProfile(id).provider!!
         //    val fav =repo.showAllFavourites()
 

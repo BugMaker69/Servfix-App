@@ -2,6 +2,7 @@ package com.example.graduationproject.presentation.accountinfo
 
 import android.annotation.SuppressLint
 import android.net.Uri
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -33,7 +34,6 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -51,17 +51,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberImagePainter
-import com.example.graduationproject.ui.BottomAppBar
 import com.example.graduationproject.presentation.common.CustomButtonAndText
 import com.example.graduationproject.R
 import com.example.graduationproject.presentation.common.CustomTextField
-import com.example.graduationproject.presentation.common.settings.SettingsTopBar
 import com.example.graduationproject.presentation.common.signup.DisplayRequirements
 import com.example.graduationproject.presentation.common.signup.UserViewModel
 import com.example.graduationproject.ui.theme.DarkBlue
@@ -76,13 +72,14 @@ fun UserAccountInfoScreen(
     onAccountInfoDetailsClick: () -> Unit,
     onBackButtonOnTopNavBar: () -> Unit,
     onBottomNavigationItemClick: (String) -> Unit,
-    userViewModel: UserViewModel
+    userAccountInfoViewModel: UserAccountInfoViewModel
 ) {
+    Log.d("whoo", "UserAccountInfoDetails: ")
 
             UserAccountInfo(
                 modifier.padding(top = innerPadding.calculateTopPadding() ),
                 onAccountInfoDetailsClick = onAccountInfoDetailsClick,
-                userViewModel = userViewModel
+                userAccountInfoViewModel = userAccountInfoViewModel
             )
 
 }
@@ -97,7 +94,7 @@ fun UserAccountInfoDetailsScreen(
     onBottomNavigationItemClick: (String) -> Unit,
     onSaveChangesClick: () -> Unit,
     onPhotoChangeClick: () -> Unit,
-    userViewModel: UserViewModel
+    userAccountInfoViewModel: UserAccountInfoViewModel
 ) {
 
             UserAccountInfoDetails(
@@ -107,7 +104,7 @@ fun UserAccountInfoDetailsScreen(
                 ),
                 onSaveChangesClick = onSaveChangesClick,
                 onPhotoChangeClick = onPhotoChangeClick,
-                userViewModel = userViewModel
+                userAccountInfoViewModel = userAccountInfoViewModel
             )
 
 
@@ -118,7 +115,7 @@ fun UserAccountInfoDetailsScreen(
 fun UserAccountInfo(
     modifier: Modifier = Modifier,
     onAccountInfoDetailsClick: () -> Unit,
-    userViewModel: UserViewModel
+    userAccountInfoViewModel: UserAccountInfoViewModel
 ) {
 
     Column(
@@ -148,7 +145,7 @@ fun UserAccountInfo(
 
         Box(modifier = Modifier.padding(16.dp), contentAlignment = Alignment.TopCenter) {
             Image(
-                painter = if (userViewModel.imageUri != null) rememberImagePainter(data = userViewModel.imageUri)!! else painterResource(
+                painter = if (userAccountInfoViewModel.imageUri != null) rememberImagePainter(data = userAccountInfoViewModel.imageUri)!! else painterResource(
                     id = R.drawable.ic_default_account_pic                ),
                 contentDescription = "",
                 contentScale = ContentScale.Crop,
@@ -170,7 +167,7 @@ fun UserAccountInfo(
         )
 
         Text(
-            text = userViewModel.returnedUserData?.username ?: "",
+            text = userAccountInfoViewModel.userName,
             Modifier
                 .fillMaxWidth(.9f)
                 .padding(horizontal = 16.dp, vertical = 8.dp),
@@ -197,7 +194,7 @@ fun UserAccountInfo(
         )
 
         Text(
-            text = userViewModel.returnedUserData?.phone ?: "",
+            text = userAccountInfoViewModel.phone ,
             Modifier
                 .fillMaxWidth(.9f)
                 .padding(horizontal = 16.dp, vertical = 8.dp),
@@ -222,7 +219,7 @@ fun UserAccountInfo(
         )
 
         Text(
-            text = userViewModel.returnedUserData?.email ?: "",
+            text = userAccountInfoViewModel.emailN ,
             Modifier
                 .fillMaxWidth(.9f)
                 .padding(horizontal = 16.dp, vertical = 8.dp),
@@ -260,7 +257,7 @@ fun UserAccountInfoDetails(
     modifier: Modifier = Modifier,
     onSaveChangesClick: () -> Unit,
     onPhotoChangeClick: () -> Unit,
-    userViewModel: UserViewModel
+    userAccountInfoViewModel: UserAccountInfoViewModel
 ) {
 
     val context = LocalContext.current
@@ -273,11 +270,7 @@ fun UserAccountInfoDetails(
     val emailFocusRequester = remember { FocusRequester() }
 
     val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
-        userViewModel.imageUri = uri
-    }
-
-    LaunchedEffect(key1 = true) {
-        userViewModel.getData()
+        userAccountInfoViewModel.imageUri = uri
     }
 
     Column(
@@ -297,7 +290,7 @@ fun UserAccountInfoDetails(
 
             Box(modifier = Modifier.size(130.dp)) {
                 Image(
-                    painter = if (userViewModel.imageUri != null) rememberImagePainter(data = userViewModel.imageUri)!! else painterResource(
+                    painter = if (userAccountInfoViewModel.imageUri != null) rememberImagePainter(data = userAccountInfoViewModel.imageUri)!! else painterResource(
                         id = R.drawable.ic_default_account_pic                    ),
                     contentDescription = "",
                     contentScale = ContentScale.Crop,
@@ -338,17 +331,17 @@ fun UserAccountInfoDetails(
             modifier = Modifier
                 .focusRequester(usernameFocusRequester)
                 .onFocusChanged { focusState ->
-                    userViewModel.isUsernameFocused.value = focusState.isFocused
+                    userAccountInfoViewModel.isUsernameFocused.value = focusState.isFocused
                 },
             fieldName = R.string.username,
-            fieldValue = userViewModel.userName,
-            onValueChange = { userViewModel.onUserNameChanged(it) },
-            isError = userViewModel.userNameError,
+            fieldValue = userAccountInfoViewModel.userName,
+            onValueChange = { userAccountInfoViewModel.onUserNameChanged(it) },
+            isError = userAccountInfoViewModel.userNameError,
         )
         DisplayRequirements(
-            isFieldFocused = userViewModel.isUsernameFocused.value,
-            requirements = userViewModel.usernameRequirements,
-            fieldValue = userViewModel.userName
+            isFieldFocused = userAccountInfoViewModel.isUsernameFocused.value,
+            requirements = userAccountInfoViewModel.usernameRequirements,
+            fieldValue = userAccountInfoViewModel.userName
         )
 
 /*        OutlinedTextField(
@@ -375,7 +368,9 @@ fun UserAccountInfoDetails(
         Row(
             Modifier
                 .fillMaxWidth()
-                .clickable { userViewModel.expanded = !userViewModel.expanded }
+                .clickable {
+                    userAccountInfoViewModel.expanded = !userAccountInfoViewModel.expanded
+                }
                 .padding(top = 8.dp, bottom = 16.dp)
                 .defaultMinSize(
                     minWidth = OutlinedTextFieldDefaults.MinWidth,
@@ -387,19 +382,19 @@ fun UserAccountInfoDetails(
                     shape = OutlinedTextFieldDefaults.shape
                 )
                 .onGloballyPositioned { coordinates ->
-                    userViewModel.textfieldSize = coordinates.size.toSize()
+                    userAccountInfoViewModel.textfieldSize = coordinates.size.toSize()
                 },
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = if (userViewModel.selectedCityValue.isNotEmpty()) userViewModel.selectedCityValue else "City",
+                text = if (userAccountInfoViewModel.selectedCityValue.isNotEmpty()) userAccountInfoViewModel.selectedCityValue else "City",
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
                     .weight(7f)
             )
 
             Icon(
-                imageVector = if (userViewModel.expanded) Icons.Filled.ArrowDropUp
+                imageVector = if (userAccountInfoViewModel.expanded) Icons.Filled.ArrowDropUp
                 else Icons.Filled.ArrowDropDown,
                 contentDescription = "",
                 modifier = Modifier.padding(horizontal = 8.dp)
@@ -408,19 +403,19 @@ fun UserAccountInfoDetails(
 
 
         DropdownMenu(
-            expanded = userViewModel.expanded,
-            onDismissRequest = { userViewModel.expanded = false },
+            expanded = userAccountInfoViewModel.expanded,
+            onDismissRequest = { userAccountInfoViewModel.expanded = false },
             modifier = Modifier
-                .width(with(LocalDensity.current) { userViewModel.textfieldSize.width.toDp() })
+                .width(with(LocalDensity.current) { userAccountInfoViewModel.textfieldSize.width.toDp() })
 
         ) {
             governorates.forEachIndexed { index, governorate ->
                 DropdownMenuItem(
                     onClick = {
-                        userViewModel.selectedCityIndex = index
-                        userViewModel.selectedCityValue = governorate
-                        userViewModel.expanded = false
-                        userViewModel.cityError = false
+                        userAccountInfoViewModel.selectedCityIndex = index
+                        userAccountInfoViewModel.selectedCityValue = governorate
+                        userAccountInfoViewModel.expanded = false
+                        userAccountInfoViewModel.cityError = false
                     },
                     text = {
                         Text(text = governorate)
@@ -442,9 +437,9 @@ fun UserAccountInfoDetails(
             modifier = Modifier.focusRequester(addressFocusRequester),
 
             fieldName = R.string.address,
-            fieldValue = userViewModel.address,
-            onValueChange = { userViewModel.onAddressChanged(it) },
-            isError = userViewModel.addressError,
+            fieldValue = userAccountInfoViewModel.address,
+            onValueChange = { userAccountInfoViewModel.onAddressChanged(it) },
+            isError = userAccountInfoViewModel.addressError,
 
             )
 
@@ -461,19 +456,19 @@ fun UserAccountInfoDetails(
             modifier = Modifier
                 .focusRequester(emailFocusRequester)
                 .onFocusChanged { focusState ->
-                    userViewModel.isEmailNFocused.value = focusState.isFocused
+                    userAccountInfoViewModel.isEmailNFocused.value = focusState.isFocused
                 },
 
             fieldName = R.string.email,
-            fieldValue = userViewModel.emailN,
-            onValueChange = { userViewModel.onEmailChangedN(it) },
-            isError = userViewModel.emailNError,
+            fieldValue = userAccountInfoViewModel.emailN,
+            onValueChange = { userAccountInfoViewModel.onEmailChangedN(it) },
+            isError = userAccountInfoViewModel.emailNError,
 
             )
         DisplayRequirements(
-            isFieldFocused = userViewModel.isEmailNFocused.value,
-            requirements = userViewModel.emailRequirements,
-            fieldValue = userViewModel.emailN
+            isFieldFocused = userAccountInfoViewModel.isEmailNFocused.value,
+            requirements = userAccountInfoViewModel.emailRequirements,
+            fieldValue = userAccountInfoViewModel.emailN
         )
 
         Text(
@@ -489,20 +484,20 @@ fun UserAccountInfoDetails(
             modifier = Modifier
                 .focusRequester(phoneNumberFocusRequester)
                 .onFocusChanged { focusState ->
-                    userViewModel.isPhoneNumberFocused.value = focusState.isFocused
+                    userAccountInfoViewModel.isPhoneNumberFocused.value = focusState.isFocused
                 },
 
             fieldName = R.string.phone,
-            fieldValue = userViewModel.phone,
-            onValueChange = { userViewModel.onPhoneChanged(it) },
-            isError = userViewModel.phoneError,
+            fieldValue = userAccountInfoViewModel.phone,
+            onValueChange = { userAccountInfoViewModel.onPhoneChanged(it) },
+            isError = userAccountInfoViewModel.phoneError,
 
             )
 
         DisplayRequirements(
-            isFieldFocused = userViewModel.isPhoneNumberFocused.value,
-            requirements = userViewModel.phoneNumberRequirements,
-            fieldValue = userViewModel.phone
+            isFieldFocused = userAccountInfoViewModel.isPhoneNumberFocused.value,
+            requirements = userAccountInfoViewModel.phoneNumberRequirements,
+            fieldValue = userAccountInfoViewModel.phone
         )
 
         CustomButtonAndText(

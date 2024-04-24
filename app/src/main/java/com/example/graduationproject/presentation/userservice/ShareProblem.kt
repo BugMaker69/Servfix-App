@@ -54,6 +54,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.graduationproject.R
 import com.example.graduationproject.presentation.common.CustomButtonAndText
 import com.example.graduationproject.ui.theme.DarkBlue
+import com.example.graduationproject.ui.theme.DarkWhite
+import com.example.graduationproject.ui.theme.LightBlue
 
 
 @Composable
@@ -61,7 +63,7 @@ fun ShareProblemScreen(
     modifier: Modifier = Modifier,
     onCancelClick: () -> Unit,
     onShareClick: () -> Unit,
-    serviceViewModel: ServiceViewModel = viewModel()
+    serviceViewModel: ServiceViewModel
 ) {
 
 
@@ -145,7 +147,7 @@ fun ShareProblemScreen(
                 .fillMaxWidth()
                 .fillMaxHeight(.9f)
                 .padding(vertical = 16.dp, horizontal = 16.dp)
-                .background(Color.LightGray)
+                .background(DarkWhite)
         ) {
             Column() {
                 Row(
@@ -392,5 +394,5 @@ fun ShareProblemScreen(
 @Preview(showBackground = true)
 @Composable
 fun ShareProblemPreview() {
-    ShareProblemScreen(Modifier, {}, {})
+    //ShareProblemScreen(Modifier, {}, {})
 }

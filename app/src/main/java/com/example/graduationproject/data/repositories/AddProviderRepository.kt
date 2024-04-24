@@ -12,6 +12,7 @@ import com.example.graduationproject.data.LoginResponse
 import com.example.graduationproject.data.ReturnedProviderData
 import com.example.graduationproject.data.ReturnedUserData
 import com.example.graduationproject.data.retrofit.RetrofitClient
+import com.example.graduationproject.presentation.common.UserType
 import com.example.graduationproject.utils.DataStoreToken
 import com.example.graduationproject.utils.FileUtils
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -138,6 +139,10 @@ class AddProviderRepository @Inject constructor(val dataStoreToken:DataStoreToke
                 // Save the tokens
                 dataStoreToken.saveToken(loginResponse.access)
 
+                dataStoreToken.saveToken2(loginResponse.refresh)
+                dataStoreToken.saveLoginState(true)
+                Log.d("byy", "login: ${dataStoreToken.getToken2().toString()}")
+
             } else {
                 Log.d("bqq", "error1")
             }
@@ -155,14 +160,19 @@ class AddProviderRepository @Inject constructor(val dataStoreToken:DataStoreToke
     var getProviderData by mutableStateOf<ReturnedProviderData?>(null)
     var accessToken by mutableStateOf<LoginResponse?>(null)
 
-    suspend fun getProviderData(token: String): ReturnedProviderData? {
+    suspend fun getProviderData(): ReturnedProviderData? {
         val response =
-            RetrofitClient.userRegisterationApiService().getReturnedProviderData("Bearer $dataStoreToken")
+            RetrofitClient.userRegisterationApiService().getReturnedProviderData("Bearer ${dataStoreToken.getToken()}")
+        dataStoreToken.saveUserType(UserType.HirePerson.name)
+        Log.d("lmno", "getProviderData: ${dataStoreToken.getUserType()}")
+
         return response
     }
-    suspend fun getUserData(token: String): ReturnedUserData? {
+    suspend fun getUserData(): ReturnedUserData? {
         val response =
-            RetrofitClient.userRegisterationApiService().getReturnedUserData("Bearer $dataStoreToken")
+            RetrofitClient.userRegisterationApiService().getReturnedUserData("Bearer ${dataStoreToken.getToken()}")
+        dataStoreToken.saveUserType(UserType.OwnerPerson.name)
+
         return response
     }
 

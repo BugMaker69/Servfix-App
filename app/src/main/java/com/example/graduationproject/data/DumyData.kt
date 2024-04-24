@@ -38,6 +38,9 @@ data class LoginResponse(
     val refresh: String,
     val access: String
 )
+data class MoreTokn(
+    val access: String
+)
 data class  SearchProviders(@SerializedName("providers" ) var providers:List<ReturnedProviderData>)
 data class ViewProfileData (
 
@@ -45,6 +48,8 @@ data class ViewProfileData (
     @SerializedName("works"    ) var works    : ArrayList<String> = arrayListOf()
 
 )
+data class RefreshRequest(val refresh: String)
+data class RefreshResponse(val access: String)
 data class Provider (
 
     @SerializedName("phone"        ) var phone       : String? = null,

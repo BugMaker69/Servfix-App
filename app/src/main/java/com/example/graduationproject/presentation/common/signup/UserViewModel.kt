@@ -34,7 +34,8 @@ import javax.inject.Inject
 @HiltViewModel
 class UserViewModel @Inject constructor(    val addProviderRepository : AddProviderRepository,
                                             val apiService :ApiService,
-                                            var mAuth: FirebaseAuth
+                                            var mAuth: FirebaseAuth,
+
 ) : ViewModel() {
     lateinit var callbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks
     var verificationID by mutableStateOf("")
@@ -545,29 +546,35 @@ class UserViewModel @Inject constructor(    val addProviderRepository : AddProvi
 private val BASE_URL = "https://p2kjdbr8-8000.uks1.devtunnels.ms/api"
 var accounType by mutableStateOf(UserType.OwnerPerson)
     fun login() {
-        if (email.isEmpty()) {
-            emailError = true
-        }
-        if (password.isEmpty()) {
-            passwordError = true
-        }
-        if (email.isNotEmpty() && password.isNotEmpty()) {
-            viewModelScope.launch {
-                token = addProviderRepository.login(
-                    loginRequest = LoginRequest(
-                        username = email,
-                        password = password
+        viewModelScope.launch {
+            if (email.isEmpty()) {
+                emailError = true
+            }
+            if (password.isEmpty()) {
+                passwordError = true
+            }
+            if (email.isNotEmpty() && password.isNotEmpty()) {
+                viewModelScope.launch {
+
+                    token = addProviderRepository.login(
+                        loginRequest = LoginRequest(
+                            username = email,
+                            password = password
+                        )
+
                     )
-                )
-                if (token == null) {
-                    error = "Incorrect Email Or Password"
-                } else {
-                    error = null
-                //    addProviderRepository.dataStoreToken.saveToken(token!!.access.toString())
-                    getData()
+                    token
+                    if (token == null) {
+                        error = "Incorrect Email Or Password"
+                    } else {
+                        error = null
+                        addProviderRepository.dataStoreToken.saveToken(token!!.access.toString())
+                        getData()
+                    }
                 }
             }
         }
+
     }
 
     /*                try {
@@ -659,18 +666,20 @@ var accounType by mutableStateOf(UserType.OwnerPerson)
         viewModelScope.launch {
             try {
                 returnedProviderData =
-                    addProviderRepository.getProviderData(addProviderRepository.dataStoreToken.getToken())
-                returnedProviderData?.let {
-                    userName = it.username
-                    address = it.address
-                    selectedCityValue = it.city
-                    emailN = it.email
-                    phone = it.phone
-                    fixedSalary = it.fixed_salary.toString()
-                    selectedServiceValue = it.profession
-                    imageUri = Uri.parse(BASE_URL + it.image)
-                }
-                accounType = UserType.HirePerson
+                    addProviderRepository.getProviderData()
+                addProviderRepository.dataStoreToken.saveUserType(UserType.HirePerson.name)
+//                returnedProviderData?.let {
+//                    userName = it.username
+//                    address = it.address
+//                    selectedCityValue = it.city
+//                    emailN = it.email
+//                    phone = it.phone
+//                    fixedSalary = it.fixed_salary.toString()
+//                    selectedServiceValue = it.profession
+//                    imageUri = Uri.parse(BASE_URL + it.image)
+//                }
+               // accounType = UserType.HirePerson
+
                 Log.d(
                     "TAG",
                     "getProviderData: data40 ${returnedProviderData?.email}   ${returnedProviderData?.id}   ${returnedProviderData?.username}  "
@@ -683,7 +692,7 @@ var accounType by mutableStateOf(UserType.OwnerPerson)
             }
 
             try {
-                returnedUserData = addProviderRepository.getUserData(addProviderRepository.dataStoreToken.getToken())
+                returnedUserData = addProviderRepository.getUserData()
                 returnedUserData?.let {
                     userName = it.username
                     emailN = it.email
@@ -692,7 +701,7 @@ var accounType by mutableStateOf(UserType.OwnerPerson)
                     phone = it.phone
                     imageUri = Uri.parse(BASE_URL + it.image)
                 }
-                accounType = UserType.OwnerPerson
+          //      accounType = UserType.OwnerPerson
 
                 Log.d(
                     "TAG",

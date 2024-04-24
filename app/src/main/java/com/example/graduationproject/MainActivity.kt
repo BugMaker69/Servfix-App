@@ -1,4 +1,6 @@
 package com.example.graduationproject
+import ChatContactScreen
+import ChatParticipant
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -13,6 +15,8 @@ import androidx.compose.ui.unit.dp
 
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
+import com.example.graduationproject.presentation.chat.ChatScreen
+import com.example.graduationproject.presentation.chat.Message
 import com.example.graduationproject.presentation.favourite.FavoriteScreen
 import com.example.graduationproject.presentation.search_for_provider.FindProvider
 import com.example.graduationproject.presentation.viewprofile.ViewProfileScreen
@@ -46,6 +50,14 @@ class MainActivity : ComponentActivity() {
 //                        BeforeSignup(onBecomeClick = { /*TODO*/ }, onHireClick = { /*TODO*/ }) {}
                      //   TestScreenForApi()
                        ServixApp()
+                //        ChatContactScreen()
+//                        val sampleMessages = listOf(
+//                            Message(1, "Hello!", false),
+//                            Message(2, "Hi! How are you?", true),
+//                            Message(3, "I'm good, thanks for asking.", false)
+//                        )
+//                       ChatScreen(messages =sampleMessages )
+
                      //   ViewProfileScreen(modifier = Modifier.padding(20.dp
                       //  ), viewProfileViewModel = ViewProfileViewModel() )
                 //        FavoriteScreen(modifier = Modifier)

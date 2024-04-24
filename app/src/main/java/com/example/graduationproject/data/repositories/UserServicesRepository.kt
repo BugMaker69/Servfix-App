@@ -2,7 +2,6 @@ package com.example.graduationproject.data.repositories
 
 import com.example.graduationproject.data.Services
 import com.example.graduationproject.data.retrofit.ApiService
-import com.example.graduationproject.data.retrofit.RetrofitClient
 import javax.inject.Inject
 import javax.inject.Singleton
 
