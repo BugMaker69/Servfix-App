@@ -7,10 +7,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.MutableLiveData
 import com.example.graduationproject.MyApplication
+import com.example.graduationproject.data.AllNotification
+import com.example.graduationproject.data.GetPostData
+import com.example.graduationproject.data.GetPostsForProvider
+import com.example.graduationproject.data.GetWorks
 import com.example.graduationproject.data.LoginRequest
 import com.example.graduationproject.data.LoginResponse
+import com.example.graduationproject.data.NewOldPassword
 import com.example.graduationproject.data.ReturnedProviderData
 import com.example.graduationproject.data.ReturnedUserData
+import com.example.graduationproject.data.retrofit.ApiService
 import com.example.graduationproject.data.retrofit.RetrofitClient
 import com.example.graduationproject.presentation.common.UserType
 import com.example.graduationproject.utils.DataStoreToken
@@ -27,7 +33,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class AddProviderRepository @Inject constructor(val dataStoreToken:DataStoreToken) {
+class AddProviderRepository @Inject constructor(val dataStoreToken:DataStoreToken,val apiService: ApiService) {
 
     val connectionError = MutableLiveData("")
     val serverResponse = MutableLiveData("")
@@ -83,7 +89,7 @@ class AddProviderRepository @Inject constructor(val dataStoreToken:DataStoreToke
             username
         )
 
-        RetrofitClient.userRegisterationApiService().postRegisterProvider(
+       apiService.postRegisterProvider(
             address = addressRequestBody,
             city = cityRequestBody,
             email = emailRequestBody,
@@ -123,14 +129,26 @@ class AddProviderRepository @Inject constructor(val dataStoreToken:DataStoreToke
     private fun prepareFilePart(partName: String, fileUri: Uri): MultipartBody.Part {
         val file: File = FileUtils.getFile(MyApplication.getApplicationContext(), fileUri)
         val requestFile: RequestBody = RequestBody.create(
-            MyApplication.getApplicationContext().contentResolver.getType(fileUri)?.toMediaTypeOrNull(), file
-        )
+            MyApplication.getApplicationContext().contentResolver.getType(fileUri)
+                ?.toMediaTypeOrNull(), file        )
         return MultipartBody.Part.createFormData(partName, file.name, requestFile)
     }
+    /*suspend fun uploadFilesToServer(context: Context, fileUris: List<Uri>): Boolean {
+    val fileUploadService = RetrofitClient.createService(FileUploadService::class.java)
+
+    // Convert URIs to file parts
+    val fileParts = mutableListOf<MultipartBody.Part>()
+    for (uri in fileUris) {
+        val file = File(uri.path!!)
+        val requestBody = file.asRequestBody(context.contentResolver.getType(uri)?.toMediaTypeOrNull())
+        val filePart = MultipartBody.Part.createFormData("files", file.name, requestBody)
+        fileParts.add(filePart)
+    }*/
+
 
 
     suspend fun login(loginRequest: LoginRequest): LoginResponse? {
-        val response = RetrofitClient.userRegisterationApiService().login(loginRequest)
+        val response = apiService.login(loginRequest)
         var loginResponse: LoginResponse? = null
         if (response.isSuccessful) {
             loginResponse = response.body()
@@ -161,16 +179,20 @@ class AddProviderRepository @Inject constructor(val dataStoreToken:DataStoreToke
     var accessToken by mutableStateOf<LoginResponse?>(null)
 
     suspend fun getProviderData(): ReturnedProviderData? {
+        Log.d("Token Value From AddProviderRepo", "${dataStoreToken.getToken()} ")
+
         val response =
-            RetrofitClient.userRegisterationApiService().getReturnedProviderData("Bearer ${dataStoreToken.getToken()}")
+           apiService.getReturnedProviderData("Bearer ${dataStoreToken.getToken()}")
         dataStoreToken.saveUserType(UserType.HirePerson.name)
         Log.d("lmno", "getProviderData: ${dataStoreToken.getUserType()}")
 
         return response
     }
     suspend fun getUserData(): ReturnedUserData? {
+        Log.d("Token Value From AddProviderRepo", "${dataStoreToken.getToken()} ")
+
         val response =
-            RetrofitClient.userRegisterationApiService().getReturnedUserData("Bearer ${dataStoreToken.getToken()}")
+            apiService.getReturnedUserData("Bearer ${dataStoreToken.getToken()}")
         dataStoreToken.saveUserType(UserType.OwnerPerson.name)
 
         return response
@@ -239,7 +261,7 @@ class AddProviderRepository @Inject constructor(val dataStoreToken:DataStoreToke
             user.toString()
         )*/
 
-        RetrofitClient.userRegisterationApiService().updateProviderData(
+        apiService.updateProviderData(
             token = "Bearer $dataStoreToken",
             address = addressRequestBody,
             city = cityRequestBody,
@@ -280,8 +302,10 @@ class AddProviderRepository @Inject constructor(val dataStoreToken:DataStoreToke
             }
 
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                Log.d("onFailure Error Updated", "onResponse: Updated onFailure Error ${t} ||  ${t.message} ||  ${t.cause} ||  ${t.localizedMessage} ||  ${t.stackTrace} ||  ${t.suppressed} || ")
-
+                Log.d(
+                    "onFailure Error Updated",
+                    "onResponse: Updated onFailure Error ${t} ||  ${t.message} ||  ${t.cause} ||  ${t.localizedMessage} ||  ${t.stackTrace} ||  ${t.suppressed} || "
+                )
                 connectionError.value = t.message.toString()
             }
         })
@@ -320,7 +344,7 @@ class AddProviderRepository @Inject constructor(val dataStoreToken:DataStoreToke
             username
         )
 
-        RetrofitClient.userRegisterationApiService().updateUserData(
+       apiService.updateUserData(
             token = "Bearer $dataStoreToken",
             address = addressRequestBody,
             city = cityRequestBody,
@@ -361,6 +385,179 @@ class AddProviderRepository @Inject constructor(val dataStoreToken:DataStoreToke
             }
         })
     }
+    suspend fun shareCreatePost(
+        token: String,
+        city: String,
+        service_name: String,
+        problem_description: String,
+        image: Uri
+//        images: List<Uri>
+    ) {
+
+//        val photoParts = mutableListOf<MultipartBody.Part>()
+//
+//        images.forEachIndexed{ index, photoUri ->
+//            val fileToSend = prepareFilePart("image", photoUri)
+//            val file = File(photoUri.path)
+//            val requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), file)
+//            val photoPart = MultipartBody.Part.createFormData("photo$index", file.name, requestFile)
+//            photoParts.add(fileToSend)
+//        }
+
+        val fileToSend = prepareFilePart("image", image)
+
+
+        val cityRequestBody: RequestBody = RequestBody.create(
+            "text/plain".toMediaTypeOrNull(),
+            city
+        )
+
+        val serviceNameRequestBody: RequestBody = RequestBody.create(
+            "text/plain".toMediaTypeOrNull(),
+            service_name
+        )
+
+        val problemDescriptionRequestBody: RequestBody = RequestBody.create(
+            "text/plain".toMediaTypeOrNull(),
+            problem_description
+        )
+
+        apiService.shareCreatePost(
+            token = "Bearer $dataStoreToken",
+            city = cityRequestBody,
+            serviceName = serviceNameRequestBody,
+            problemDescription = problemDescriptionRequestBody,
+            image = fileToSend
+        ).enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+
+                if (response.body() != null && response.isSuccessful) {
+                    try {
+
+                        if (response.code() == 201) {
+                            serverResponse.value = "Updated"
+                            Log.d(
+                                "Updated",
+                                "onResponse: Updated ${response} ||  ${response.code()} ||  ${response.body()} ||  ${response.errorBody()} ||  ${response.isSuccessful} ||  ||  ${response.message()} ||  ||  ${response.headers()} ||  ||  ${response.raw()} || "
+                            )
+
+                        } else {
+                            Log.d(
+                                "Error",
+                                "onResponse: Updated Error ${response} ||  ${response.code()} ||  ${response.body()} ||  ${response.errorBody()} ||  ${response.isSuccessful} ||  ||  ${response.message()} ||  ||  ${response.headers()} ||  ||  ${response.raw()} || "
+                            )
+
+                            connectionError.value = response.errorBody().toString()
+                        }
+                    } catch (e: Exception) {
+                        Log.d(
+                            "Catched Error Updated",
+                            "onResponse: Updated Catched Error  ${response} ||  ${response.code()} ||  ${response.body()} ||  ${response.errorBody()} ||  ${response.isSuccessful} ||  ||  ${response.message()} ||  ||  ${response.headers()} ||  ||  ${response.raw()} || "
+                        )
+
+                        connectionError.value = e.message.toString()
+                    }
+                }
+                Log.d("onFailure Error Updated", "onResponse: Updated Nothing Happen Why ")
+                Log.d(
+                    "onFailure Error Updated",
+                    "onResponse: Updated onFailure Error ${response} ||  ${response.isSuccessful} ||  ${response.message()} ||  ${response.code()} ||  ${response.errorBody()} ||  ${response.headers()} ||  ${response.raw()} || "
+                )
+
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                Log.d(
+                    "onFailure Error Updated",
+                    "onResponse: Updated onFailure Error ${t} ||  ${t.message} ||  ${t.cause} ||  ${t.localizedMessage} ||  ${t.stackTrace} ||  ${t.suppressed} || "
+                )
+
+                connectionError.value = t.message.toString()
+            }
+        })
+
+    }
+
+
+    suspend fun getAllNotifications(): AllNotification {
+        val response = apiService.getAllNotifications("Bearer ${dataStoreToken.getToken()}")
+        return response
+    }
+
+    suspend fun getPostById(id:Int): GetPostData {
+        val response = apiService.getPostById("Bearer ${dataStoreToken.getToken()}",id)
+        return response
+    }
+
+    suspend fun getPostsForProvider(): GetPostsForProvider {
+        val response = apiService.getPostsForProvider("Bearer ${dataStoreToken.getToken()}")
+        return response
+    }
+
+    suspend fun changePassword(newOldPassword: NewOldPassword){
+        apiService.changePassword("Bearer ${dataStoreToken.getToken()}",
+            newOldPassword
+        ).enqueue(object : Callback<ResponseBody>{
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                if (response.body() != null && response.isSuccessful){
+                    try {
+                        if (response.code() == 200){
+                            serverResponse.value = "Updated"
+                            Log.d(
+                                "Password Updated",
+                                "onResponse: Updated ${response} ||  ${response.code()} ||  ${response.body()} ||  ${response.errorBody()} ||  ${response.isSuccessful} ||  ||  ${response.message()} ||  ||  ${response.headers()} ||  ||  ${response.raw()} || "
+                            )
+                        }else{
+                            connectionError.value=response.errorBody().toString()
+                            Log.d(
+                                "Password Error",
+                                "onResponse: Updated Error ${response} ||  ${response.code()} ||  ${response.body()} ||  ${response.errorBody()} ||  ${response.isSuccessful} ||  ||  ${response.message()} ||  ||  ${response.headers()} ||  ||  ${response.raw()} || "
+                            )
+                        }
+                    }catch (e:Exception){
+                        connectionError.value=e.message.toString()
+                        Log.d(
+                            "Catched Error Password Updated",
+                            "onResponse: Updated Catched Error  ${response} ||  ${response.code()} ||  ${response.body()} ||  ${response.errorBody()} ||  ${response.isSuccessful} ||  ||  ${response.message()} ||  ||  ${response.headers()} ||  ||  ${response.raw()} || "
+                        )
+                    }
+                }
+                else {
+                    Log.d(
+                        "Else onFailure Error Password Updated",
+                        "onResponse: Updated Nothing Happen Why "
+                    )
+                    Log.d(
+                        "Else onFailure Error Password Updated",
+                        "onResponse: Updated onFailure Error ${response} ||  ${response.isSuccessful} ||  ${response.message()} ||  ${response.code()} ||  ${response.errorBody()} ||  ${response.headers()} ||  ${response.raw()} || "
+                    )
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                Log.d(
+                    "onFailure Error Password Updated",
+                    "onResponse: Updated onFailure Error ${t} ||  ${t.message} ||  ${t.cause} ||  ${t.localizedMessage} ||  ${t.stackTrace} ||  ${t.suppressed} || "
+                )
+                connectionError.value = t.message.toString()
+            }
+        })
+    }
+    suspend fun getAllWorks(): GetWorks {
+        val response = apiService.getAllWorks("Bearer ${dataStoreToken.getToken()}")
+        return response
+    }
+
+    suspend fun deleteWork(id: Int){
+        apiService.deleteWork("Bearer ${dataStoreToken.getToken()}",id)
+    }
+
+    suspend fun addWork(image: Uri){
+        val fileToSend = prepareFilePart("image", image)
+        apiService.addWork("Bearer ${dataStoreToken.getToken()}",fileToSend)
+    }
+
 
 
 }
+

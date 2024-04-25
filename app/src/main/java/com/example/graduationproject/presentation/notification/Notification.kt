@@ -28,29 +28,30 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.graduationproject.R
 import com.example.graduationproject.presentation.common.CustomTopAppBar
+import androidx.compose.foundation.lazy.items
+import com.example.graduationproject.data.AllNotification
+import com.example.graduationproject.data.AllNotificationItem
 
 
-data class Notification(
-    val userId: String,
-    val notificationId: String,
-    val userImage: Int,
-    val notificationDescription: String,
-    val isRead: Boolean,
-)
+
 
 
 @Composable
 fun NotificationScreen(
     modifier: Modifier = Modifier,
-    onNotificationItemClick: () -> Unit,
-    notificationDescription: String,
+    onNotificationItemClick: (Int) -> Unit,
+
+    //notificationDescription: String,
+    allNotification: List<AllNotificationItem>
+
+
 ) {
 
 
         NotificationItems(
             modifier = modifier,
-            onNotificationItemClick = onNotificationItemClick,
-            notificationDescription = notificationDescription
+            onNotificationItemClick = { onNotificationItemClick(it) },
+            allNotification = allNotification
         )
     }
 
@@ -59,16 +60,17 @@ fun NotificationScreen(
 @Composable
 fun NotificationItems(
     modifier: Modifier = Modifier,
-    onNotificationItemClick: () -> Unit,
-    notificationDescription: String
+    onNotificationItemClick: (Int) -> Unit,
+//    notificationDescription: String,
+    allNotification: List<AllNotificationItem>
 ) {
     LazyColumn(
         modifier = modifier
     ) {
-        items(15) {
+        items(allNotification) { item->
             NotificationItem(
-                onNotificationItemClick = onNotificationItemClick,
-                notificationDescription = "said accepted your service and wants to solve your problem"
+                onNotificationItemClick = { onNotificationItemClick(item.post) },
+                allNotificationItem = item
             )
         }
     }
@@ -97,7 +99,9 @@ fun NotificationTopBar(
 fun NotificationItem(
     modifier: Modifier = Modifier,
     onNotificationItemClick: () -> Unit,
-    notificationDescription: String
+//    notificationDescription: String,
+    allNotificationItem: AllNotificationItem
+
 ) {
     Card(
         modifier = Modifier
@@ -125,46 +129,46 @@ fun NotificationItem(
                     modifier = Modifier.size(50.dp),
                 )
             }
-            Text(text = notificationDescription)
+            Text(text = allNotificationItem.message)
         }
 
     }
 
 
 }
-
-@Preview(showBackground = true)
-@Composable
-fun NotificationItemPreview() {
-    NotificationItem(
-        Modifier,
-        {},
-        notificationDescription = "said accepted your service and wants to solve your problem"
-    )
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun NotificationItemsPreview() {
-    NotificationItems(
-        Modifier,
-        {},
-        notificationDescription = "said accepted your service and wants to solve your problem"
-    )
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun NotificationScreenPreview() {
-    NotificationScreen(
-        Modifier,
-        {},
-        notificationDescription = "said accepted your service and wants to solve your problem"
-    )
-}
-
+//
+//@Preview(showBackground = true)
+//@Composable
+//fun NotificationItemPreview() {
+//    NotificationItem(
+//        Modifier,
+//        {},
+//        notificationDescription = "said accepted your service and wants to solve your problem"
+//    )
+//}
+//
+//
+//@Preview(showBackground = true)
+//@Composable
+//fun NotificationItemsPreview() {
+//    NotificationItems(
+//        Modifier,
+//        {},
+//        notificationDescription = "said accepted your service and wants to solve your problem"
+//    )
+//}
+//
+//
+//@Preview(showBackground = true)
+//@Composable
+//fun NotificationScreenPreview() {
+//    NotificationScreen(
+//        Modifier,
+//        {},
+//        notificationDescription = "said accepted your service and wants to solve your problem"
+//    )
+//}
+//
 
 
 

@@ -9,6 +9,7 @@ import javax.inject.Singleton
 class UserServicesRepository @Inject constructor(val apiService:ApiService){
 
 suspend fun getServicesList():List<Services>{
+
     return apiService.getServices().service
 }
 }

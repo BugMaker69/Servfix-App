@@ -16,6 +16,8 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -26,6 +28,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.graduationproject.R
 import com.example.graduationproject.presentation.common.UserType
 import com.example.graduationproject.ui.theme.DarkBlue
+import com.example.graduationproject.ui.theme.LightBlue
+import kotlinx.coroutines.flow.StateFlow
 
 
 data class BottomNavItem(
@@ -38,7 +42,7 @@ data class BottomNavItem(
 
 @Composable
 fun BottomAppBar(
-    navController:NavController,userType: String
+    navController:NavController, userType:String
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
@@ -102,7 +106,7 @@ fun BottomAppBar(
         items.forEach { screen ->
 
             NavigationBarItem(
-                selected = currentRoute == screen.title,
+                selected = currentRoute == screen.route,
                 onClick = {
 
 
@@ -116,7 +120,7 @@ fun BottomAppBar(
                     Icon(
                         imageVector = if (currentRoute == screen.route) screen.selectedIcon else screen.unselectedIcon,
                         contentDescription = screen.title,
-                        tint = Color.Black
+                        tint = DarkBlue
                     )
                 },
                 colors = NavigationBarItemDefaults.colors(

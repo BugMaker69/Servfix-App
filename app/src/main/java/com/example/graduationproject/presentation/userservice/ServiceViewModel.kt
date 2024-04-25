@@ -13,6 +13,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.graduationproject.data.Services
+import com.example.graduationproject.data.repositories.AddProviderRepository
 import com.example.graduationproject.data.repositories.UserServicesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -21,7 +22,8 @@ import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
-class ServiceViewModel @Inject constructor(val userServicesRep: UserServicesRepository): ViewModel() {
+class ServiceViewModel @Inject constructor(    val addProviderRepository :AddProviderRepository
+                                               ,val userServicesRep: UserServicesRepository): ViewModel() {
     var servicesState = mutableStateOf(emptyList<Services>())
 
     init {
@@ -31,16 +33,22 @@ class ServiceViewModel @Inject constructor(val userServicesRep: UserServicesRepo
     private val BASE_URL = "https://p2kjdbr8-8000.uks1.devtunnels.ms/api"
 
     fun getServicesList() {
+        try {
 
-        viewModelScope.launch(Dispatchers.IO) {
-            val services = userServicesRep.getServicesList()
-            services.forEach { service ->
-                service.image = BASE_URL + service.image
 
+            viewModelScope.launch(Dispatchers.IO) {
+                val services = userServicesRep.getServicesList()
+                services.forEach { service ->
+                    service.image = BASE_URL + service.image
+
+                }
+                servicesState.value = services
+                Log.d("pppp", ": ${servicesState.value}")
             }
-            servicesState.value = services
-            Log.d("pppp", ": ${servicesState.value}")
+        }catch (e:Exception){
+            Log.d("Test", "getServicesList: ${e.message.toString()}")
         }
+
 
 
     }
@@ -69,22 +77,26 @@ class ServiceViewModel @Inject constructor(val userServicesRep: UserServicesRepo
     //  Share Problem   Handle Photos
 
     val isLoading = mutableStateOf(false)
-    val maxImages = 5
+//    val maxImages = 5
     val launchCamera = mutableStateOf(false)
+    var imageUri by mutableStateOf<Uri?>(null)
+
     val permissionDenied = mutableStateOf(false)
-    val imageMap = mutableStateMapOf<String, Bitmap>()
+    //val imageMap = mutableStateMapOf<String, Bitmap>()
 
 
-    fun addImage(id: String, bitmap: Bitmap) {
-        if (imageMap.size < maxImages) {
-            imageMap[id] = bitmap
-        }
+    //    fun addImage(id: String, uri: Uri) {
+//        if (imageMap.size < maxImages) {
+//            imageMap[id] = uri
+//        }
+//    }
+//
+//    fun removeImage(id: String) {
+//        imageMap.remove(id)
+//    }
+    fun removeImage() {
+        imageUri=null
     }
-
-    fun removeImage(id: String) {
-        imageMap.remove(id)
-    }
-
     fun startLoading() {
         isLoading.value = true
     }
@@ -94,19 +106,19 @@ class ServiceViewModel @Inject constructor(val userServicesRep: UserServicesRepo
     }
 
 
-    fun handleGalleryResult(context: Context, uris: List<Uri>) {
-        uris.mapNotNull { uri ->
-            context.contentResolver.openInputStream(uri)?.use { inputStream ->
-                Pair(uri.toString(), BitmapFactory.decodeStream(inputStream))
-            }
-        }.forEach { (id, bitmap) ->
-            addImage(id, bitmap)
-        }
-        stopLoading()
-    }
+//    fun handleGalleryResult(context: Context, uris: List<Uri>) {
+//        uris.mapNotNull { uri ->
+//            context.contentResolver.openInputStream(uri)?.use { inputStream ->
+//                Pair(uri.toString(), BitmapFactory.decodeStream(inputStream))
+//            }
+//        }.forEach { (id, bitmap) ->
+//            addImage(id, bitmap)
+//        }
+//        stopLoading()
+//    }
 
-    fun handleCameraResult(bitmap: Bitmap?) {
-        bitmap?.let { addImage(UUID.randomUUID().toString(), it) }
+    fun handleCameraResult(uri: Uri?) {
+        uri?.let { imageUri = it }
         stopLoading()
     }
 
@@ -116,6 +128,20 @@ class ServiceViewModel @Inject constructor(val userServicesRep: UserServicesRepo
             launchCamera.value = true
         } else {
             permissionDenied.value = true
+        }
+    }
+
+    fun shareCreatePost(){
+        viewModelScope.launch {
+            Log.d("shareCreatePost Token ", "shareCreatePost: ${addProviderRepository.dataStoreToken.getToken()} || ")
+            Log.d("shareCreatePost Data ", "shareCreatePost: ${selectedSentToLocationValue} ||  ${selectedSentToServiceValue} ||   ${postText} ||   ${imageUri} ||  ")
+            addProviderRepository.shareCreatePost(
+                token = addProviderRepository.dataStoreToken.getToken(),
+                city = selectedSentToLocationValue,
+                service_name = selectedSentToServiceValue,
+                problem_description = postText,
+                image = imageUri!!
+            )
         }
     }
 

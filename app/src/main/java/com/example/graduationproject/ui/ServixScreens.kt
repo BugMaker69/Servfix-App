@@ -24,5 +24,9 @@ enum class ServixScreens {
     Favorite,
 FindProvider,
     ViewProfile,
-    HomeProvider
+    HomeProvider,
+    PostDetails,
+    AddNeWorkToProfileItems,
+    NewPasswordScreen,
+    NotifiPostItemDetailByID,
 }
