@@ -63,7 +63,7 @@ class UserAccountInfoViewModel @Inject constructor(val addProviderRepository: Ad
     }
     fun updateUserData() {
 viewModelScope.launch (Dispatchers.IO){
-    val updateUserData = addProviderRepository.updateUserData(
+    addProviderRepository.updateUserData(
         token = dataStoreToken.getToken(),
         address = address,
         city = selectedCityValue,

@@ -194,10 +194,11 @@ fun ServixApp(
         NavHost(
             navController = navController,
             startDestination = if (isFirstLaunch) ServixScreens.OnBoarding.name else {
-                if (isLoggedIn) {
+                if (isLoggedIn && userTypeFlow.value != "" ) {
                     Log.d("mmmm1", "ServixApp: ${userTypeFlow.value}")
                     if (userTypeFlow.value == UserType.OwnerPerson.name) ServixScreens.HomeUser.name else ServixScreens.HomeProvider.name
                 } else {
+                    Log.d("mmmm6", "ServixApp: ${userTypeFlow.value}")
                     ServixScreens.Login.name
                 }
             }
@@ -614,13 +615,14 @@ delay(4000)
 
             composable(ServixScreens.HomeProvider.name){
                 val notificationViewModel:NotificationViewModel= hiltViewModel()
+                if (userTypeFlow.value==UserType.HirePerson.name) {
                 notificationViewModel.getPostsForProvider()
 
-                Log.d("getPostsForProvider", "ServixApp: ${userTypeFlow.value.toString()}")
-            //    Log.d("getPostsForProvider", "ServixApp: ${notificationViewModel.getPostsForProvider()}")
-            //    Log.d("getPostsForProvider", "ServixApp: ${notificationViewModel.getPostsForProvider}")
-                   Log.d("getPostsForProvider", "here:")
-
+                    Log.d("getPostsForProvider", "ServixApp: ${userTypeFlow.value.toString()}")
+                    //    Log.d("getPostsForProvider", "ServixApp: ${notificationViewModel.getPostsForProvider()}")
+                    //    Log.d("getPostsForProvider", "ServixApp: ${notificationViewModel.getPostsForProvider}")
+                    Log.d("getPostsForProvider", "here:")
+                }
                 NotifiPostItems(
                     onNotifiPostItemClick = { id ->
                         Log.d("PostDetailsNotifiPostItems", "ServixApp: id $id ")

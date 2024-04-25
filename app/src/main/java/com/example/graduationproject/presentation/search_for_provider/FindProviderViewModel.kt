@@ -15,6 +15,7 @@ import androidx.paging.cachedIn
 import com.example.graduationproject.data.ReturnedProviderData
 import com.example.graduationproject.data.repositories.FindProviderSearchReopsitory
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -44,13 +45,16 @@ class FindProviderViewModel @Inject constructor(
     init {
         serviceName = savedStateHandle.get<String>("serviceName") ?: ""
         itemId = savedStateHandle.get<Int>("id") ?: 0
+        viewModelScope.launch {
+
 searchProvider()
+        }
 
 
     }
     fun searchProvider(){
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
 
             searchText.collectLatest { query ->
                 _lista.value = Pager(

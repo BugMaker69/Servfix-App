@@ -48,6 +48,7 @@ class ProviderAccountInfoViewModel @Inject constructor(val addProviderRepository
     val isUsernameFocused = mutableStateOf(false)
     val isPhoneNumberFocused = mutableStateOf(false)
     val isEmailNFocused = mutableStateOf(false)
+    var passwordN by mutableStateOf("")
 
     val Emailregex = "^[a-zA-Z]{3,}.*@.*\\.[a-zA-Z]+".toRegex()
     fun onFixedSalaryChanged(fixedSalary1: String) {
@@ -71,7 +72,7 @@ class ProviderAccountInfoViewModel @Inject constructor(val addProviderRepository
         }
     }
     fun getProviderData() {
-        viewModelScope.launch (Dispatchers.Main){
+        viewModelScope.launch (Dispatchers.IO){
             try {
                 Log.d("whoo", "getUserData: ${ dataStoreToken.getToken()}")
                 Log.d("whoo2", returnedProviderData?.username.toString())
@@ -136,24 +137,24 @@ class ProviderAccountInfoViewModel @Inject constructor(val addProviderRepository
     )
     fun updateProviderData() {
 
-//        viewModelScope.launch {
-//            val updateProviderData = addProviderRepository.updateProviderData(
-//                token =  addProviderRepository.dataStoreToken.getToken(),
-//
-//                address = address,
-//                city = selectedCityValue,
-//                email = emailN,
-//                fixed_salary = fixedSalary,
-//                image = imageUri!!,
-//                password = passwordN,
-//                phone = phone,
-//                profession = selectedServiceValue,
-//                username = userName,
-//                /*            ratings = "5",
-//                            service_id = 1,
-//                            user = 1,*/
-//            )
-//        }
+        viewModelScope.launch(Dispatchers.IO) {
+            addProviderRepository.updateProviderData(
+                token =  addProviderRepository.dataStoreToken.getToken(),
+
+                address = address,
+                city = selectedCityValue,
+                email = emailN,
+                fixed_salary = fixedSalary,
+                image = imageUri!!,
+                password = passwordN,
+                phone = phone,
+                profession = selectedServiceValue,
+                username = userName,
+                /*            ratings = "5",
+                            service_id = 1,
+                            user = 1,*/
+            )
+        }
 
 
 

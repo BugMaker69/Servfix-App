@@ -13,6 +13,7 @@ import com.example.graduationproject.data.repositories.ViewProfileRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 @HiltViewModel
 class ViewProfileViewModel @Inject constructor(val repo : ViewProfileRepository,savedStateHandle: SavedStateHandle): ViewModel() {
@@ -39,7 +40,7 @@ class ViewProfileViewModel @Inject constructor(val repo : ViewProfileRepository,
     }
 
     fun getData(id:Int) {
-        viewModelScope.launch(Dispatchers.Main) {
+        viewModelScope.launch(Dispatchers.IO) {
             val providerProfile = repo.getProviderProfile(id).provider!!
         //    val fav =repo.showAllFavourites()
 
@@ -47,7 +48,7 @@ class ViewProfileViewModel @Inject constructor(val repo : ViewProfileRepository,
 
                 providerProfile.image=BASE_URL+providerProfile.image
 
-                profile.value=providerProfile
+                withContext(Dispatchers.Main){ profile.value=providerProfile}
 
 
         }
