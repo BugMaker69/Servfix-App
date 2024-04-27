@@ -77,23 +77,23 @@ class ServiceViewModel @Inject constructor(    val addProviderRepository :AddPro
     //  Share Problem   Handle Photos
 
     val isLoading = mutableStateOf(false)
-//    val maxImages = 5
+    val maxImages = 5
     val launchCamera = mutableStateOf(false)
     var imageUri by mutableStateOf<Uri?>(null)
 
     val permissionDenied = mutableStateOf(false)
-    //val imageMap = mutableStateMapOf<String, Bitmap>()
+    val imageMap = mutableStateMapOf<String, Uri>()
 
 
-    //    fun addImage(id: String, uri: Uri) {
-//        if (imageMap.size < maxImages) {
-//            imageMap[id] = uri
-//        }
-//    }
-//
-//    fun removeImage(id: String) {
-//        imageMap.remove(id)
-//    }
+        fun addImage(id: String, uri: Uri) {
+        if (imageMap.size < maxImages) {
+            imageMap[id] = uri
+        }
+    }
+
+    fun removeImage(id: String) {
+        imageMap.remove(id)
+    }
     fun removeImage() {
         imageUri=null
     }
@@ -106,16 +106,27 @@ class ServiceViewModel @Inject constructor(    val addProviderRepository :AddPro
     }
 
 
-//    fun handleGalleryResult(context: Context, uris: List<Uri>) {
-//        uris.mapNotNull { uri ->
-//            context.contentResolver.openInputStream(uri)?.use { inputStream ->
-//                Pair(uri.toString(), BitmapFactory.decodeStream(inputStream))
-//            }
-//        }.forEach { (id, bitmap) ->
-//            addImage(id, bitmap)
-//        }
-//        stopLoading()
-//    }
+    fun handleGalleryResult(context: Context, uris: List<Uri>) {
+        uris.mapNotNull { uri ->
+                Pair(uri.toString(),uri)
+        }.forEach { (id, uri) ->
+            addImage(id, uri)
+        }
+        stopLoading()
+    }
+/*
+
+    fun handleGalleryResult(context: Context, uris: List<Uri>) {
+        uris.mapNotNull { uri ->
+            context.contentResolver.openInputStream(uri)?.use { inputStream ->
+                Pair(uri.toString(), BitmapFactory.decodeStream(inputStream))
+            }
+        }.forEach { (id, bitmap) ->
+            addImage(id, bitmap)
+        }
+        stopLoading()
+    }
+*/
 
     fun handleCameraResult(uri: Uri?) {
         uri?.let { imageUri = it }
@@ -140,7 +151,7 @@ class ServiceViewModel @Inject constructor(    val addProviderRepository :AddPro
                 city = selectedSentToLocationValue,
                 service_name = selectedSentToServiceValue,
                 problem_description = postText,
-                image = imageUri!!
+                image = imageMap.values.toList()!!
             )
         }
     }

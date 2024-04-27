@@ -125,15 +125,15 @@ suspend fun moreToken(@Body refreshRequest: RefreshRequest): Response<RefreshRes
     ): Call<ResponseBody>
     @Multipart
     @POST("/notification/post_create")
-    suspend fun shareCreatePost(
+    fun shareCreatePost(
         @Header("Authorization") token: String,
 
         @Part("city") city: RequestBody,
-        @Part("service_name") serviceName:RequestBody,
-        @Part("problem_description") problemDescription:RequestBody,
+        @Part("service_name") service_name:RequestBody,
+        @Part("problem_description") problem_description:RequestBody,
 
-        @Part image:MultipartBody.Part?
-//        @Part image:List<MultipartBody.Part>?
+//        @Part image:MultipartBody.Part
+        @Part image:List<MultipartBody.Part>
     ):Call<ResponseBody>
 
     @GET("/notifi/allnotification/")

@@ -1,7 +1,6 @@
 package com.example.graduationproject.presentation.userservice
 
 import android.Manifest
-import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -19,6 +18,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -44,6 +45,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -71,20 +73,14 @@ fun ShareProblemScreen(
 
 
     val galleryLauncher =
-        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri:Uri? ->
-            serviceViewModel.imageUri = uri
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetMultipleContents()) { uris ->
+            serviceViewModel.handleGalleryResult(context, uris)
         }
 
-    /*    val cameraLauncher =
-            rememberLauncherForActivityResult(contract = ActivityResultContracts.TakePicturePreview()) { uri ->
-                serviceViewModel.imageUri = uri
-            }*/
-    /*
-        val cameraLauncher =
-            rememberLauncherForActivityResult(contract = ActivityResultContracts.TakePicture()) { uri ->
-                serviceViewModel.handleCameraResult(uri)
-            }
-    */
+//    val cameraLauncher =
+//        rememberLauncherForActivityResult(contract = ActivityResultContracts.TakePicturePreview()) { bitmap ->
+//            serviceViewModel.handleCameraResult(bitmap)
+//        }
 
 
     val permissionLauncher =
@@ -93,10 +89,10 @@ fun ShareProblemScreen(
         }
 
 
-    /*    if (serviceViewModel.launchCamera.value) {
-            cameraLauncher.launch(null)
-            serviceViewModel.launchCamera.value = false
-        }*/
+/*    if (serviceViewModel.launchCamera.value) {
+        cameraLauncher.launch(null)
+        serviceViewModel.launchCamera.value = false
+    }*/
 
     if (serviceViewModel.permissionDenied.value) {
         Toast.makeText(context, "Permission denied", Toast.LENGTH_SHORT).show()
@@ -305,10 +301,10 @@ fun ShareProblemScreen(
                     )
                     IconButton(
                         onClick = {
-//                            if (serviceViewModel.imageMap.size != serviceViewModel.maxImages) {
-                            serviceViewModel.startLoading()
-                            galleryLauncher.launch("image/*")
-//                            }
+                            if (serviceViewModel.imageMap.size != serviceViewModel.maxImages) {
+                                serviceViewModel.startLoading()
+                                galleryLauncher.launch("image/*")
+                            }
                         },
                         enabled = !serviceViewModel.isLoading.value,
                         modifier = Modifier
@@ -323,8 +319,8 @@ fun ShareProblemScreen(
                     }
                     IconButton(
                         onClick = {
-//                            if (serviceViewModel.imageMap.size != serviceViewModel.maxImages)
-                            permissionLauncher.launch(Manifest.permission.CAMERA)
+                            if (serviceViewModel.imageMap.size != serviceViewModel.maxImages)
+                                permissionLauncher.launch(Manifest.permission.CAMERA)
                         },
                         enabled = !serviceViewModel.isLoading.value,
                         modifier = Modifier
@@ -339,40 +335,42 @@ fun ShareProblemScreen(
                     }
                 }
 
-//                LazyRow(
-//                    modifier = Modifier.padding(top = 16.dp),
-//                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-//                ) {
-                if (serviceViewModel.imageUri!=null) {
-                    Box {
-                        Image(
-                            painter = rememberImagePainter(data = Uri.parse(serviceViewModel.imageUri.toString()))!!,
-                            contentDescription = null,
-                            modifier = Modifier.size(100.dp)
-                        )
-                        IconButton(
-                            onClick = { serviceViewModel.removeImage() },
-                            modifier = Modifier.align(Alignment.TopEnd)
-                        ) {
-                            Icon(Icons.Default.Close, contentDescription = "Remove image")
+                LazyRow(
+                    modifier = Modifier.padding(top = 16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+
+                    items(serviceViewModel.imageMap.entries.toList()) { (id, uri) ->
+                        Box {
+                            Image(
+                                painter = rememberImagePainter(data = uri)!!,
+//                                bitmap = bitmap.asImageBitmap(),
+                                contentDescription = null,
+                                modifier = Modifier.size(100.dp)
+                            )
+                            IconButton(
+                                onClick = { serviceViewModel.removeImage(id) },
+                                modifier = Modifier.align(Alignment.TopEnd)
+                            ) {
+                                Icon(Icons.Default.Close, contentDescription = "Remove image")
+                            }
                         }
                     }
+
                 }
 
-//                }
-
-                /*                Text(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(8.dp),
-                                    textAlign = TextAlign.End,
-                                    text = if (serviceViewModel.imageMap.size == serviceViewModel.maxImages) {
-                                        "Sorry But You Reached Max Images Allowed You Need To remove First"
-                                    } else {
-                                        "Total Number Of Photos: ${serviceViewModel.imageMap.size}/ ${serviceViewModel.maxImages}"
-                                    },
-                                    color = if (serviceViewModel.imageMap.size == serviceViewModel.maxImages) Color.Green else Color.Black
-                                )*/
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    textAlign = TextAlign.End,
+                    text = if (serviceViewModel.imageMap.size == serviceViewModel.maxImages) {
+                        "Sorry But You Reached Max Images Allowed You Need To remove First"
+                    } else {
+                        "Total Number Of Photos: ${serviceViewModel.imageMap.size}/ ${serviceViewModel.maxImages}"
+                    },
+                    color = if (serviceViewModel.imageMap.size == serviceViewModel.maxImages) Color.Green else Color.Black
+                )
             }
         }
 
@@ -385,9 +383,7 @@ fun ShareProblemScreen(
                 .padding(vertical = 16.dp, horizontal = 4.dp),
             backgroundColor = DarkBlue,
             contentColor = Color.White,
-            onClick = {
-                serviceViewModel.shareCreatePost()
-            }
+            onClick = onShareClick
         )
 
     }
@@ -395,8 +391,9 @@ fun ShareProblemScreen(
 }
 
 
+/*
 @Preview(showBackground = true)
 @Composable
 fun ShareProblemPreview() {
-    ShareProblemScreen(Modifier, {}, {}, viewModel())
-}
+    ShareProblemScreen(Modifier, {}, {})
+}*/

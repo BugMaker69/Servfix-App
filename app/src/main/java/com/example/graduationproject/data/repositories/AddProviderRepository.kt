@@ -390,21 +390,21 @@ class AddProviderRepository @Inject constructor(val dataStoreToken:DataStoreToke
         city: String,
         service_name: String,
         problem_description: String,
-        image: Uri
-//        images: List<Uri>
+//        image: Uri
+        image: List<Uri>
     ) {
 
-//        val photoParts = mutableListOf<MultipartBody.Part>()
-//
-//        images.forEachIndexed{ index, photoUri ->
-//            val fileToSend = prepareFilePart("image", photoUri)
+        val photoParts = mutableListOf<MultipartBody.Part>()
+
+        image.forEachIndexed{ index, photoUri ->
+            val fileToSend = prepareFilePart("image", photoUri)
 //            val file = File(photoUri.path)
 //            val requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), file)
 //            val photoPart = MultipartBody.Part.createFormData("photo$index", file.name, requestFile)
-//            photoParts.add(fileToSend)
-//        }
+            photoParts.add(fileToSend)
+        }
 
-        val fileToSend = prepareFilePart("image", image)
+//        val fileToSend = prepareFilePart("image", image)
 
 
         val cityRequestBody: RequestBody = RequestBody.create(
@@ -421,55 +421,68 @@ class AddProviderRepository @Inject constructor(val dataStoreToken:DataStoreToke
             "text/plain".toMediaTypeOrNull(),
             problem_description
         )
+        Log.d(
+            "Before Send",
+            "onResponse:  ${image} ||     ${token} ||  ${dataStoreToken} ||   ${dataStoreToken.getToken()} ||   ${photoParts} ||  ${city} ||  ${service_name} ||  ${problem_description}"
+        )
 
+        Log.d(
+            "Before Send",
+            "onResponse: ||  ${cityRequestBody} ||  ${serviceNameRequestBody} ||  ${problemDescriptionRequestBody}"
+        )
         apiService.shareCreatePost(
-            token = "Bearer $dataStoreToken",
+            token = "Bearer ${dataStoreToken.getToken()}",
             city = cityRequestBody,
-            serviceName = serviceNameRequestBody,
-            problemDescription = problemDescriptionRequestBody,
-            image = fileToSend
+            service_name = serviceNameRequestBody,
+            problem_description = problemDescriptionRequestBody,
+            image = photoParts.toList()
         ).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-
+/*                Log.d(
+                    "WHY ERRor HERRE",
+                    "onResponse: ERRor ${response} ||  ${response.code()} ||  ${response.body()} ||  ${response.errorBody()} ||  ${response.isSuccessful} ||  ||  ${response.message()} ||  ||  ${response.headers()} ||  ||  ${response.raw()} || "
+                )*/
                 if (response.body() != null && response.isSuccessful) {
                     try {
 
                         if (response.code() == 201) {
                             serverResponse.value = "Updated"
                             Log.d(
-                                "Updated",
-                                "onResponse: Updated ${response} ||  ${response.code()} ||  ${response.body()} ||  ${response.errorBody()} ||  ${response.isSuccessful} ||  ||  ${response.message()} ||  ||  ${response.headers()} ||  ||  ${response.raw()} || "
+                                "Post Created Successfully",
+                                "onResponse: Post Created ${response} ||  ${response.code()} ||  ${response.body()} ||  ${response.errorBody()} ||  ${response.isSuccessful} ||  ||  ${response.message()} ||  ||  ${response.headers()} ||  ||  ${response.raw()} || "
                             )
 
                         } else {
                             Log.d(
                                 "Error",
-                                "onResponse: Updated Error ${response} ||  ${response.code()} ||  ${response.body()} ||  ${response.errorBody()} ||  ${response.isSuccessful} ||  ||  ${response.message()} ||  ||  ${response.headers()} ||  ||  ${response.raw()} || "
+                                "onResponse: Create Post Error ${response} ||  ${response.code()} ||  ${response.body()} ||  ${response.errorBody()} ||  ${response.isSuccessful} ||  ||  ${response.message()} ||  ||  ${response.headers()} ||  ||  ${response.raw()} || "
                             )
 
                             connectionError.value = response.errorBody().toString()
                         }
                     } catch (e: Exception) {
                         Log.d(
-                            "Catched Error Updated",
-                            "onResponse: Updated Catched Error  ${response} ||  ${response.code()} ||  ${response.body()} ||  ${response.errorBody()} ||  ${response.isSuccessful} ||  ||  ${response.message()} ||  ||  ${response.headers()} ||  ||  ${response.raw()} || "
+                            "Catched Error Created",
+                            "onResponse: Post Catched Error  ${response} ||  ${response.code()} ||  ${response.body()} ||  ${response.errorBody()} ||  ${response.isSuccessful} ||  ||  ${response.message()} ||  ||  ${response.headers()} ||  ||  ${response.raw()} || "
                         )
 
                         connectionError.value = e.message.toString()
                     }
                 }
-                Log.d("onFailure Error Updated", "onResponse: Updated Nothing Happen Why ")
-                Log.d(
-                    "onFailure Error Updated",
-                    "onResponse: Updated onFailure Error ${response} ||  ${response.isSuccessful} ||  ${response.message()} ||  ${response.code()} ||  ${response.errorBody()} ||  ${response.headers()} ||  ${response.raw()} || "
-                )
+                else {
+                    Log.d("onFailure Error Post Created", "onResponse: Updated Nothing Happen Why ")
+                    Log.d(
+                        "onFailure Error Post Created",
+                        "onResponse: Post Created onFailure Error ${response} ||  ${response.isSuccessful} ||  ${response.message()} ||  ${response.code()} ||  ${response.errorBody()} ||  ${response.headers()} ||  ${response.raw()} || "
+                    )
+                }
 
             }
 
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 Log.d(
                     "onFailure Error Updated",
-                    "onResponse: Updated onFailure Error ${t} ||  ${t.message} ||  ${t.cause} ||  ${t.localizedMessage} ||  ${t.stackTrace} ||  ${t.suppressed} || "
+                    "onResponse: Post Created onFailure Error ${t} ||  ${t.message} ||  ${t.cause} ||  ${t.localizedMessage} ||  ${t.stackTrace} ||  ${t.suppressed} || "
                 )
 
                 connectionError.value = t.message.toString()
