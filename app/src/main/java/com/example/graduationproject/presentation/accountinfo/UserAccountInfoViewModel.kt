@@ -16,6 +16,7 @@ import com.example.graduationproject.utils.DataStoreToken
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 @HiltViewModel
 class UserAccountInfoViewModel @Inject constructor(val addProviderRepository: AddProviderRepository,val dataStoreToken: DataStoreToken):ViewModel() {
@@ -56,10 +57,9 @@ class UserAccountInfoViewModel @Inject constructor(val addProviderRepository: Ad
 
 
     init {
-        viewModelScope.launch {
             getUserData()
 
-        }
+
     }
     fun updateUserData() {
 viewModelScope.launch (Dispatchers.IO){
@@ -123,20 +123,22 @@ fun getUserData() {
 
             returnedUserData = addProviderRepository.getUserData(
             )
-            returnedUserData?.let {
-                userName = it.username
-                emailN = it.email
-                selectedCityValue = it.city
-                address = it.address
-                phone = it.phone
-                imageUri = Uri.parse(BASE_URL + it.image)
-            }
-            accounType = UserType.OwnerPerson
+            withContext (Dispatchers.Main){
+                returnedUserData?.let {
+                    userName = it.username
+                    emailN = it.email
+                    selectedCityValue = it.city
+                    address = it.address
+                    phone = it.phone
+                    imageUri = Uri.parse(BASE_URL + it.image)
+                }
+                accounType = UserType.OwnerPerson
 
-            Log.d(
-                "TAG",
-                "getProviderData: data40 ${returnedUserData?.email}   ${returnedUserData?.id}   ${returnedUserData?.username}  "
-            )
+                Log.d(
+                    "TAG",
+                    "getProviderData: data40 ${returnedUserData?.email}   ${returnedUserData?.id}   ${returnedUserData?.username}  "
+                )
+            }
         } catch (e: Exception) {
             Log.d(
                 "EEERRROOORRR",

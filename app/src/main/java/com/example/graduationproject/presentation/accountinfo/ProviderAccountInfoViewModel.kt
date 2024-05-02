@@ -16,6 +16,7 @@ import com.example.graduationproject.utils.DataStoreToken
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -66,10 +67,9 @@ class ProviderAccountInfoViewModel @Inject constructor(val addProviderRepository
 
     var selectedServiceValue by mutableStateOf("")
     init {
-        viewModelScope.launch {
             getProviderData()
 
-        }
+
     }
     fun getProviderData() {
         viewModelScope.launch (Dispatchers.IO){
@@ -79,22 +79,26 @@ class ProviderAccountInfoViewModel @Inject constructor(val addProviderRepository
                 returnedProviderData =
                     addProviderRepository.getProviderData(
                     )
-                returnedProviderData?.let {
-                    userName = it.username
-                    address = it.address
-                    selectedCityValue = it.city
-                    emailN = it.email
-                    phone = it.phone
-                    rating=it.ratings
-                    fixedSalary = it.fixed_salary.toString()
-                    selectedServiceValue = it.profession
-                    imageUri = Uri.parse(BASE_URL + it.image)
+                withContext (Dispatchers.Main){
+                    returnedProviderData?.let {
+                        userName = it.username
+                        address = it.address
+                        selectedCityValue = it.city
+                        emailN = it.email
+                        phone = it.phone
+                        rating=it.ratings
+                        fixedSalary = it.fixed_salary.toString()
+                        selectedServiceValue = it.profession
+                        imageUri = Uri.parse(BASE_URL + it.image)
+                    }
+                    accounType = UserType.HirePerson
+                    Log.d(
+                        "TAG",
+                        "getProviderData: data40 ${returnedProviderData?.email}   ${returnedProviderData?.id}   ${returnedProviderData?.username}  "
+                    )
                 }
-                accounType = UserType.HirePerson
-                Log.d(
-                    "TAG",
-                    "getProviderData: data40 ${returnedProviderData?.email}   ${returnedProviderData?.id}   ${returnedProviderData?.username}  "
-                )
+
+
             } catch (e: Exception) {
                 Log.d(
                     "EEERRROOORRR",
