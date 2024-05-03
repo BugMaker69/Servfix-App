@@ -6,18 +6,24 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.geometry.Size
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.graduationproject.MyApplication
 import com.example.graduationproject.data.Services
 import com.example.graduationproject.data.repositories.AddProviderRepository
 import com.example.graduationproject.data.repositories.UserServicesRepository
+import com.example.graduationproject.utils.FileUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.File
 import java.util.UUID
 import javax.inject.Inject
 
@@ -83,7 +89,20 @@ class ServiceViewModel @Inject constructor(    val addProviderRepository :AddPro
 
     val permissionDenied = mutableStateOf(false)
     val imageMap = mutableStateMapOf<String, Uri>()
+//    private val _fileName = MutableLiveData("")
 
+    private val _fileNames = mutableStateListOf<String>()
+
+    val fileNames: List<String>
+        get() = _fileNames
+
+    fun addFileName(name: String) {
+        _fileNames.add(name)
+    }
+
+    fun removeFileName(name: String) {
+        _fileNames.remove(name)
+    }
 
         fun addImage(id: String, uri: Uri) {
         if (imageMap.size < maxImages) {
@@ -114,6 +133,15 @@ class ServiceViewModel @Inject constructor(    val addProviderRepository :AddPro
         }
         stopLoading()
     }
+
+/*    val fileName: LiveData<String>
+        get() = _fileName
+
+
+    fun setFileName(name:String) {
+        _fileName.value = name
+    }*/
+
 /*
 
     fun handleGalleryResult(context: Context, uris: List<Uri>) {
@@ -128,8 +156,13 @@ class ServiceViewModel @Inject constructor(    val addProviderRepository :AddPro
     }
 */
 
-    fun handleCameraResult(uri: Uri?) {
+/*    fun handleCameraResult(uri: Uri?) {
         uri?.let { imageUri = it }
+        stopLoading()
+    }*/
+
+    fun handleCameraResult(uri: Uri?) {
+        uri?.let { addImage(UUID.randomUUID().toString(), it) }
         stopLoading()
     }
 
@@ -151,8 +184,11 @@ class ServiceViewModel @Inject constructor(    val addProviderRepository :AddPro
                 city = selectedSentToLocationValue,
                 service_name = selectedSentToServiceValue,
                 problem_description = postText,
+//                fileRealPath = fileNames,
                 image = imageMap.values.toList()!!
             )
+            File(FileUtils.getDocumentCacheDir(MyApplication.getApplicationContext().applicationContext), fileNames.toString()).delete()
+
         }
     }
 

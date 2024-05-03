@@ -2,6 +2,7 @@ package com.example.graduationproject.data.retrofit
 
 import com.example.graduationproject.data.AllNotification
 import com.example.graduationproject.data.FavouritesList
+import com.example.graduationproject.data.GeneralPostAccept
 import com.example.graduationproject.data.GetPostData
 import com.example.graduationproject.data.GetPostsForProvider
 import com.example.graduationproject.data.GetWorks
@@ -151,6 +152,25 @@ suspend fun moreToken(@Body refreshRequest: RefreshRequest): Response<RefreshRes
     suspend fun getPostsForProvider(
         @Header("Authorization") token: String
     ): GetPostsForProvider
+
+    @POST("/notification/post_accept/{id}")
+    suspend fun acceptPost(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int
+    ): GeneralPostAccept
+
+    @POST("/notification/post/accept/{id}/")
+    suspend fun acceptPostForSpecificProvider(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int
+    ):Call<ResponseBody>
+
+    @POST("/notification/post/reject/{id}/")
+    suspend fun rejectPostForSpecificProvider(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int
+    ):Call<ResponseBody>
+
 
     @POST("/api/change_password")
     fun changePassword(

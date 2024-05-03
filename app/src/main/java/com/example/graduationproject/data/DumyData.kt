@@ -184,3 +184,13 @@ data class GetPostsForProviderItem(
 )
 
 class GetPostsForProvider : ArrayList<GetPostsForProviderItem>()
+
+
+data class GeneralPostAccept(
+    val id: Int,
+    val post: Int,
+    val provider: Int,
+    val status: String,
+    val timestamp: String,
+    val user: Int
+)
