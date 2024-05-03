@@ -223,3 +223,7 @@ data class GeneralPostAccept(
     val timestamp: String,
     val user: Int
 )
+
+data class PostStatus(
+    val message: String
+)

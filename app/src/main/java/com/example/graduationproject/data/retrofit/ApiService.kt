@@ -11,14 +11,15 @@ import com.example.graduationproject.data.GetWorks
 import com.example.graduationproject.data.LoginRequest
 import com.example.graduationproject.data.LoginResponse
 import com.example.graduationproject.data.NewOldPassword
+import com.example.graduationproject.data.PostStatus
 import com.example.graduationproject.data.RefreshRequest
 import com.example.graduationproject.data.RefreshResponse
 import com.example.graduationproject.data.Register
 import com.example.graduationproject.data.ReturnedProviderData
 import com.example.graduationproject.data.ReturnedUserData
+import com.example.graduationproject.data.SearchProviders
 import com.example.graduationproject.data.ServicesCategories
 import com.example.graduationproject.data.ViewProfileData
-import com.example.graduationproject.data.SearchProviders
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -38,11 +39,11 @@ import retrofit2.http.Query
 interface ApiService {
 
     @GET("/notification/get_accepted_users_and_providers")
-    suspend fun getChatListForUsers(@Header("Authorization") token: String):GetChatListForUsers
+    suspend fun getChatListForUsers(@Header("Authorization") token: String): GetChatListForUsers
 
 
     @GET("/notification/accepted-users-and-providers/")
-    suspend fun getChatListForProviders(@Header("Authorization") token: String):GetChatListForProviders
+    suspend fun getChatListForProviders(@Header("Authorization") token: String): GetChatListForProviders
 
     @POST("/api/register/")
     suspend fun postRegister(@Body register: Register): Response<Register>
@@ -74,16 +75,19 @@ interface ApiService {
     suspend fun getReturnedUserData(@Header("Authorization") token: String): ReturnedUserData
 
     @GET("/api/get_providers/{id}")
-    suspend fun getProvidersSearch(@Header("Authorization") token: String,
-                                   @Path("id") id: Int ,
-                                   @Query("keyword") keyword:String ,
-                                   @Query("minRate") rate:Int,
-                                   @Query("place") place :String,
-                                   @Query("page") page:Int
+    suspend fun getProvidersSearch(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int,
+        @Query("keyword") keyword: String,
+        @Query("minRate") rate: Int,
+        @Query("place") place: String,
+        @Query("page") page: Int
 
-    ):SearchProviders
-@POST("api/token/refresh/")
-suspend fun moreToken(@Body refreshRequest: RefreshRequest): Response<RefreshResponse>
+    ): SearchProviders
+
+    @POST("api/token/refresh/")
+    suspend fun moreToken(@Body refreshRequest: RefreshRequest): Response<RefreshResponse>
+
     @GET("api/all/{id}")
     suspend fun getProviders(@Path("id") id: Int, @Query("page") page: Int): SearchProviders
 
@@ -134,18 +138,19 @@ suspend fun moreToken(@Body refreshRequest: RefreshRequest): Response<RefreshRes
         @Part("fixed_salary") fixed_salary: RequestBody,
         @Part image: MultipartBody.Part
     ): Call<ResponseBody>
+
     @Multipart
     @POST("/notification/post_create")
     fun shareCreatePost(
         @Header("Authorization") token: String,
 
         @Part("city") city: RequestBody,
-        @Part("service_name") service_name:RequestBody,
-        @Part("problem_description") problem_description:RequestBody,
+        @Part("service_name") service_name: RequestBody,
+        @Part("problem_description") problem_description: RequestBody,
 
 //        @Part image:MultipartBody.Part
-        @Part image:List<MultipartBody.Part>
-    ):Call<ResponseBody>
+        @Part image: List<MultipartBody.Part>
+    ): Call<ResponseBody>
 
     @GET("/notifi/allnotification/")
     suspend fun getAllNotifications(
@@ -169,24 +174,24 @@ suspend fun moreToken(@Body refreshRequest: RefreshRequest): Response<RefreshRes
         @Path("id") id: Int
     ): GeneralPostAccept
 
-    @POST("/notification/post/accept/{id}/")
+    @POST("/notification/post/accept/{post_id}/")
     suspend fun acceptPostForSpecificProvider(
         @Header("Authorization") token: String,
-        @Path("id") id: Int
-    ):Call<ResponseBody>
+        @Path("post_id") post_id: Int
+    ): PostStatus
 
-    @POST("/notification/post/reject/{id}/")
+    @POST("/notification/post/reject/{post_id}/")
     suspend fun rejectPostForSpecificProvider(
         @Header("Authorization") token: String,
-        @Path("id") id: Int
-    ):Call<ResponseBody>
+        @Path("post_id") post_id: Int
+    ): PostStatus
 
 
     @POST("/api/change_password")
     fun changePassword(
         @Header("Authorization") token: String,
         @Body changePassword: NewOldPassword
-    ):Call<ResponseBody>
+    ): Call<ResponseBody>
 
     @GET("/api/all_work")
     fun getAllWorks(
@@ -197,15 +202,14 @@ suspend fun moreToken(@Body refreshRequest: RefreshRequest): Response<RefreshRes
     fun deleteWork(
         @Header("Authorization") token: String,
         @Path("id") id: Int
-    ):Call<ResponseBody>
+    ): Call<ResponseBody>
 
     @Multipart
     @DELETE("/api/add_work/")
     fun addWork(
         @Header("Authorization") token: String,
         @Part image: MultipartBody.Part
-    ):Call<ResponseBody>
-
+    ): Call<ResponseBody>
 
 
 }

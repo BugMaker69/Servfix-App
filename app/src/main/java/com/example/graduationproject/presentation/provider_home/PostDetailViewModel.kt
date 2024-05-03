@@ -43,13 +43,17 @@ class PostDetailViewModel @Inject constructor(
 
     fun acceptPostForSpecificProvider(id: Int) {
         viewModelScope.launch {
-            providerRepository.acceptPostForSpecificProvider(id)
+            providerRepository.acceptPostForSpecificProvider(
+                id = id
+            )
         }
     }
 
     fun rejectPostForSpecificProvider(id: Int) {
         viewModelScope.launch {
-            providerRepository.rejectPostForSpecificProvider(id)
+            providerRepository.rejectPostForSpecificProvider(
+                id = id
+            )
         }
     }
 
