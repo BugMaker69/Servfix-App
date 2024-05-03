@@ -1,5 +1,6 @@
 package com.example.graduationproject.ui
 
+import ChatContactScreen
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
@@ -38,6 +39,7 @@ import com.example.graduationproject.presentation.accountinfo.ProviderAccountInf
 import com.example.graduationproject.presentation.accountinfo.UserAccountInfoDetailsScreen
 import com.example.graduationproject.presentation.accountinfo.UserAccountInfoScreen
 import com.example.graduationproject.presentation.accountinfo.UserAccountInfoViewModel
+import com.example.graduationproject.presentation.chat.ChatContactViewModel
 import com.example.graduationproject.presentation.common.HomeTopBar
 import com.example.graduationproject.presentation.common.UserType
 import com.example.graduationproject.presentation.common.UserTypeViewModel
@@ -250,7 +252,11 @@ fun ServixApp(
 
                 FavoriteScreen(
                     modifier = Modifier.padding(innerPadding),
-                    favouriteViewModel = favouriteViewModel
+                    favouriteViewModel = favouriteViewModel,
+                    onProfileClicked = {id->
+                        navController.navigate(ServixScreens.ViewProfile.name + "/$id")
+
+                    }
                 )
             }
             composable(ServixScreens.Login.name) {
@@ -679,6 +685,10 @@ fun ServixApp(
                         viewModel.rejectPostForSpecificProvider(itemId!!)
                     },
                 )
+            }
+            composable(ServixScreens.ChatContactScreen.name){
+                val vm:ChatContactViewModel= hiltViewModel()
+                ChatContactScreen(modifier =Modifier.padding(innerPadding) , vm = vm, userType =userTypeFlow.value )
             }
 
         }

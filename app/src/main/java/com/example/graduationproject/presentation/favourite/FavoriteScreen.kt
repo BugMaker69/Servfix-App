@@ -7,7 +7,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -20,7 +19,6 @@ import androidx.compose.foundation.layout.wrapContentSize
 
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -33,8 +31,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 
 
 import androidx.compose.ui.graphics.RectangleShape
@@ -46,7 +42,6 @@ import androidx.compose.ui.tooling.preview.Preview
 
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.SubcomposeAsyncImage
 import com.example.graduationproject.R
 import com.example.graduationproject.data.ReturnedProviderData
@@ -54,7 +49,7 @@ import com.example.graduationproject.presentation.common.RatingBar
 import com.example.graduationproject.ui.theme.LightBlue
 
 @Composable
-fun FavoriteScreen(modifier: Modifier, favouriteViewModel: FavouriteViewModel
+fun FavoriteScreen(modifier: Modifier, favouriteViewModel: FavouriteViewModel,onProfileClicked: (Int) -> Unit
 ) {
     val lista by favouriteViewModel.providersFavList.collectAsState()
 
@@ -70,12 +65,16 @@ fun FavoriteScreen(modifier: Modifier, favouriteViewModel: FavouriteViewModel
 
 
         items(lista) { state->
-            FavoriteItem(state) {id->
-               favouriteViewModel.id=id
+            FavoriteItem(state, onProfileClick = {id->
+                                                 onProfileClicked(id)
+
+            }, onCardClick = {
+                id->
+                favouriteViewModel.id=id
                 favouriteViewModel.showDialog.value = true
 
+            })
 
-            }
         }
     }
     if (favouriteViewModel.showDialog.value) {
@@ -113,7 +112,7 @@ Button(onClick = {onDismissClick()}) {
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun FavoriteItem(state:ReturnedProviderData,onCardClick: (Int) -> Unit) {
+fun FavoriteItem(state:ReturnedProviderData, onCardClick: (Int) -> Unit, onProfileClick:(Int)->Unit) {
 //    val shape = object : Shape {
 //        override fun createOutline(
 //            size: Size,
@@ -154,11 +153,13 @@ fun FavoriteItem(state:ReturnedProviderData,onCardClick: (Int) -> Unit) {
             modifier = Modifier
                 .fillMaxSize()
                 .align(Alignment.Center)
-                .combinedClickable(onLongClick = {
-                    onCardClick(state.id)
-                }) {
+                .combinedClickable(onClick = {
+                    onProfileClick(state.id)
 
+                },onLongClick = {
+                    onCardClick(state.id)
                 }
+                )
 
         ) {
             Box(modifier = Modifier.fillMaxSize()) {

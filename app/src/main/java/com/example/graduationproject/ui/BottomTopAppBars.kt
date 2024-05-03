@@ -69,7 +69,7 @@ fun BottomAppBar(
             unselectedIcon = Icons.Outlined.Settings,
         ),
         BottomNavItem(
-            route="",
+            route=ServixScreens.ChatContactScreen.name,
             title = stringResource(id = R.string.messages),
             selectedIcon = Icons.Filled.Message,
             unselectedIcon = Icons.Outlined.Message,
@@ -90,7 +90,7 @@ fun BottomAppBar(
             unselectedIcon = Icons.Outlined.Settings,
         ),
         BottomNavItem(
-            route="",
+            route=ServixScreens.ChatContactScreen.name,
             title = stringResource(id = R.string.messages),
             selectedIcon = Icons.Filled.Message,
             unselectedIcon = Icons.Outlined.Message,

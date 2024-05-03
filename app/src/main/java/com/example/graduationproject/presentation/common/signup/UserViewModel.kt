@@ -554,16 +554,13 @@ var accounType by mutableStateOf(UserType.OwnerPerson)
                 passwordError = true
             }
             if (email.isNotEmpty() && password.isNotEmpty()) {
-                viewModelScope.launch {
-
+                try {
                     token = addProviderRepository.login(
                         loginRequest = LoginRequest(
                             username = email,
                             password = password
                         )
-
                     )
-                    token
                     if (token == null) {
                         error = "Incorrect Email Or Password"
                     } else {
@@ -571,11 +568,13 @@ var accounType by mutableStateOf(UserType.OwnerPerson)
                         addProviderRepository.dataStoreToken.saveToken(token!!.access.toString())
                         getData()
                     }
+                } catch (e: Exception) {
+                    // Handle any exceptions that might occur during the login operation
                 }
             }
         }
-
     }
+
 
     /*                try {
                         returnedProviderData =

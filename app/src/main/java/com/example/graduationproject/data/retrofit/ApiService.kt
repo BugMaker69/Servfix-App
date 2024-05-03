@@ -3,6 +3,8 @@ package com.example.graduationproject.data.retrofit
 import com.example.graduationproject.data.AllNotification
 import com.example.graduationproject.data.FavouritesList
 import com.example.graduationproject.data.GeneralPostAccept
+import com.example.graduationproject.data.GetChatListForProviders
+import com.example.graduationproject.data.GetChatListForUsers
 import com.example.graduationproject.data.GetPostData
 import com.example.graduationproject.data.GetPostsForProvider
 import com.example.graduationproject.data.GetWorks
@@ -34,6 +36,14 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiService {
+
+    @GET("/notification/get_accepted_users_and_providers")
+    suspend fun getChatListForUsers(@Header("Authorization") token: String):GetChatListForUsers
+
+
+    @GET("/notification/accepted-users-and-providers/")
+    suspend fun getChatListForProviders(@Header("Authorization") token: String):GetChatListForProviders
+
     @POST("/api/register/")
     suspend fun postRegister(@Body register: Register): Response<Register>
 

@@ -45,9 +45,18 @@ data class  SearchProviders(@SerializedName("providers" ) var providers:List<Ret
 data class ViewProfileData (
 
     @SerializedName("provider" ) var provider : Provider?         = Provider(),
-    @SerializedName("works"    ) var works    : ArrayList<String> = arrayListOf()
+    @SerializedName("works"    ) var works    : ArrayList<Works> = arrayListOf()
 
 )
+data class Works (
+    @SerializedName("images") var images : ArrayList<Image> = arrayListOf()
+)
+
+data class Image (
+    @SerializedName("id") var id: Int? = null,
+    @SerializedName("image") var image: String? = null
+)
+
 data class RefreshRequest(val refresh: String)
 data class RefreshResponse(val access: String)
 data class Provider (
@@ -172,8 +181,28 @@ data class GetWorksItem(
 )
 
 class GetWorks : ArrayList<GetWorksItem>()
+sealed class ChatItem {
+    data class User(val name: String, val message: String,val id:Int) : ChatItem()
+    data class Provider(val name: String, val message: String,val id:Int) : ChatItem()
+}
 
+data class GetChatListForProviders(
+    var accepted_users : ArrayList<AcceptedUsers> = arrayListOf()
+)
 
+data class GetChatListForUsers (
+
+    @SerializedName("accepted_providers" ) var acceptedProviderUsers : ArrayList<AcceptedProviders> = arrayListOf()
+
+)
+data class AcceptedProviders (
+
+    @SerializedName("provider_id" ) var id : Int,
+    @SerializedName("name"        ) var name       : String,
+    @SerializedName("image"       ) var image      : String?=null
+
+)
+data class AcceptedUsers( @SerializedName("user_id" )var id:Int, @SerializedName("username")var name:String   ,@SerializedName("image") var image:String?=null)
 data class GetPostsForProviderItem(
     val created_at: String,
     val id: Int,
