@@ -48,9 +48,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.graduationproject.R
 import com.example.graduationproject.presentation.common.CustomButtonAndText
 import com.example.graduationproject.presentation.common.CustomTextField
-import com.example.graduationproject.R
 import com.example.graduationproject.presentation.common.signup.DisplayRequirements
 import com.example.graduationproject.presentation.common.signup.UserViewModel
 import com.example.graduationproject.ui.theme.DarkBlue
@@ -67,7 +67,7 @@ fun FirstScreenOnForgotPasswordChange(
     val context = LocalContext.current
 
     Column(
-        modifier= Modifier
+        modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
             .verticalScroll(rememberScrollState()),
@@ -78,7 +78,7 @@ fun FirstScreenOnForgotPasswordChange(
         CustomButtonAndText(
             text = R.string.forgot_password,
             contentColor = Color.Black,
-            style = TextStyle(fontSize = 32.sp, fontWeight = FontWeight.Bold,)
+            style = TextStyle(fontSize = 32.sp, fontWeight = FontWeight.Bold)
         )
 
 
@@ -101,10 +101,10 @@ fun FirstScreenOnForgotPasswordChange(
             modifier = Modifier,
             fieldName = R.string.phone,
             fieldValue = userViewModel.phoneChange,
-            onValueChange = { userViewModel.onNewPhoneChanged(it)},
+            onValueChange = { userViewModel.onNewPhoneChanged(it) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
 
-            )
+        )
 
         CustomButtonAndText(
             Modifier
@@ -112,13 +112,14 @@ fun FirstScreenOnForgotPasswordChange(
                 .padding(top = 8.dp),
             text = R.string.send_code,
             onClick = {
-                userViewModel.isPasswordForget= true
+                userViewModel.isPasswordForget = true
                 userViewModel.onFinishSignupClick()
                 userViewModel.sendVerificationCode(
                     activity = context as Activity,
                     callbacks = userViewModel.callbacks
                 )
-                onSendClick()},
+                onSendClick()
+            },
             backgroundColor = DarkBlue,
             contentColor = Color.White,
             indication = rememberRipple(),
@@ -146,11 +147,10 @@ fun ResetPassword(
 ) {
 
     Column(
-        modifier= Modifier
+        modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
-            .verticalScroll(rememberScrollState())
-        ,
+            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -166,7 +166,7 @@ fun ResetPassword(
         CustomButtonAndText(
             text = R.string.reset_password,
             contentColor = Color.Black,
-            style = TextStyle(fontSize = 32.sp, fontWeight = FontWeight.Bold,)
+            style = TextStyle(fontSize = 32.sp, fontWeight = FontWeight.Bold)
         )
 
 
@@ -191,8 +191,7 @@ fun ResetPassword(
                 .focusRequester(passwordFocusRequester)
                 .onFocusChanged { focusState ->
                     userViewModel.isNewPasswordFocused.value = focusState.isFocused
-                }
-            ,
+                },
 
             fieldName = R.string.new_password,
             fieldValue = userViewModel.newPassword,
@@ -250,7 +249,6 @@ fun ResetPassword(
         )
     }
 }
-
 
 
 @Composable
@@ -312,18 +310,21 @@ fun AfterPasswordChange(onBackToLoginClick: () -> Unit) {
 }
 
 
-
 @Preview(showBackground = true)
 @Composable
 fun PhoneAgainPreview() {
-    FirstScreenOnForgotPasswordChange(onSendClick =  {}, onLoginClick = {}, userViewModel = viewModel())
+    FirstScreenOnForgotPasswordChange(
+        onSendClick = {},
+        onLoginClick = {},
+        userViewModel = viewModel()
+    )
 }
 
 
 @Preview(showBackground = true)
 @Composable
 fun ResetPasswordPreview() {
-    ResetPassword(userViewModel = viewModel(),onResetClick =  {})
+    ResetPassword(userViewModel = viewModel(), onResetClick = {})
 }
 
 

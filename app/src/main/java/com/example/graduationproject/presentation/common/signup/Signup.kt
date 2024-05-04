@@ -512,19 +512,19 @@ fun SignupThirdScreen(
             )
         }
 
-/*        val galleryLauncher =
-            rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
-                uri?.let {
-                    userViewModel.handleGalleryResultForIdImage(context, uri)
-                }
-            }
+        /*        val galleryLauncher =
+                    rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
+                        uri?.let {
+                            userViewModel.handleGalleryResultForIdImage(context, uri)
+                        }
+                    }
 
-        val galleryLauncherForWork =
-            rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
-                uri?.let {
-                    userViewModel.handleGalleryResultForWork(context, uri)
-                }
-            }*/
+                val galleryLauncherForWork =
+                    rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
+                        uri?.let {
+                            userViewModel.handleGalleryResultForWork(context, uri)
+                        }
+                    }*/
 
         Column(
             modifier = Modifier
@@ -601,9 +601,10 @@ fun SignupThirdScreen(
             )
 
 // National ID
-            val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
-                userViewModel.imageUri = uri
-            }
+            val launcher =
+                rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
+                    userViewModel.imageUri = uri
+                }
 
             Row(
                 Modifier
@@ -634,21 +635,19 @@ fun SignupThirdScreen(
                     ),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                if (userViewModel.isLoading.value){
+                if (userViewModel.isLoading.value) {
                     CircularProgressIndicator(color = MaterialTheme.colorScheme.onPrimary)
                 }
-                if (userViewModel.imageUri == null){
+                if (userViewModel.imageUri == null) {
                     Text(
                         text = "National ID",
                         modifier = Modifier
                             .padding(horizontal = 16.dp)
                             .weight(7f)
                     )
-                }
-                else
-                {
+                } else {
                     Image(
-                        painter = rememberImagePainter(data =  userViewModel.imageUri)!!,
+                        painter = rememberImagePainter(data = userViewModel.imageUri)!!,
                         contentDescription = "",
                         contentScale = ContentScale.FillBounds,
                         modifier = Modifier
@@ -664,7 +663,7 @@ fun SignupThirdScreen(
                 )
             }
 
-            if (userViewModel.showText){
+            if (userViewModel.showText) {
                 Text(text = "Error Its Required", color = Color.Red)
             }
 
@@ -698,7 +697,7 @@ fun SignupThirdScreen(
                         userViewModel.thirdSignUpFinish()
                         userViewModel.providerRegister()
                         if (userViewModel.idImageFileError) {
-                           userViewModel.showText = true
+                            userViewModel.showText = true
                         }
 
 //                        userViewModel.onFinishSignupClick()

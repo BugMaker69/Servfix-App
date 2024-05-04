@@ -2,6 +2,7 @@
 
 package com.example.graduationproject.presentation
 
+import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Canvas
@@ -15,16 +16,21 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBackIosNew
+import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -47,12 +53,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import coil.compose.rememberImagePainter
+import coil.compose.SubcomposeAsyncImage
 import com.example.graduationproject.R
 import com.example.graduationproject.data.GetWorksItem
+import com.example.graduationproject.presentation.common.CustomButtonAndText
 import com.example.graduationproject.presentation.common.CustomDialog
-import com.example.graduationproject.presentation.notification.NotificationViewModel
 import com.example.graduationproject.presentation.userservice.ServiceViewModel
 import com.example.graduationproject.ui.theme.DarkBlue
 
@@ -64,11 +69,11 @@ import com.example.graduationproject.ui.theme.DarkBlue
 fun AddWorkToProfileItem(
     modifier: Modifier = Modifier,
     onAddWorkToProfileItemOpenPhoto: () -> Unit,
-    image: String
+//    onDeleteIconClick: () -> Unit,
+    image: Uri
 
 ) {
 
-    val Base = "https://p2kjdbr8-8000.uks1.devtunnels.ms/api"
     Box(
         modifier = Modifier
             .size(150.dp)
@@ -76,14 +81,43 @@ fun AddWorkToProfileItem(
             .clickable { onAddWorkToProfileItemOpenPhoto() }
 //            .clip(RoundedCornerShape(16.dp))
     ) {
-        Image(
-            //  TODO Image Want To Be Dynamic I don't Know yet if i will use painter or ImageVector or What?
-            painter = rememberImagePainter(data = Base + image),
-            contentDescription = "",
-//            contentScale = ContentScale.Crop,
-            modifier = Modifier.align(Alignment.Center)
-//                modifier = Modifier.size(300.dp),
+        Icon(
+            modifier = Modifier.align(Alignment.TopEnd)
+//                .clickable { onDeleteIconClick() },
+                    ,
+            imageVector = Icons.Filled.Cancel,
+            contentDescription = ""
         )
+
+        SubcomposeAsyncImage(
+            model = image,
+            clipToBounds = true,
+            contentDescription = "",
+            contentScale = ContentScale.Inside,
+            modifier = Modifier
+                .size(150.dp)
+                .clip(CircleShape),
+            loading = { CircularProgressIndicator(Modifier.wrapContentSize()) },
+            error = {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_become),
+                    contentDescription = "",
+                    modifier = Modifier
+                        .size(150.dp)
+                        .clip(CircleShape), contentScale = ContentScale.Inside
+                )
+
+            }
+        )
+
+        /*        Image(
+                    //  TODO Image Want To Be Dynamic I don't Know yet if i will use painter or ImageVector or What?
+                    painter = rememberImagePainter(data = Base + image),
+                    contentDescription = "",
+        //            contentScale = ContentScale.Crop,
+                    modifier = Modifier.align(Alignment.Center)
+        //                modifier = Modifier.size(300.dp),
+                )*/
     }
 
 }
@@ -92,7 +126,7 @@ fun AddWorkToProfileItem(
 @Composable
 fun AddNeWorkToProfileItem(
     modifier: Modifier = Modifier,
-    serviceViewModel: ServiceViewModel = viewModel()
+    serviceViewModel: ServiceViewModel
 ) {
 
 
@@ -100,13 +134,9 @@ fun AddNeWorkToProfileItem(
 
 
     val galleryLauncher =
-        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
-            serviceViewModel.imageUri = uri
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetMultipleContents()) { uris ->
+            serviceViewModel.handleGalleryResult(context, uris)
         }
-    /*    val galleryLauncher =
-            rememberLauncherForActivityResult(contract = ActivityResultContracts.GetMultipleContents()) { uris ->
-                serviceViewModel.handleGalleryResult(context, uris)
-            }*/
 
     Box(
         modifier = Modifier
@@ -179,7 +209,9 @@ fun AddNeWorkToProfileItem(
 fun AddNeWorkToProfileItems(
     modifier: Modifier = Modifier,
     onAddWorkToProfileItemOpenPhoto: () -> Unit,
-//    serviceViewModel: ServiceViewModel = viewModel()
+    onSaveWorkClick: () -> Unit,
+//    onDeleteIconClick: () -> Unit,
+    serviceViewModel: ServiceViewModel,
 //    viewModel: NotificationViewModel,
     getWorks: List<GetWorksItem>
 ) {
@@ -190,14 +222,32 @@ fun AddNeWorkToProfileItems(
         horizontalArrangement = Arrangement.Center
     ) {
         item {
-            AddNeWorkToProfileItem()
+            AddNeWorkToProfileItem(serviceViewModel = serviceViewModel)
         }
-        items(getWorks) { item ->
+        items(serviceViewModel.imageMap.values.toList()) { item ->
             AddWorkToProfileItem(
                 onAddWorkToProfileItemOpenPhoto = onAddWorkToProfileItemOpenPhoto,
-                image = item.image
+                image = item,
+//                onDeleteIconClick = onDeleteIconClick
             )
         }
+        item(span = { GridItemSpan(3) }) {
+            CustomButtonAndText(
+                text = R.string.send,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp, horizontal = 4.dp),
+                backgroundColor = DarkBlue,
+                contentColor = Color.White,
+                onClick = onSaveWorkClick
+            )
+        }
+        /*        items(getWorks) { item ->
+                    AddWorkToProfileItem(
+                        onAddWorkToProfileItemOpenPhoto = onAddWorkToProfileItemOpenPhoto,
+                        image = item.image
+                    )
+                }*/
     }
 
 }
@@ -209,7 +259,7 @@ fun SeeWork(
     onBackIconClick: () -> Unit,
     onDeleteIconClick: () -> Unit,
     id: Int,
-    viewModel: NotificationViewModel
+    serviceViewModel: ServiceViewModel
 ) {
 
     var showDialog by remember { mutableStateOf(false) }
@@ -259,7 +309,7 @@ fun SeeWork(
                 DeleteImageDialog(
                     onDismissButtonClick = { showDialog = false },
                     onConfirmButtonClick = {
-                        viewModel.deleteWork(id)
+                        serviceViewModel.deleteWork(id)
                     }
                 )
             }

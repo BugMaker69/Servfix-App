@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,10 +21,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material.icons.filled.CameraAlt
@@ -38,11 +43,9 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
@@ -57,8 +60,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
 import coil.compose.SubcomposeAsyncImage
-import coil.compose.rememberImagePainter
 import com.example.graduationproject.R
+import com.example.graduationproject.data.GetWorksItem
+import com.example.graduationproject.data.constants.Constant
 import com.example.graduationproject.presentation.common.CustomButtonAndText
 import com.example.graduationproject.presentation.common.CustomTextField
 import com.example.graduationproject.presentation.common.signup.DisplayRequirements
@@ -71,6 +75,9 @@ import com.example.graduationproject.ui.theme.LightBrown
 fun ProviderAccountInfoScreen(
     modifier: Modifier,
     onAccountInfoDetailsClick: () -> Unit,
+    onAddWorkToProfileItemOpenPhoto: () -> Unit,
+    onAddWorkToProfile: () -> Unit,
+    getWorks: List<GetWorksItem>,
     providerAccountInfoViewModel: ProviderAccountInfoViewModel
 
 ) {
@@ -78,6 +85,9 @@ fun ProviderAccountInfoScreen(
     ProviderAccountInfo(
         modifier = modifier,
         onAccountInfoDetailsClick = onAccountInfoDetailsClick,
+        onAddWorkToProfileItemOpenPhoto = onAddWorkToProfileItemOpenPhoto,
+        onAddWorkToProfile = onAddWorkToProfile,
+        getWorks = getWorks,
         providerAccountInfoViewModel = providerAccountInfoViewModel
     )
 }
@@ -106,6 +116,9 @@ fun ProviderAccountInfoDetailsScreen(
 fun ProviderAccountInfo(
     modifier: Modifier = Modifier,
     onAccountInfoDetailsClick: () -> Unit,
+    onAddWorkToProfileItemOpenPhoto: () -> Unit,
+    onAddWorkToProfile: () -> Unit,
+    getWorks: List<GetWorksItem>,
     providerAccountInfoViewModel: ProviderAccountInfoViewModel
 ) {
 
@@ -283,6 +296,108 @@ fun ProviderAccountInfo(
                 .padding(horizontal = 16.dp)
         )
 
+        Spacer(modifier = Modifier.height(32.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                text = "Work",
+                modifier = Modifier
+                    .fillMaxWidth(.9f)
+                    .padding(horizontal = 8.dp),
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+            )
+            IconButton(onClick = onAddWorkToProfile) {
+                Icon(imageVector = Icons.Filled.Add, contentDescription = "ADD Work")
+            }
+        }
+
+        LazyVerticalGrid(
+            GridCells.Fixed(3), modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp)
+                .padding(20.dp)
+        ) {
+            items(getWorks) { work ->
+                Column {
+                    SubcomposeAsyncImage(
+                        model = Constant.BASE_URL + work.image,
+                        clipToBounds = true,
+                        contentDescription = "",
+                        modifier = Modifier
+                            .width(200.dp)
+                            .height(200.dp)
+                            .aspectRatio(1f),
+                        contentScale = ContentScale.Inside,
+                        loading = { CircularProgressIndicator(Modifier.wrapContentSize()) },
+                        error = {
+                            Image(
+                                painter = painterResource(id = R.drawable.ic_become),
+                                contentDescription = "",
+                                modifier = Modifier
+                                    .size(200.dp)
+                                    .aspectRatio(1f),
+                                contentScale = ContentScale.Inside
+                            )
+                        }
+                    )
+                }
+            }
+        }
+
+
+        /*
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(3),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+
+                    items(5) {
+                        Image(painter = painterResource(id = R.drawable.ic_become), contentDescription = "")
+                    }
+
+        */
+        /*            items(getWorks) { item ->
+                        AddWorkToProfileItem(
+                            onAddWorkToProfileItemOpenPhoto = onAddWorkToProfileItemOpenPhoto,
+                            image = item.image
+                        )
+                    }*//*
+
+        }
+*/
+
+
+        /*
+                LazyRow(
+
+                ) {
+
+                    items(5) {
+                        Image(painter = painterResource(id = R.drawable.ic_become), contentDescription = "")
+                    }
+
+                    items(getWorks) { item ->
+                        AddWorkToProfileItem(
+                            onAddWorkToProfileItemOpenPhoto = onAddWorkToProfileItemOpenPhoto,
+                            image = item.image
+                        )
+                    }
+
+                }
+        */
+
+
+        /*        Divider(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                )*/
+
     }
 
 
@@ -306,9 +421,10 @@ fun ProviderAccountInfoDetails(
     val emailFocusRequester = remember { FocusRequester() }
     val services = context.resources.getStringArray(R.array.services).toList()
 
-    val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
-        providerAccountInfoViewModel.imageUri = uri
-    }
+    val launcher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
+            providerAccountInfoViewModel.imageUri = uri
+        }
     val BASE_URL = "https://p2kjdbr8-8000.uks1.devtunnels.ms/api"
 
     Column(
@@ -327,7 +443,7 @@ fun ProviderAccountInfoDetails(
         ) {
 
             Box(modifier = Modifier.size(130.dp)) {
-            ///edit this
+                ///edit this
                 SubcomposeAsyncImage(
                     model = providerAccountInfoViewModel.imageUri,
                     clipToBounds = true,
@@ -634,8 +750,11 @@ fun ProviderAccountInfoDetails(
             backgroundColor = DarkBlue,
             contentColor = Color.White,
             onClick = {
-                Log.d("TAG", "ProviderAccountInfoDetails: $providerAccountInfoViewModel || ${providerAccountInfoViewModel.userName} || ${providerAccountInfoViewModel.phone} || ${providerAccountInfoViewModel.emailN} ||")
-                Log.d("WHY","IMageURI ${providerAccountInfoViewModel.imageUri}")
+                Log.d(
+                    "TAG",
+                    "ProviderAccountInfoDetails: $providerAccountInfoViewModel || ${providerAccountInfoViewModel.userName} || ${providerAccountInfoViewModel.phone} || ${providerAccountInfoViewModel.emailN} ||"
+                )
+                Log.d("WHY", "IMageURI ${providerAccountInfoViewModel.imageUri}")
                 onSaveChangesClick()
             }
         )

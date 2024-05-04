@@ -1,5 +1,5 @@
 package com.example.graduationproject.presentation.viewprofile
-import android.util.Log
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -49,9 +49,13 @@ import com.example.graduationproject.ui.theme.White
 
 
 @Composable
-fun ViewProfileScreen(modifier: Modifier,viewProfileViewModel:ViewProfileViewModel){
+fun ViewProfileScreen(
+    modifier: Modifier,
+    viewProfileViewModel: ViewProfileViewModel,
+    onChatClick: (Int, String) -> Unit
+) {
 
-    Box(modifier =Modifier.fillMaxSize()){
+    Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = modifier
                 .fillMaxWidth()
@@ -61,32 +65,55 @@ fun ViewProfileScreen(modifier: Modifier,viewProfileViewModel:ViewProfileViewMod
         ) {
 
 
-            Row (
+            Row(
                 Modifier
                     .padding(20.dp)
-                    .fillMaxSize(), horizontalArrangement = Arrangement.Center){
+                    .fillMaxSize(), horizontalArrangement = Arrangement.Center
+            ) {
                 UpperScreen(viewProfileViewModel.profile.value)
 
             }
-            Text(text = viewProfileViewModel.profile.value.provider!!.username.toString(), fontSize = 30.sp)
+            Text(
+                text = viewProfileViewModel.profile.value.provider!!.username.toString(),
+                fontSize = 30.sp
+            )
 
-            Text(text = viewProfileViewModel.profile.value.provider!!.profession.toString(), fontSize = 20.sp)
+            Text(
+                text = viewProfileViewModel.profile.value.provider!!.profession.toString(),
+                fontSize = 20.sp
+            )
             Row {
-                Icon(imageVector = Icons.Filled.LocationOn, contentDescription ="location",modifier=Modifier.size(20.dp) )
-                Text(text = viewProfileViewModel.profile.value.provider!!.city.toString(), fontSize = 13.sp)
+                Icon(
+                    imageVector = Icons.Filled.LocationOn,
+                    contentDescription = "location",
+                    modifier = Modifier.size(20.dp)
+                )
+                Text(
+                    text = viewProfileViewModel.profile.value.provider!!.city.toString(),
+                    fontSize = 13.sp
+                )
             }
             Spacer(modifier = Modifier.padding(5.dp))
 
 
-            Row (Modifier.fillMaxSize(),Arrangement.Center){
-                Button(modifier=Modifier.weight(1f),onClick = { /*TODO*/ }) {
+            Row(Modifier.fillMaxSize(), Arrangement.Center) {
+                Button(modifier = Modifier.weight(1f), onClick = { /*TODO*/ }) {
                     Text(text = stringResource(id = R.string.call), fontSize = 20.sp)
                     Spacer(modifier = Modifier.padding(4.dp))
-                    Icon(imageVector = Icons.Filled.Phone, contentDescription ="phone", tint = White )
+                    Icon(
+                        imageVector = Icons.Filled.Phone,
+                        contentDescription = "phone",
+                        tint = White
+                    )
 
                 }
                 Spacer(modifier = Modifier.padding(10.dp))
-                Button(modifier=Modifier.weight(1f),onClick = { /*TODO*/ }) {
+                Button(modifier = Modifier.weight(1f), onClick = {
+                    onChatClick(
+                        viewProfileViewModel.profile.value.provider!!.id!!,
+                        viewProfileViewModel.profile.value.provider!!.username!!,
+                    )
+                }) {
                     Text(text = stringResource(id = R.string.chat), fontSize = 20.sp)
                     Spacer(modifier = Modifier.padding(4.dp))
 
@@ -96,16 +123,25 @@ fun ViewProfileScreen(modifier: Modifier,viewProfileViewModel:ViewProfileViewMod
 
             }
 
-            when(viewProfileViewModel.isFavourite.value){
-                true->        Icon(imageVector = Icons.Filled.Favorite,contentDescription = "favourite",tint= DarkBlue, modifier = Modifier.size(40.dp))
-                false->        Icon(imageVector = Icons.Outlined.FavoriteBorder,contentDescription = "favourite",tint= DarkBlue, modifier = Modifier.clickable {
-                    viewProfileViewModel.addToFavourite()
-                })
+            when (viewProfileViewModel.isFavourite.value) {
+                true -> Icon(
+                    imageVector = Icons.Filled.Favorite,
+                    contentDescription = "favourite",
+                    tint = DarkBlue,
+                    modifier = Modifier.size(40.dp)
+                )
+
+                false -> Icon(
+                    imageVector = Icons.Outlined.FavoriteBorder,
+                    contentDescription = "favourite",
+                    tint = DarkBlue,
+                    modifier = Modifier.clickable {
+                        viewProfileViewModel.addToFavourite()
+                    })
 
             }
 
             WorkList(viewProfileViewModel.profile.value.works)
-
 
 
         }
@@ -116,12 +152,14 @@ fun ViewProfileScreen(modifier: Modifier,viewProfileViewModel:ViewProfileViewMod
 }
 
 
-
 @Composable
 fun WorkList(works: ArrayList<Works>) {
-    LazyVerticalGrid(GridCells.Fixed(2), modifier = Modifier.fillMaxWidth().height(200.dp)
-        .padding(20.dp)
-    )  {
+    LazyVerticalGrid(
+        GridCells.Fixed(2), modifier = Modifier
+            .fillMaxWidth()
+            .height(200.dp)
+            .padding(20.dp)
+    ) {
         items(works) { work ->
             Column {
                 SubcomposeAsyncImage(
@@ -167,15 +205,15 @@ fun UpperScreen(state: ViewProfileData) {
             Image(
                 painter = painterResource(id = R.drawable.ic_become),
                 contentDescription = "",
-                modifier= Modifier
+                modifier = Modifier
                     .size(150.dp)
-                    .clip(CircleShape)
-                     , contentScale = ContentScale.Inside)
+                    .clip(CircleShape), contentScale = ContentScale.Inside
+            )
 
         }
     )
 
-  //  }
+    //  }
 }
 //
 //@Preview

@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.graduationproject.R
 import com.example.graduationproject.data.ReturnedUserData
+import com.example.graduationproject.data.constants.Constant
 import com.example.graduationproject.data.repositories.AddProviderRepository
 import com.example.graduationproject.presentation.common.UserType
 import com.example.graduationproject.utils.DataStoreToken
@@ -22,7 +23,6 @@ import javax.inject.Inject
 class UserAccountInfoViewModel @Inject constructor(val addProviderRepository: AddProviderRepository,val dataStoreToken: DataStoreToken):ViewModel() {
        var returnedUserData: ReturnedUserData? by mutableStateOf<ReturnedUserData?>(null)
     var userName by mutableStateOf("")
-    private val BASE_URL = "https://p2kjdbr8-8000.uks1.devtunnels.ms/api"
 
 
     var address by mutableStateOf("")
@@ -130,7 +130,7 @@ fun getUserData() {
                     selectedCityValue = it.city
                     address = it.address
                     phone = it.phone
-                    imageUri = Uri.parse(BASE_URL + it.image)
+                    imageUri = Uri.parse(Constant.BASE_URL + it.image)
                 }
                 accounType = UserType.OwnerPerson
 

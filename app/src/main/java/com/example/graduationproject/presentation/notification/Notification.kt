@@ -4,9 +4,13 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,6 +19,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -30,10 +35,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import coil.compose.SubcomposeAsyncImage
 import coil.compose.rememberImagePainter
 import com.example.graduationproject.R
 import com.example.graduationproject.data.AllNotificationItem
 import com.example.graduationproject.data.GetPostDataItem
+import com.example.graduationproject.data.constants.Constant
 import com.example.graduationproject.presentation.common.CustomButtonAndText
 import com.example.graduationproject.presentation.common.CustomTopAppBar
 import com.example.graduationproject.ui.theme.DarkBlue
@@ -147,7 +154,6 @@ fun NotificationDetails(
     getPostDataItem: GetPostDataItem
 ) {
 
-    val Base = "https://p2kjdbr8-8000.uks1.devtunnels.ms/api"
 
     Card(
         modifier = Modifier
@@ -177,12 +183,34 @@ fun NotificationDetails(
                 .clip(RoundedCornerShape(16.dp))
                 .align(Alignment.CenterHorizontally),
         ) {
-            Image(
+
+            SubcomposeAsyncImage(
+                model = Constant.BASE_URL + getPostDataItem.image,
+                clipToBounds = true,
+                contentDescription = "",
+                modifier = Modifier
+                    .width(200.dp)
+                    .height(200.dp)
+                    .aspectRatio(1f),
+                contentScale = ContentScale.Inside,
+                loading = { CircularProgressIndicator(Modifier.wrapContentSize()) },
+                error = {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_become),
+                        contentDescription = "",
+                        modifier = Modifier
+                            .size(200.dp)
+                            .aspectRatio(1f),
+                        contentScale = ContentScale.Inside
+                    )
+                }
+            )
+/*            Image(
                 //  TODO Image Want To Be Dynamic I don't Know yet if i will use painter or ImageVector or What?
-                painter = rememberImagePainter(data = Base + getPostDataItem.image),
+                painter = rememberImagePainter(data = Constant.BASE_URL + getPostDataItem.image),
                 contentDescription = "",
                 contentScale = ContentScale.Crop,
-            )
+            )*/
         }
 
         Row(

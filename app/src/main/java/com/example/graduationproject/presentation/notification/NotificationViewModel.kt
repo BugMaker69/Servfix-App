@@ -53,23 +53,7 @@ class NotificationViewModel @Inject constructor(
 
 
 
-    fun getAllWorks() {
-        viewModelScope.launch {
-            addProviderRepository.getAllWorks()
-        }
-    }
 
-    fun deleteWork(id: Int) {
-        viewModelScope.launch {
-            addProviderRepository.deleteWork(id)
-        }
-    }
-
-    fun addWork(image: Uri) {
-        viewModelScope.launch {
-            addProviderRepository.addWork(image)
-        }
-    }
 
 
 }

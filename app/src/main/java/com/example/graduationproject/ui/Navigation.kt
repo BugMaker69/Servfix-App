@@ -33,6 +33,7 @@ import androidx.navigation.navArgument
 import com.example.graduationproject.BeforeSignup
 import com.example.graduationproject.data.NewOldPassword
 import com.example.graduationproject.presentation.AddNeWorkToProfileItems
+import com.example.graduationproject.presentation.SeeWork
 import com.example.graduationproject.presentation.accountinfo.ProviderAccountInfoDetailsScreen
 import com.example.graduationproject.presentation.accountinfo.ProviderAccountInfoScreen
 import com.example.graduationproject.presentation.accountinfo.ProviderAccountInfoViewModel
@@ -69,6 +70,8 @@ import com.example.graduationproject.presentation.provider_home.ProviderHomeView
 import com.example.graduationproject.presentation.provider_home.ProviderPostScreen
 import com.example.graduationproject.presentation.search_for_provider.FindProvider
 import com.example.graduationproject.presentation.search_for_provider.FindProviderViewModel
+import com.example.graduationproject.presentation.share_problem.ShareProblemSpecific
+import com.example.graduationproject.presentation.share_problem.ShareProblemSpecificViewModel
 import com.example.graduationproject.presentation.userservice.ServiceViewModel
 import com.example.graduationproject.presentation.userservice.ShareProblemScreen
 import com.example.graduationproject.presentation.userservice.UserHomeScreen
@@ -158,7 +161,7 @@ fun ServixApp(
                     )
                 }
 
-                ServixScreens.PostDetails.name + "/{id}",ServixScreens.ChatContactScreen.name,ServixScreens.PostDetails.name + "/{id}", ServixScreens.HomeUser.name, ServixScreens.HomeProvider.name, ServixScreens.FindProvider.name + "/{id}" + "/{serviceName}", ServixScreens.Favorite.name -> HomeTopBar(
+                ServixScreens.PostDetails.name + "/{id}", ServixScreens.ChatContactScreen.name, ServixScreens.PostDetails.name + "/{id}", ServixScreens.HomeUser.name, ServixScreens.HomeProvider.name, ServixScreens.FindProvider.name + "/{id}" + "/{serviceName}", ServixScreens.Favorite.name -> HomeTopBar(
                     onNotificationClick = { navController.navigate(ServixScreens.Notification.name) },
                     onMessageClick = { },
                     scrollBarBehavior = scrollBehavior
@@ -187,7 +190,7 @@ fun ServixApp(
                     ServixScreens.ProviderAccountInfoDetails.name,
                     ServixScreens.FindProvider.name + "/{id}" + "/{serviceName}",
                     ServixScreens.HomeProvider.name,
-                ServixScreens.ChatContactScreen.name,
+                    ServixScreens.ChatContactScreen.name,
                     ServixScreens.PostDetails.name + "/{id}",
                 )
             ) {
@@ -246,17 +249,45 @@ fun ServixApp(
 
                 ViewProfileScreen(
                     modifier = Modifier.padding(innerPadding),
-                    viewProfileViewModel = viewProfileViewModel
+                    viewProfileViewModel = viewProfileViewModel,
+                    onChatClick = { pid, providerName ->
+                        navController.navigate(ServixScreens.ShareProblemSpecific.name + "/$pid" + "/$providerName")
+                    }
                 )
 
             }
+
+            composable(ServixScreens.ShareProblemSpecific.name + "/{pid}" + "/{providerName}",
+                arguments = listOf(
+                    navArgument("pid") {
+                        type = NavType.IntType
+                    },
+                    navArgument("providerName") {
+                        type = NavType.StringType
+                    }
+                )) {
+                val serviceViewmodel: ShareProblemSpecificViewModel = hiltViewModel()
+
+                ShareProblemSpecific(
+                    modifier = Modifier.padding(innerPadding),
+                    onCancelClick = { navController.popBackStack() },
+                    onShareClick = {
+                        serviceViewmodel.shareSpecificPost()
+                        navController.navigate(ServixScreens.HomeUser.name)
+                    },
+                    serviceViewModel = serviceViewmodel
+
+                )
+
+            }
+
             composable(ServixScreens.Favorite.name) {
                 val favouriteViewModel: FavouriteViewModel = hiltViewModel()
 
                 FavoriteScreen(
                     modifier = Modifier.padding(innerPadding),
                     favouriteViewModel = favouriteViewModel,
-                    onProfileClicked = {id->
+                    onProfileClicked = { id ->
                         navController.navigate(ServixScreens.ViewProfile.name + "/$id")
 
                     }
@@ -316,7 +347,7 @@ fun ServixApp(
                 )
             }
             composable(ServixScreens.Settings.name) {
-                val settingsViewModel:SettingsViewModel= hiltViewModel()
+                val settingsViewModel: SettingsViewModel = hiltViewModel()
                 SettingsScreen(
                     innerPadding,
                     onAccountInfoClick = {
@@ -328,7 +359,7 @@ fun ServixApp(
                             navController.navigate(ServixScreens.ProviderAccountInfo.name)
                         }
                     },
-                    onDeleteMyAccountClick = {pass->
+                    onDeleteMyAccountClick = { pass ->
                         settingsViewModel.deleteAccount(pass)
 //                        navController.navigate(ServixScreens.Login.name) {
 //                            popUpTo(ServixScreens.Settings.name) {
@@ -352,7 +383,8 @@ fun ServixApp(
                             }
                             launchSingleTop = true
                         }
-                    }, settingsViewModel = settingsViewModel,
+                    },
+                    settingsViewModel = settingsViewModel,
 
                     onSecurityClick = {
                         navController.navigate(ServixScreens.NewPasswordScreen.name)
@@ -396,12 +428,22 @@ fun ServixApp(
             }
             composable(ServixScreens.ProviderAccountInfo.name) {
                 val providerAccountInfoViewModel: ProviderAccountInfoViewModel = hiltViewModel()
+                val serviceViewModel: ServiceViewModel = hiltViewModel()
+                serviceViewModel.getAllWorks()
+                Log.d("ServixApp", "ServixApp: ${serviceViewModel.getAllWork}")
 
                 ProviderAccountInfoScreen(
                     modifier = Modifier.padding(innerPadding),
                     onAccountInfoDetailsClick = {
                         navController.navigate(ServixScreens.ProviderAccountInfoDetails.name)
                     },
+                    onAddWorkToProfileItemOpenPhoto = {
+                        navController.navigate(ServixScreens.SeeWork.name)
+                    },
+                    onAddWorkToProfile = {
+                        navController.navigate(ServixScreens.AddNeWorkToProfileItems.name)
+                    },
+                    getWorks = serviceViewModel.getAllWork,
                     providerAccountInfoViewModel = providerAccountInfoViewModel
                 )
             }
@@ -610,14 +652,30 @@ fun ServixApp(
                 )
             }
             composable(ServixScreens.AddNeWorkToProfileItems.name) {
-                val notificationViewModel: NotificationViewModel = hiltViewModel()
+                val serviceViewModel: ServiceViewModel = hiltViewModel()
 
-                notificationViewModel.getAllWorks()
+//                serviceViewModel.getAllWorks()
                 AddNeWorkToProfileItems(
-                    onAddWorkToProfileItemOpenPhoto = { /*TODO*/ },
-                    getWorks = notificationViewModel.getAllWorks
+                    onAddWorkToProfileItemOpenPhoto = {},
+                    serviceViewModel = serviceViewModel,
+                    getWorks = serviceViewModel.getAllWork,
+                    onSaveWorkClick = {
+                        serviceViewModel.addWork()
+                        navController.navigate(ServixScreens.ProviderAccountInfo.name)
+                    },
+//                    onDeleteIconClick = serviceViewModel.deleteWork()
                 )
             }
+
+/*            composable(ServixScreens.SeeWork.name){
+                val serviceViewModel:ServiceViewModel= hiltViewModel()
+                SeeWork(
+                    onBackIconClick = { navController.popBackStack() },
+                    onDeleteIconClick = { *//*TODO*//* },
+                    id = ,
+                    serviceViewModel = serviceViewModel
+                )
+            }*/
 
             composable(ServixScreens.ShareProblemScreen.name) {
                 val serviceViewmodel: ServiceViewModel = hiltViewModel()
@@ -665,7 +723,7 @@ fun ServixApp(
                     Log.d("getPostsForProvider", "here:")
                 }
                 ProviderPostScreen(
-                    modifier=Modifier.padding(innerPadding),
+                    modifier = Modifier.padding(innerPadding),
                     onNotifiPostItemClick = { id ->
                         Log.d("PostDetailsNotifiPostItems", "ServixApp: id $id ")
                         navController.navigate(ServixScreens.PostDetails.name + "/$id")
@@ -692,9 +750,13 @@ fun ServixApp(
                     }, modifier = Modifier.padding(innerPadding)
                 )
             }
-            composable(ServixScreens.ChatContactScreen.name){
-                val vm:ChatContactViewModel= hiltViewModel()
-                ChatContactScreen(modifier =Modifier.padding(innerPadding) , vm = vm, userType =userTypeFlow.value )
+            composable(ServixScreens.ChatContactScreen.name) {
+                val vm: ChatContactViewModel = hiltViewModel()
+                ChatContactScreen(
+                    modifier = Modifier.padding(innerPadding),
+                    vm = vm,
+                    userType = userTypeFlow.value
+                )
             }
 
         }

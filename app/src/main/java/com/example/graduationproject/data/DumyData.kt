@@ -177,10 +177,17 @@ data class NewOldPassword(
     val new_password: String
 )
 
-data class GetWorksItem(
+/*data class GetWorksItem(
     val id: Int,
     val image: String,
     val provider_id: Int
+)
+
+class GetWorks : ArrayList<GetWorksItem>()*/
+
+data class GetWorksItem(
+    val id: Int,
+    val image: String
 )
 
 class GetWorks : ArrayList<GetWorksItem>()

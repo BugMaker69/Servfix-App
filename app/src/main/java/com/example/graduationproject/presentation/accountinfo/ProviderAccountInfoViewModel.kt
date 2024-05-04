@@ -10,6 +10,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.graduationproject.R
 import com.example.graduationproject.data.ReturnedProviderData
+import com.example.graduationproject.data.constants.Constant
+import com.example.graduationproject.data.constants.Constant.BASE_URL
 import com.example.graduationproject.data.repositories.AddProviderRepository
 import com.example.graduationproject.presentation.common.UserType
 import com.example.graduationproject.utils.DataStoreToken
@@ -23,7 +25,6 @@ import javax.inject.Inject
 class ProviderAccountInfoViewModel @Inject constructor(val addProviderRepository: AddProviderRepository,val dataStoreToken: DataStoreToken): ViewModel() {
     var returnedProviderData: ReturnedProviderData? by mutableStateOf<ReturnedProviderData?>(null)
     var userName by mutableStateOf("")
-    private val BASE_URL = "https://p2kjdbr8-8000.uks1.devtunnels.ms/api"
     var rating by mutableStateOf("")
 
 
@@ -89,7 +90,7 @@ class ProviderAccountInfoViewModel @Inject constructor(val addProviderRepository
                     rating=it.ratings
                     fixedSalary = it.fixed_salary.toString()
                     selectedServiceValue = it.profession
-                    imageUri = Uri.parse(BASE_URL + it.image)
+                    imageUri = Uri.parse( Constant.BASE_URL + it.image)
                 }
                 accounType = UserType.HirePerson
                 Log.d(

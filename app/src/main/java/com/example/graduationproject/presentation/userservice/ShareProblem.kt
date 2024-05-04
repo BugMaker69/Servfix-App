@@ -45,12 +45,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberImagePainter
 import com.example.graduationproject.R
 import com.example.graduationproject.presentation.common.CustomButtonAndText
@@ -77,10 +74,10 @@ fun ShareProblemScreen(
             serviceViewModel.handleGalleryResult(context, uris)
         }
 
-//    val cameraLauncher =
-//        rememberLauncherForActivityResult(contract = ActivityResultContracts.TakePicturePreview()) { bitmap ->
-//            serviceViewModel.handleCameraResult(bitmap)
-//        }
+    val cameraLauncher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.TakePicture()) {
+
+        }
 
 
     val permissionLauncher =
@@ -89,10 +86,10 @@ fun ShareProblemScreen(
         }
 
 
-/*    if (serviceViewModel.launchCamera.value) {
+    if (serviceViewModel.launchCamera.value) {
         cameraLauncher.launch(null)
         serviceViewModel.launchCamera.value = false
-    }*/
+    }
 
     if (serviceViewModel.permissionDenied.value) {
         Toast.makeText(context, "Permission denied", Toast.LENGTH_SHORT).show()
@@ -231,8 +228,9 @@ fun ShareProblemScreen(
 
                         DropdownMenu(
                             expanded = serviceViewModel.expandDropDownMenuLocation,
-                            onDismissRequest = { serviceViewModel.expandDropDownMenuLocation = false }
-                            ,
+                            onDismissRequest = {
+                                serviceViewModel.expandDropDownMenuLocation = false
+                            },
                         ) {
                             locations.forEachIndexed { index, location ->
                                 DropdownMenuItem(

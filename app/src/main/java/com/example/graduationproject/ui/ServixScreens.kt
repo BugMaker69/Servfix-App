@@ -29,5 +29,7 @@ FindProvider,
     AddNeWorkToProfileItems,
     NewPasswordScreen,
     NotifiPostItemDetailByID,
-    ChatContactScreen
+    ChatContactScreen,
+    ShareProblemSpecific,
+    SeeWork,
 }

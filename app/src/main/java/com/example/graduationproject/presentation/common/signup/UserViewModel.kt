@@ -10,14 +10,14 @@ import androidx.compose.ui.geometry.Size
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.graduationproject.R
-import com.example.graduationproject.data.repositories.AddProviderRepository
 import com.example.graduationproject.data.LoginRequest
 import com.example.graduationproject.data.LoginResponse
 import com.example.graduationproject.data.Register
 import com.example.graduationproject.data.ReturnedProviderData
 import com.example.graduationproject.data.ReturnedUserData
+import com.example.graduationproject.data.constants.Constant
+import com.example.graduationproject.data.repositories.AddProviderRepository
 import com.example.graduationproject.data.retrofit.ApiService
-import com.example.graduationproject.data.retrofit.RetrofitClient
 import com.example.graduationproject.presentation.common.UserType
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
@@ -31,12 +31,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-@HiltViewModel
-class UserViewModel @Inject constructor(    val addProviderRepository : AddProviderRepository,
-                                            val apiService :ApiService,
-                                            var mAuth: FirebaseAuth,
 
-) : ViewModel() {
+@HiltViewModel
+class UserViewModel @Inject constructor(
+    val addProviderRepository: AddProviderRepository,
+    val apiService: ApiService,
+    var mAuth: FirebaseAuth,
+
+    ) : ViewModel() {
     lateinit var callbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks
     var verificationID by mutableStateOf("")
     var otpText by mutableStateOf("")
@@ -381,7 +383,6 @@ class UserViewModel @Inject constructor(    val addProviderRepository : AddProvi
     }
 
 
-
     fun prepareProvideRegister(
         address: String,
         city: String,
@@ -541,10 +542,10 @@ class UserViewModel @Inject constructor(    val addProviderRepository : AddProvi
     var returnedProviderData: ReturnedProviderData? by mutableStateOf<ReturnedProviderData?>(null)
     var returnedUserData: ReturnedUserData? by mutableStateOf<ReturnedUserData?>(null)
     var error: String? by mutableStateOf(null)
-//private val _returnedProviderData = MutableStateFlow<ReturnedProviderData?>(null)
+
+    //private val _returnedProviderData = MutableStateFlow<ReturnedProviderData?>(null)
 //    val returnedProviderData: StateFlow<ReturnedProviderData?> = _returnedProviderData
-private val BASE_URL = "https://p2kjdbr8-8000.uks1.devtunnels.ms/api"
-var accounType by mutableStateOf(UserType.OwnerPerson)
+    var accounType by mutableStateOf(UserType.OwnerPerson)
     fun login() {
         viewModelScope.launch {
             if (email.isEmpty()) {
@@ -623,7 +624,6 @@ var accounType by mutableStateOf(UserType.OwnerPerson)
 //                returnedProviderData= token?.let { getProviderData(it.access ) }
 
 
-
     fun clearAllData() {
         userName = ""
         address = ""
@@ -661,7 +661,7 @@ var accounType by mutableStateOf(UserType.OwnerPerson)
         isNewPasswordFocused.value = false
     }
 
-    fun getData(){
+    fun getData() {
         viewModelScope.launch {
             try {
                 returnedProviderData =
@@ -677,7 +677,7 @@ var accounType by mutableStateOf(UserType.OwnerPerson)
 //                    selectedServiceValue = it.profession
 //                    imageUri = Uri.parse(BASE_URL + it.image)
 //                }
-               // accounType = UserType.HirePerson
+                // accounType = UserType.HirePerson
 
                 Log.d(
                     "TAG",
@@ -698,9 +698,9 @@ var accounType by mutableStateOf(UserType.OwnerPerson)
                     selectedCityValue = it.city
                     address = it.address
                     phone = it.phone
-                    imageUri = Uri.parse(BASE_URL + it.image)
+                    imageUri = Uri.parse(Constant.BASE_URL + it.image)
                 }
-          //      accounType = UserType.OwnerPerson
+                //      accounType = UserType.OwnerPerson
 
                 Log.d(
                     "TAG",
@@ -743,14 +743,14 @@ var accounType by mutableStateOf(UserType.OwnerPerson)
             phone = phone,
             profession = selectedServiceValue,
             username = userName,
-/*            ratings = "5",
-            service_id = 1,
-            user = 1,*/
+            /*            ratings = "5",
+                        service_id = 1,
+                        user = 1,*/
         )
 
 
-
     }
+
     fun updateUserData() {
 
         val updateUserData = addProviderRepository.updateUserData(
@@ -762,7 +762,6 @@ var accounType by mutableStateOf(UserType.OwnerPerson)
             phone = phone,
             username = userName,
         )
-
 
 
     }

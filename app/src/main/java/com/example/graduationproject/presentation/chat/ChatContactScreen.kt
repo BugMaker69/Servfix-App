@@ -47,11 +47,7 @@ fun ChatContactScreen(modifier: Modifier, vm: ChatContactViewModel, userType: St
         when (userType) {
             UserType.OwnerPerson.name -> {
                 items(chatListProviders) {
-
-
-                    ChatContactItem(it.id,it.name,it.image?:"")
-
-
+                    ChatContactItem(it.id, it.name, it.image ?: "")
                 }
 
             }
@@ -59,17 +55,17 @@ fun ChatContactScreen(modifier: Modifier, vm: ChatContactViewModel, userType: St
 
             UserType.HirePerson.name -> {
                 items(chatListUsers) {
-                    ChatContactItem(id=it.id, name=it.name, image =it.image?:"")
+                    ChatContactItem(id = it.id, name = it.name, image = it.image ?: "")
                 }
             }
         }
 
     }
-    }
+}
 
 
 @Composable
-fun ChatContactItem(id:Int,name:String,image:String) {
+fun ChatContactItem(id: Int, name: String, image: String) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -86,7 +82,8 @@ fun ChatContactItem(id:Int,name:String,image:String) {
                     .clip(RoundedCornerShape(16.dp))
 
             ) {
-                Image(painter = painterResource(id = R.drawable.ic_become),
+                Image(
+                    painter = painterResource(id = R.drawable.ic_become),
                     contentDescription = "",
                     contentScale = ContentScale.Inside,
                     modifier = Modifier

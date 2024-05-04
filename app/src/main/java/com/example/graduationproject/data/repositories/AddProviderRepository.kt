@@ -540,6 +540,87 @@ class AddProviderRepository @Inject constructor(
 
 
 
+    suspend fun shareSpecificPost(
+        token: String,
+        message: String,
+        id: Int,
+//        fileUri: Uri,
+//        fileRealPath: List<String>,
+        image: List<Uri>,
+    ) {
+
+        val photoParts = mutableListOf<MultipartBody.Part>()
+
+        image.forEachIndexed { index, photoUri ->
+            val fileToSend = prepareFilePart("image", photoUri)
+            photoParts.add(fileToSend)
+        }
+
+        val problemDescriptionRequestBody: RequestBody = RequestBody.create(
+            "text/plain".toMediaTypeOrNull(),
+            message
+        )
+        Log.d(
+            "Before Send",
+            "onResponse:  ${image} ||     ${token} ||  ${dataStoreToken} ||   ${dataStoreToken.getToken()} ||   ${photoParts} ||  ${message} "
+        )
+
+        apiService.shareSpecificPost(
+            token = "Bearer ${dataStoreToken.getToken()}",
+            message = problemDescriptionRequestBody,
+            id = id,
+            image = photoParts.toList(),
+        ).enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+
+                if (response.body() != null && response.isSuccessful) {
+                    try {
+
+                        if (response.code() == 201) {
+                            Log.d(
+                                "Post Created Successfully",
+                                "onResponse: Post Created ${response} ||  ${response.code()} ||  ${response.body()} ||  ${response.errorBody()} ||  ${response.isSuccessful} ||  ||  ${response.message()} ||  ||  ${response.headers()} ||  ||  ${response.raw()} || "
+                            )
+
+                        } else {
+                            Log.d(
+                                "Error",
+                                "onResponse: Create Post Error ${response} ||  ${response.code()} ||  ${response.body()} ||  ${response.errorBody()} ||  ${response.isSuccessful} ||  ||  ${response.message()} ||  ||  ${response.headers()} ||  ||  ${response.raw()} || "
+                            )
+
+                        }
+                    } catch (e: Exception) {
+                        Log.d(
+                            "Catched Error Created",
+                            "onResponse: Post Catched Error  ${response} ||  ${response.code()} ||  ${response.body()} ||  ${response.errorBody()} ||  ${response.isSuccessful} ||  ||  ${response.message()} ||  ||  ${response.headers()} ||  ||  ${response.raw()} || "
+                        )
+
+                    }
+                } else {
+                    Log.d("onFailure Error Post Created", "onResponse: Updated Nothing Happen Why ")
+                    Log.d(
+                        "onFailure Error Post Created",
+                        "onResponse: Post Created onFailure Error ${response} ||  ${response.isSuccessful} ||  ${response.message()} ||  ${response.code()} ||  ${response.errorBody()} ||  ${response.headers()} ||  ${response.raw()} || "
+                    )
+                }
+
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                Log.d(
+                    "onFailure Error Updated",
+                    "onResponse: Post Created onFailure Error ${t} ||  ${t.message} ||  ${t.cause} ||  ${t.localizedMessage} ||  ${t.stackTrace} ||  ${t.suppressed} || "
+                )
+
+            }
+        })
+
+    }
+
+
+
+
+
     suspend fun changePassword(newOldPassword: NewOldPassword) {
         apiService.changePassword(
             "Bearer ${dataStoreToken.getToken()}",
@@ -599,9 +680,61 @@ class AddProviderRepository @Inject constructor(
         apiService.deleteWork("Bearer ${dataStoreToken.getToken()}", id)
     }
 
-    suspend fun addWork(image: Uri) {
-        val fileToSend = prepareFilePart("image", image)
-        apiService.addWork("Bearer ${dataStoreToken.getToken()}", fileToSend)
+    suspend fun addWork(images: List<Uri>) {
+
+        val photoParts = mutableListOf<MultipartBody.Part>()
+
+        images.forEachIndexed { index, photoUri ->
+            val fileToSend = prepareFilePart("images", photoUri)
+            photoParts.add(fileToSend)
+        }
+
+        apiService.addWork("Bearer ${dataStoreToken.getToken()}", photoParts)
+            .enqueue(object : Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+
+                if (response.body() != null && response.isSuccessful) {
+                    try {
+
+                        if (response.code() == 201) {
+                            Log.d(
+                                "Work Added Successfully",
+                                "onResponse: Work Added Successfully ${response} ||  ${response.code()} ||  ${response.body()} ||  ${response.errorBody()} ||  ${response.isSuccessful} ||  ||  ${response.message()} ||  ||  ${response.headers()} ||  ||  ${response.raw()} || "
+                            )
+
+                        } else {
+                            Log.d(
+                                "Error",
+                                "onResponse: Work Added Error ${response} ||  ${response.code()} ||  ${response.body()} ||  ${response.errorBody()} ||  ${response.isSuccessful} ||  ||  ${response.message()} ||  ||  ${response.headers()} ||  ||  ${response.raw()} || "
+                            )
+
+                        }
+                    } catch (e: Exception) {
+                        Log.d(
+                            "Catched Error Created",
+                            "onResponse: Work Added Error  ${response} ||  ${response.code()} ||  ${response.body()} ||  ${response.errorBody()} ||  ${response.isSuccessful} ||  ||  ${response.message()} ||  ||  ${response.headers()} ||  ||  ${response.raw()} || "
+                        )
+
+                    }
+                } else {
+                    Log.d("onFailure Error Work Added", "onResponse: Updated Nothing Happen Why ")
+                    Log.d(
+                        "onFailure Error Work Added",
+                        "onResponse: Work Added onFailure Error ${response} ||  ${response.isSuccessful} ||  ${response.message()} ||  ${response.code()} ||  ${response.errorBody()} ||  ${response.headers()} ||  ${response.raw()} || "
+                    )
+                }
+
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                Log.d(
+                    "onFailure Error Updated",
+                    "onResponse: Work Added onFailure Error ${t} ||  ${t.message} ||  ${t.cause} ||  ${t.localizedMessage} ||  ${t.stackTrace} ||  ${t.suppressed} || "
+                )
+
+            }
+        })
+
     }
     suspend fun deleteAccount(password:String){
         apiService.deleteAccount("Bearer ${dataStoreToken.getToken()}",password)

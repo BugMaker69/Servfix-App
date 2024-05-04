@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.graduationproject.data.ReturnedProviderData
+import com.example.graduationproject.data.constants.Constant
 import com.example.graduationproject.data.repositories.FavouriteRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -20,7 +21,6 @@ import javax.inject.Inject
 class FavouriteViewModel @Inject constructor(val repo:FavouriteRepository): ViewModel() {
     var id by mutableStateOf(0)
 var showDialog = mutableStateOf(false)
-    private val BASE_URL = "https://p2kjdbr8-8000.uks1.devtunnels.ms/api"
 
     var providersFavList = MutableStateFlow(listOf<ReturnedProviderData>())
     init {
@@ -41,7 +41,7 @@ var showDialog = mutableStateOf(false)
             repo.showAllFavourites().collect { favouritesList ->
                 val x = favouritesList.providerFavourite
                 x.map {
-                    it.image = BASE_URL + it.image
+                    it.image = Constant.BASE_URL + it.image
                 }
                 providersFavList.value = x
             }

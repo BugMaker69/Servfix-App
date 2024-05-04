@@ -49,7 +49,8 @@ import com.example.graduationproject.presentation.common.RatingBar
 import com.example.graduationproject.ui.theme.LightBlue
 
 @Composable
-fun FavoriteScreen(modifier: Modifier, favouriteViewModel: FavouriteViewModel,onProfileClicked: (Int) -> Unit
+fun FavoriteScreen(
+    modifier: Modifier, favouriteViewModel: FavouriteViewModel, onProfileClicked: (Int) -> Unit
 ) {
     val lista by favouriteViewModel.providersFavList.collectAsState()
 
@@ -64,13 +65,12 @@ fun FavoriteScreen(modifier: Modifier, favouriteViewModel: FavouriteViewModel,on
     ) {
 
 
-        items(lista) { state->
-            FavoriteItem(state, onProfileClick = {id->
-                                                 onProfileClicked(id)
+        items(lista) { state ->
+            FavoriteItem(state, onProfileClick = { id ->
+                onProfileClicked(id)
 
-            }, onCardClick = {
-                id->
-                favouriteViewModel.id=id
+            }, onCardClick = { id ->
+                favouriteViewModel.id = id
                 favouriteViewModel.showDialog.value = true
 
             })
@@ -78,17 +78,18 @@ fun FavoriteScreen(modifier: Modifier, favouriteViewModel: FavouriteViewModel,on
         }
     }
     if (favouriteViewModel.showDialog.value) {
-FavouriteAlertDialog(onConfirmClick = {
-favouriteViewModel.deleteFavourite(favouriteViewModel.id)
-    favouriteViewModel.showDialog.value=false
+        FavouriteAlertDialog(onConfirmClick = {
+            favouriteViewModel.deleteFavourite(favouriteViewModel.id)
+            favouriteViewModel.showDialog.value = false
 
-}, onDismissClick = {
-    favouriteViewModel.showDialog.value = false
-})
+        }, onDismissClick = {
+            favouriteViewModel.showDialog.value = false
+        })
     }
 }
+
 @Composable
-fun FavouriteAlertDialog(onDismissClick:()->Unit,onConfirmClick:()->Unit){
+fun FavouriteAlertDialog(onDismissClick: () -> Unit, onConfirmClick: () -> Unit) {
     AlertDialog(
         text = { Text(text = stringResource(id = R.string.remove_favorite)) },
         onDismissRequest = {
@@ -96,23 +97,27 @@ fun FavouriteAlertDialog(onDismissClick:()->Unit,onConfirmClick:()->Unit){
 
         },
         confirmButton = {
-           Button(onClick = {onConfirmClick()}) {
-               Text(text = stringResource(id = R.string.confirm))
-           }
+            Button(onClick = { onConfirmClick() }) {
+                Text(text = stringResource(id = R.string.confirm))
+            }
         },
 
         dismissButton = {
-Button(onClick = {onDismissClick()}) {
-    Text(text = stringResource(id = R.string.cancel))
+            Button(onClick = { onDismissClick() }) {
+                Text(text = stringResource(id = R.string.cancel))
 
-}
+            }
 
         })
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun FavoriteItem(state:ReturnedProviderData, onCardClick: (Int) -> Unit, onProfileClick:(Int)->Unit) {
+fun FavoriteItem(
+    state: ReturnedProviderData,
+    onCardClick: (Int) -> Unit,
+    onProfileClick: (Int) -> Unit
+) {
 //    val shape = object : Shape {
 //        override fun createOutline(
 //            size: Size,
@@ -156,7 +161,7 @@ fun FavoriteItem(state:ReturnedProviderData, onCardClick: (Int) -> Unit, onProfi
                 .combinedClickable(onClick = {
                     onProfileClick(state.id)
 
-                },onLongClick = {
+                }, onLongClick = {
                     onCardClick(state.id)
                 }
                 )
@@ -204,16 +209,14 @@ fun FavoriteItem(state:ReturnedProviderData, onCardClick: (Int) -> Unit, onProfi
                 .size(120.dp)
                 .align(Alignment.TopCenter)
                 .offset(y = (-50).dp)
-                .offset(x = (15).dp)
-
-            ,
+                .offset(x = (15).dp),
             loading = { CircularProgressIndicator(Modifier.wrapContentSize()) },
-           error = {
-           Image(
+            error = {
+                Image(
                     painter = painterResource(id = R.drawable.ic_become),
                     contentDescription = ""
                 )
-         }
+            }
         )
 //        Image(
 //            modifier = Modifier
@@ -228,9 +231,6 @@ fun FavoriteItem(state:ReturnedProviderData, onCardClick: (Int) -> Unit, onProfi
 //        )
     }
 }
-
-
-
 
 
 @Preview

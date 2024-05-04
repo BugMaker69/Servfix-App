@@ -45,16 +45,15 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import com.example.graduationproject.R
 import com.example.graduationproject.presentation.common.CustomButtonAndText
-import com.example.graduationproject.presentation.userservice.ServiceViewModel
 import com.example.graduationproject.ui.theme.DarkBlue
 
 
 @Composable
 fun ShareProblemSpecific(
-    modifier: Modifier = Modifier,
+    modifier: Modifier,
     onCancelClick: () -> Unit,
     onShareClick: () -> Unit,
-    serviceViewModel: ServiceViewModel
+    serviceViewModel: ShareProblemSpecificViewModel
 ) {
 
     val context = LocalContext.current
@@ -94,7 +93,7 @@ fun ShareProblemSpecific(
 
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(vertical = 16.dp)
             .verticalScroll(rememberScrollState()),
@@ -147,7 +146,6 @@ fun ShareProblemSpecific(
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.Start
                     ) {
-                        Text(text = "User")
 
                         Row(
                             modifier = Modifier
@@ -155,7 +153,7 @@ fun ShareProblemSpecific(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(text = "Send To")
-                            Text(text = "Provider")
+                            Text(text = serviceViewModel.providerName)
                         }
 
                     }

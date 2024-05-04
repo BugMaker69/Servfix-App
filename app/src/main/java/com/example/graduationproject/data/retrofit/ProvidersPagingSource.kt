@@ -2,6 +2,7 @@ import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.graduationproject.data.ReturnedProviderData
+import com.example.graduationproject.data.constants.Constant
 import com.example.graduationproject.data.repositories.FindProviderSearchReopsitory
 
 
@@ -12,7 +13,6 @@ class ProviderPagingSource(
     private var city:String="",
     private var rating:Int=0
 ) : PagingSource<Int, ReturnedProviderData>() {
-    private val BASE_URL = "https://p2kjdbr8-8000.uks1.devtunnels.ms/api"
 
     override fun getRefreshKey(state: PagingState<Int, ReturnedProviderData>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
@@ -40,7 +40,7 @@ class ProviderPagingSource(
             Log.d("memlord", "load: responc ${response.size}")
 
             response.forEach {
-                it.image = BASE_URL + it.image
+                it.image = Constant.BASE_URL + it.image
             }
 
             val nextKey = if (response.isEmpty()) null else pageNum + 1

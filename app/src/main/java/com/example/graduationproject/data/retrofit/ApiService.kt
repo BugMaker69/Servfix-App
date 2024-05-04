@@ -1,6 +1,5 @@
 package com.example.graduationproject.data.retrofit
 
-import android.annotation.SuppressLint
 import com.example.graduationproject.data.AllNotification
 import com.example.graduationproject.data.DeleteResponse
 import com.example.graduationproject.data.FavouritesList
@@ -30,7 +29,6 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
-import retrofit2.http.HTTP
 import retrofit2.http.Header
 import retrofit2.http.Multipart
 import retrofit2.http.POST
@@ -38,13 +36,14 @@ import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
-import java.lang.annotation.Documented
-import java.util.concurrent.Callable
 
 interface ApiService {
 
     @DELETE("/api/delete-account/")
-    suspend fun deleteAccount(@Header("Authorization") token: String, @Body password: String):Response<DeleteResponse>
+    suspend fun deleteAccount(
+        @Header("Authorization") token: String,
+        @Body password: String
+    ): Response<DeleteResponse>
 
 
 //    @DELETE("/api/delete-account/{password}")
@@ -164,6 +163,17 @@ interface ApiService {
         @Part image: List<MultipartBody.Part>
     ): Call<ResponseBody>
 
+
+    @Multipart
+    @POST("/notification/post/create/{id}/")
+    fun shareSpecificPost(
+        @Header("Authorization") token: String,
+
+        @Part("message") message: RequestBody,
+        @Path("id") id: Int,
+        @Part image: List<MultipartBody.Part>
+    ): Call<ResponseBody>
+
     @GET("/notifi/allnotification/")
     suspend fun getAllNotifications(
         @Header("Authorization") token: String,
@@ -206,7 +216,7 @@ interface ApiService {
     ): Call<ResponseBody>
 
     @GET("/api/all_work")
-    fun getAllWorks(
+    suspend fun getAllWorks(
         @Header("Authorization") token: String
     ): GetWorks
 
@@ -217,10 +227,10 @@ interface ApiService {
     ): Call<ResponseBody>
 
     @Multipart
-    @DELETE("/api/add_work/")
+    @POST("/api/add_work/")
     fun addWork(
         @Header("Authorization") token: String,
-        @Part image: MultipartBody.Part
+        @Part images: List<MultipartBody.Part>
     ): Call<ResponseBody>
 
 

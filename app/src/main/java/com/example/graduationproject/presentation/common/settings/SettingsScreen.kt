@@ -31,9 +31,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -50,25 +48,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.graduationproject.ui.BottomAppBar
 import com.example.graduationproject.R
-import com.example.graduationproject.presentation.accountinfo.ProviderAccountInfo
-import com.example.graduationproject.presentation.accountinfo.ProviderAccountInfoDetails
-import com.example.graduationproject.presentation.accountinfo.UserAccountInfo
-import com.example.graduationproject.presentation.accountinfo.UserAccountInfoDetails
 import com.example.graduationproject.presentation.common.CustomButtonAndText
 import com.example.graduationproject.presentation.common.CustomDialog
 import com.example.graduationproject.presentation.common.CustomTopAppBar
 import com.example.graduationproject.ui.theme.DarkBlue
-import com.example.graduationproject.presentation.notification.NotificationViewModel
-
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun SettingsScreen(
-    innerPadding:PaddingValues,
+    innerPadding: PaddingValues,
     modifier: Modifier = Modifier,
     onAccountInfoClick: () -> Unit,
     onDeleteMyAccountClick: (String) -> Unit,
@@ -80,8 +70,9 @@ fun SettingsScreen(
     SettingsScreenContent(
         modifier.padding(top = innerPadding.calculateTopPadding()),
         onAccountInfoClick = onAccountInfoClick,
-        onDeleteMyAccountClick ={pass->
-            onDeleteMyAccountClick(pass)} ,
+        onDeleteMyAccountClick = { pass ->
+            onDeleteMyAccountClick(pass)
+        },
         onSecurityClick = onSecurityClick,
         onSignOutClick = onSignOutClick,
         vm = settingsViewModel
@@ -97,7 +88,7 @@ fun SettingsScreenContent(
     onSecurityClick: () -> Unit,
     onDeleteMyAccountClick: (String) -> Unit,
     onSignOutClick: () -> Unit,
-    vm:SettingsViewModel
+    vm: SettingsViewModel
 ) {
     //  TODO Place This Values In ViewModel
     var showSignOutDialog by remember { mutableStateOf(false) }
@@ -163,14 +154,14 @@ fun SettingsScreenContent(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            if (showDeleteDialog){
-                DeleteAccountDialog(vm=vm,onDeleteAccountConfirmButtonClick = {
+            if (showDeleteDialog) {
+                DeleteAccountDialog(vm = vm, onDeleteAccountConfirmButtonClick = {
                     //  TODO We Need To Check First If Password He Enters Is Correct
                     Log.d("SignOUT", "SettingsScreenContent: SignOUT")
                     onDeleteMyAccountClick(vm.confirmedPassword)
                     showDeleteDialog = false
                 },
-                    onDeleteAccountDismissButtonClick = {showDeleteDialog = false}
+                    onDeleteAccountDismissButtonClick = { showDeleteDialog = false }
                 )
             }
             Icon(
@@ -205,13 +196,13 @@ fun SettingsScreenContent(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             //  TODO Place This Values In ViewModel
-            if (showSignOutDialog){
+            if (showSignOutDialog) {
                 SignOutDialog(onSignOutConfirmButtonClick = {
                     Log.d("SignOUT", "SettingsScreenContent: SignOUT")
                     showSignOutDialog = false
                     onSignOutClick()
                 },
-                    onSignOutDismissButtonClick = {showSignOutDialog = false})
+                    onSignOutDismissButtonClick = { showSignOutDialog = false })
             }
 
             Icon(
@@ -237,7 +228,7 @@ fun SettingsScreenContent(
 
 @Composable
 fun DeleteAccountDialog(
-    vm:SettingsViewModel,
+    vm: SettingsViewModel,
     modifier: Modifier = Modifier,
     onDeleteAccountConfirmButtonClick: () -> Unit,
     onDeleteAccountDismissButtonClick: () -> Unit,
@@ -262,7 +253,10 @@ fun DeleteAccountDialog(
                     text = "Enter Your Password to Confirm Your Action",
                     modifier = Modifier.padding(vertical = 4.dp),
                 )
-                OutlinedTextField(value = vm.confirmedPassword, onValueChange = {vm.confirmedPasswordChange(it)},)
+                OutlinedTextField(
+                    value = vm.confirmedPassword,
+                    onValueChange = { vm.confirmedPasswordChange(it) },
+                )
             }
         },
         onConfirmButtonClick = onDeleteAccountConfirmButtonClick,
@@ -317,11 +311,10 @@ fun DeleteAccountScreen(
 }
 
 
-
 @Composable
 fun SecurityScreen(
     modifier: Modifier = Modifier,
-    onDonePasswordClick:()->Unit
+    onDonePasswordClick: () -> Unit
 ) {
 
     Column(
@@ -389,7 +382,6 @@ fun SecurityScreen(
 }
 
 
-
 @Composable
 fun NewPasswordScreen(
     modifier: Modifier = Modifier,
@@ -439,7 +431,7 @@ fun NewPasswordScreen(
                 .fillMaxWidth()
                 .padding(8.dp),
             value = vm.oldPassword,
-            onValueChange = {vm.onOldPasswordChange(it)},
+            onValueChange = { vm.onOldPasswordChange(it) },
             placeholder = { Text(text = "Old Password") },
             trailingIcon = {
                 IconButton(onClick = {
@@ -469,7 +461,7 @@ fun NewPasswordScreen(
                 .fillMaxWidth()
                 .padding(8.dp),
             value = vm.newPassword,
-            onValueChange = {vm.onNewPasswordChange(it)},
+            onValueChange = { vm.onNewPasswordChange(it) },
             placeholder = { Text(text = "New Password") },
             trailingIcon = {
                 IconButton(onClick = {
@@ -532,22 +524,22 @@ fun SignOutDialog(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsTopBar(
-    scrollBarBehavior:TopAppBarScrollBehavior,
+    scrollBarBehavior: TopAppBarScrollBehavior,
 
-    showBack:Boolean,
+    showBack: Boolean,
     modifier: Modifier = Modifier,
     onBackButtonOnTopNavBar: () -> Unit
 ) {
     CustomTopAppBar(
         title = "Settings",
         navigationIcon = {
-            if (showBack){
+            if (showBack) {
                 IconButton(onClick = onBackButtonOnTopNavBar) {
                     Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Back Arrow")
                 }
             }
 
-        }, scrollBarBehavior =scrollBarBehavior
+        }, scrollBarBehavior = scrollBarBehavior
     )
 }
 
@@ -565,11 +557,11 @@ fun ProviderAccountInfoDetailsPreview() {
     ProviderAccountInfoDetails(Modifier, {}, {})
 }*/
 
-@Preview(showBackground = true)
+/*@Preview(showBackground = true)
 @Composable
 fun ProviderAccountInfoPreview() {
     ProviderAccountInfo(Modifier, {}, viewModel())
-}
+}*/
 
 //@Preview(showBackground = true)
 //@Composable
@@ -594,7 +586,7 @@ fun UserAccountInfoPreview() {
 @Preview(showBackground = true)
 @Composable
 fun SecurityScreenPreview() {
-    SecurityScreen(Modifier,{})
+    SecurityScreen(Modifier, {})
 }
 
 @Preview(showBackground = true)

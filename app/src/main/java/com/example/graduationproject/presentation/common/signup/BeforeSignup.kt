@@ -108,8 +108,7 @@ fun BeforeSignup(
                         modifier = Modifier
                             .fillMaxWidth(.7f)
                             .padding(horizontal = 16.dp, vertical = 8.dp)
-                            .padding(16.dp)
-                        ,
+                            .padding(16.dp),
                         style = TextStyle(
                             letterSpacing = .9.sp,
                             fontSize = 24.sp,

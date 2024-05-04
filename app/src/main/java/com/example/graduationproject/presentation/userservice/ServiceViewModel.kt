@@ -16,7 +16,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.graduationproject.MyApplication
+import com.example.graduationproject.data.GetWorksItem
 import com.example.graduationproject.data.Services
+import com.example.graduationproject.data.constants.Constant
 import com.example.graduationproject.data.repositories.AddProviderRepository
 import com.example.graduationproject.data.repositories.UserServicesRepository
 import com.example.graduationproject.utils.FileUtils
@@ -34,9 +36,8 @@ class ServiceViewModel @Inject constructor(    val addProviderRepository :AddPro
 
     init {
         getServicesList()
+        getAllWorks()
     }
-
-    private val BASE_URL = "https://p2kjdbr8-8000.uks1.devtunnels.ms/api"
 
     fun getServicesList() {
         try {
@@ -45,7 +46,7 @@ class ServiceViewModel @Inject constructor(    val addProviderRepository :AddPro
             viewModelScope.launch(Dispatchers.IO) {
                 val services = userServicesRep.getServicesList()
                 services.forEach { service ->
-                    service.image = BASE_URL + service.image
+                    service.image = Constant.BASE_URL + service.image
 
                 }
                 servicesState.value = services
@@ -70,6 +71,8 @@ class ServiceViewModel @Inject constructor(    val addProviderRepository :AddPro
             postText = postText1
         }
     }
+
+    var getAllWork by mutableStateOf(emptyList<GetWorksItem>())
 
 
     //  DropdownMenu Of Service Inside Share Problem
@@ -191,5 +194,33 @@ class ServiceViewModel @Inject constructor(    val addProviderRepository :AddPro
 
         }
     }
+
+
+
+
+    fun getAllWorks() {
+        viewModelScope.launch {
+            getAllWork = addProviderRepository.getAllWorks()
+        }
+    }
+
+    fun deleteWork(id: Int) {
+        viewModelScope.launch {
+            addProviderRepository.deleteWork(id)
+        }
+    }
+
+    fun addWork() {
+        viewModelScope.launch {
+            Log.d("addWork Images", "addWork: ${imageMap.values.toList()}")
+            addProviderRepository.addWork(imageMap.values.toList())
+        }
+    }
+
+
+
+
+
+
 
 }
