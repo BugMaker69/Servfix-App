@@ -7,11 +7,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -117,30 +119,32 @@ fun ViewProfileScreen(modifier: Modifier,viewProfileViewModel:ViewProfileViewMod
 
 @Composable
 fun WorkList(works: ArrayList<Works>) {
-    LazyVerticalGrid(GridCells.Fixed(2), modifier = Modifier.fillMaxWidth().height(600.dp)
+    LazyVerticalGrid(GridCells.Fixed(2), modifier = Modifier.fillMaxWidth().height(200.dp)
         .padding(20.dp)
     )  {
         items(works) { work ->
             Column {
-                work.images.forEach { imageUrl ->
-                    SubcomposeAsyncImage(
-                        model = imageUrl.image,
-                        clipToBounds = true,
-                        contentDescription = "",
-                        modifier = Modifier
-                            .size(200.dp).padding(30.dp),
-                        loading = { CircularProgressIndicator(Modifier.wrapContentSize()) },
-                        error = {
-                            Image(
-                                painter = painterResource(id = R.drawable.ic_become),
-                                contentDescription = "",
-                                modifier = Modifier
-                                    .size(200.dp),
-                                contentScale = ContentScale.Inside
-                            )
-                        }
-                    )
-                }
+                SubcomposeAsyncImage(
+                    model = work.image,
+                    clipToBounds = true,
+                    contentDescription = "",
+                    modifier = Modifier
+                        .width(200.dp)
+                        .height(200.dp)
+                        .aspectRatio(1f), // maintain aspect ratio
+                    contentScale = ContentScale.Inside,
+                    loading = { CircularProgressIndicator(Modifier.wrapContentSize()) },
+                    error = {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_become),
+                            contentDescription = "",
+                            modifier = Modifier
+                                .size(200.dp)
+                                .aspectRatio(1f), // maintain aspect ratio
+                            contentScale = ContentScale.Inside
+                        )
+                    }
+                )
             }
         }
     }

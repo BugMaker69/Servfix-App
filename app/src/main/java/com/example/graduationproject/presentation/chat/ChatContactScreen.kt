@@ -32,7 +32,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.graduationproject.R
-import com.example.graduationproject.data.ChatItem
 import com.example.graduationproject.presentation.chat.ChatContactViewModel
 import com.example.graduationproject.presentation.common.UserType
 

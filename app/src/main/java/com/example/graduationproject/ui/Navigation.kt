@@ -157,7 +157,7 @@ fun ServixApp(
                     )
                 }
 
-                ServixScreens.PostDetails.name, ServixScreens.HomeUser.name, ServixScreens.HomeProvider.name, ServixScreens.FindProvider.name + "/{id}" + "/{serviceName}", ServixScreens.Favorite.name -> HomeTopBar(
+                ServixScreens.PostDetails.name + "/{id}",ServixScreens.ChatContactScreen.name,ServixScreens.PostDetails.name + "/{id}", ServixScreens.HomeUser.name, ServixScreens.HomeProvider.name, ServixScreens.FindProvider.name + "/{id}" + "/{serviceName}", ServixScreens.Favorite.name -> HomeTopBar(
                     onNotificationClick = { navController.navigate(ServixScreens.Notification.name) },
                     onMessageClick = { },
                     scrollBarBehavior = scrollBehavior
@@ -185,7 +185,9 @@ fun ServixApp(
                     ServixScreens.ProviderAccountInfo.name,
                     ServixScreens.ProviderAccountInfoDetails.name,
                     ServixScreens.FindProvider.name + "/{id}" + "/{serviceName}",
-                    ServixScreens.HomeProvider.name
+                    ServixScreens.HomeProvider.name,
+                ServixScreens.ChatContactScreen.name,
+                    ServixScreens.PostDetails.name + "/{id}",
                 )
             ) {
                 BottomAppBar(navController = navController, userTypeFlow.value)
@@ -660,6 +662,7 @@ fun ServixApp(
                     Log.d("getPostsForProvider", "here:")
                 }
                 ProviderPostScreen(
+                    modifier=Modifier.padding(innerPadding),
                     onNotifiPostItemClick = { id ->
                         Log.d("PostDetailsNotifiPostItems", "ServixApp: id $id ")
                         navController.navigate(ServixScreens.PostDetails.name + "/$id")
@@ -683,7 +686,7 @@ fun ServixApp(
                     },
                     onRejectButtonClickForSpecificProvider = {
                         viewModel.rejectPostForSpecificProvider(itemId!!)
-                    },
+                    }, modifier = Modifier.padding(innerPadding)
                 )
             }
             composable(ServixScreens.ChatContactScreen.name){

@@ -31,7 +31,7 @@ import com.example.graduationproject.ui.theme.DarkBlue
 
 @Composable
 fun PostItemDetail(
-    modifier: Modifier = Modifier,
+    modifier: Modifier ,
     onNotifiPostItemDetailToOpenIt: () -> Unit,
     onAcceptButtonClickForSpecificProvider: () -> Unit,
     onRejectButtonClickForSpecificProvider: () -> Unit,

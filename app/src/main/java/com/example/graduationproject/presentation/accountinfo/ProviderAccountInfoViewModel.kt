@@ -72,42 +72,39 @@ class ProviderAccountInfoViewModel @Inject constructor(val addProviderRepository
 
     }
     fun getProviderData() {
-        viewModelScope.launch (Dispatchers.IO){
+        viewModelScope.launch {
             try {
                 Log.d("whoo", "getUserData: ${ dataStoreToken.getToken()}")
                 Log.d("whoo2", returnedProviderData?.username.toString())
-                returnedProviderData =
-                    addProviderRepository.getProviderData(
-                    )
-                withContext (Dispatchers.Main){
-                    returnedProviderData?.let {
-                        userName = it.username
-                        address = it.address
-                        selectedCityValue = it.city
-                        emailN = it.email
-                        phone = it.phone
-                        rating=it.ratings
-                        fixedSalary = it.fixed_salary.toString()
-                        selectedServiceValue = it.profession
-                        imageUri = Uri.parse(BASE_URL + it.image)
-                    }
-                    accounType = UserType.HirePerson
-                    Log.d(
-                        "TAG",
-                        "getProviderData: data40 ${returnedProviderData?.email}   ${returnedProviderData?.id}   ${returnedProviderData?.username}  "
-                    )
+                val providerData = withContext(Dispatchers.IO) {
+                    addProviderRepository.getProviderData()
                 }
-
-
+                returnedProviderData = providerData
+                returnedProviderData?.let {
+                    userName = it.username
+                    address = it.address
+                    selectedCityValue = it.city
+                    emailN = it.email
+                    phone = it.phone
+                    rating=it.ratings
+                    fixedSalary = it.fixed_salary.toString()
+                    selectedServiceValue = it.profession
+                    imageUri = Uri.parse(BASE_URL + it.image)
+                }
+                accounType = UserType.HirePerson
+                Log.d(
+                    "TAG",
+                    "getProviderData: data40 ${returnedProviderData?.email}   ${returnedProviderData?.id}   ${returnedProviderData?.username}  "
+                )
             } catch (e: Exception) {
                 Log.d(
                     "EEERRROOORRR",
                     "Provider Error: ${e.cause} ||  ${e.message} ||  ${e.localizedMessage} ||  ${e.stackTrace} ||  ${e.suppressed} ||  ${e} || "
                 )
             }
-
         }
     }
+
     fun onUserNameChanged(userName1: String) {
         userName = userName1
         userNameError = !userName1.matches(fullnameregex)

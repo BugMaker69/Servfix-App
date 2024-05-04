@@ -1,6 +1,5 @@
 package com.example.graduationproject
 import ChatContactScreen
-import ChatParticipant
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent

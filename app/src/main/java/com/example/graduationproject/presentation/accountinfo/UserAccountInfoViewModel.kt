@@ -134,10 +134,7 @@ fun getUserData() {
                 }
                 accounType = UserType.OwnerPerson
 
-                Log.d(
-                    "TAG",
-                    "getProviderData: data40 ${returnedUserData?.email}   ${returnedUserData?.id}   ${returnedUserData?.username}  "
-                )
+
             }
         } catch (e: Exception) {
             Log.d(

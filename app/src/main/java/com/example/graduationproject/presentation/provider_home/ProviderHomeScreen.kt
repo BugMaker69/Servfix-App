@@ -57,7 +57,7 @@ fun PostItem(
 
 @Composable
 fun ProviderPostScreen(
-    modifier: Modifier = Modifier,
+    modifier: Modifier ,
     onNotifiPostItemClick: (Int) -> Unit,
 //    getPostsForProvider: List<GetPostsForProviderItem>
     viewModel: ProviderHomeViewModel

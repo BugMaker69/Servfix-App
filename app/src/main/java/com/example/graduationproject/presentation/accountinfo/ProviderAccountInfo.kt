@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -27,6 +28,7 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.ManageAccounts
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -54,6 +56,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
+import coil.compose.SubcomposeAsyncImage
 import coil.compose.rememberImagePainter
 import com.example.graduationproject.R
 import com.example.graduationproject.presentation.common.CustomButtonAndText
@@ -71,7 +74,6 @@ fun ProviderAccountInfoScreen(
     providerAccountInfoViewModel: ProviderAccountInfoViewModel
 
 ) {
-    Log.d("whoo", "ProviderAccountInfoDetails: ")
 
     ProviderAccountInfo(
         modifier = modifier,
@@ -133,14 +135,20 @@ fun ProviderAccountInfo(
 
 
         Box(modifier = Modifier.padding(16.dp), contentAlignment = Alignment.TopCenter) {
-            Image(
-                painter = if (providerAccountInfoViewModel.returnedProviderData?.image != null) rememberImagePainter(data = Uri.parse( providerAccountInfoViewModel.returnedProviderData!!.image.toString()))!! else painterResource(
-                    id = R.drawable.ic_default_account_pic
-                ),
+            SubcomposeAsyncImage(
+                model = providerAccountInfoViewModel.imageUri,
+                clipToBounds = true,
                 contentDescription = "",
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.size(100.dp),
-                alignment = Alignment.TopCenter,
+                modifier = modifier
+                    .size(130.dp),
+                loading = { CircularProgressIndicator(modifier.wrapContentSize()) },
+                error = {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_become),
+                        contentDescription = ""
+                    )
+                }
             )
         }
 
@@ -320,15 +328,20 @@ fun ProviderAccountInfoDetails(
 
             Box(modifier = Modifier.size(130.dp)) {
             ///edit this
-                 Image(
-                    painter = if (providerAccountInfoViewModel.imageUri != null) rememberImagePainter(data = providerAccountInfoViewModel.imageUri)!! else painterResource(
-                        id = R.drawable.ic_default_account_pic                    ),
+                SubcomposeAsyncImage(
+                    model = providerAccountInfoViewModel.imageUri,
+                    clipToBounds = true,
                     contentDescription = "",
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(100.dp)
-                        .clip(RoundedCornerShape(12.dp)),
-                    alignment = Alignment.TopCenter,
+                    modifier = modifier
+                        .size(200.dp),
+                    loading = { CircularProgressIndicator(modifier.wrapContentSize()) },
+                    error = {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_become),
+                            contentDescription = ""
+                        )
+                    }
                 )
                 IconButton(
                     onClick = { launcher.launch("image/*") },

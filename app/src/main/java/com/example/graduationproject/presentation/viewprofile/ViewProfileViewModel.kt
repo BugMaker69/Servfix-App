@@ -55,6 +55,10 @@ class ViewProfileViewModel @Inject constructor(val repo : ViewProfileRepository,
 //
 //                }
 //            }
+            providerProfile.works.forEach { work->
+                work.image= BASE_URL+ work.image
+
+            }
 //            providerProfile.works.forEach { work ->
 //                work.images.forEach{
 //                   it.image =  BASE_URL+it.image

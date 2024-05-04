@@ -49,7 +49,10 @@ data class ViewProfileData (
 
 )
 data class Works (
-    @SerializedName("images") var images : ArrayList<Image> = arrayListOf()
+
+    @SerializedName("id"    ) var id    : Int?    = null,
+    @SerializedName("image" ) var image : String? = null
+
 )
 
 data class Image (
@@ -181,10 +184,7 @@ data class GetWorksItem(
 )
 
 class GetWorks : ArrayList<GetWorksItem>()
-sealed class ChatItem {
-    data class User(val name: String, val message: String,val id:Int) : ChatItem()
-    data class Provider(val name: String, val message: String,val id:Int) : ChatItem()
-}
+
 
 data class GetChatListForProviders(
     var accepted_users : ArrayList<AcceptedUsers> = arrayListOf()

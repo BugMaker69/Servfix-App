@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -28,6 +29,7 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.ManageAccounts
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -54,6 +56,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
+import coil.compose.SubcomposeAsyncImage
 import coil.compose.rememberImagePainter
 import com.example.graduationproject.presentation.common.CustomButtonAndText
 import com.example.graduationproject.R
@@ -144,13 +147,20 @@ fun UserAccountInfo(
 
 
         Box(modifier = Modifier.padding(16.dp), contentAlignment = Alignment.TopCenter) {
-            Image(
-                painter = if (userAccountInfoViewModel.imageUri != null) rememberImagePainter(data = userAccountInfoViewModel.imageUri)!! else painterResource(
-                    id = R.drawable.ic_default_account_pic                ),
+            SubcomposeAsyncImage(
+                model = userAccountInfoViewModel.imageUri,
+                clipToBounds = true,
                 contentDescription = "",
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.size(100.dp),
-                alignment = Alignment.TopCenter,
+                modifier = modifier
+                    .size(130.dp),
+                loading = { CircularProgressIndicator(modifier.wrapContentSize()) },
+                error = {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_become),
+                        contentDescription = ""
+                    )
+                }
             )
         }
 
