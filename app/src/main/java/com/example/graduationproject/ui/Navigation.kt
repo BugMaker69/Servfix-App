@@ -50,6 +50,7 @@ import com.example.graduationproject.presentation.common.login.ResetPassword
 import com.example.graduationproject.presentation.common.settings.NewPasswordScreen
 import com.example.graduationproject.presentation.common.settings.SettingsScreen
 import com.example.graduationproject.presentation.common.settings.SettingsTopBar
+import com.example.graduationproject.presentation.common.settings.SettingsViewModel
 import com.example.graduationproject.presentation.common.signup.SignupFirstScreen
 import com.example.graduationproject.presentation.common.signup.SignupSecondScreen
 import com.example.graduationproject.presentation.common.signup.SignupThirdScreen
@@ -315,6 +316,7 @@ fun ServixApp(
                 )
             }
             composable(ServixScreens.Settings.name) {
+                val settingsViewModel:SettingsViewModel= hiltViewModel()
                 SettingsScreen(
                     innerPadding,
                     onAccountInfoClick = {
@@ -326,14 +328,15 @@ fun ServixApp(
                             navController.navigate(ServixScreens.ProviderAccountInfo.name)
                         }
                     },
-                    onDeleteMyAccountClick = {
-                        navController.navigate(ServixScreens.Login.name) {
-                            popUpTo(ServixScreens.Settings.name) {
-                                inclusive = true
-                            }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
+                    onDeleteMyAccountClick = {pass->
+                        settingsViewModel.deleteAccount(pass)
+//                        navController.navigate(ServixScreens.Login.name) {
+//                            popUpTo(ServixScreens.Settings.name) {
+//                                inclusive = true
+//                            }
+//                            launchSingleTop = true
+//                            restoreState = true
+//                        }
                     },
                     onSignOutClick = {
                         runBlocking {
@@ -349,7 +352,7 @@ fun ServixApp(
                             }
                             launchSingleTop = true
                         }
-                    },
+                    }, settingsViewModel = settingsViewModel,
 
                     onSecurityClick = {
                         navController.navigate(ServixScreens.NewPasswordScreen.name)
@@ -587,23 +590,23 @@ fun ServixApp(
 
 
             composable(ServixScreens.NewPasswordScreen.name) {
-                val notificationViewModel: NotificationViewModel = hiltViewModel()
+                val settingsViewModel: SettingsViewModel = hiltViewModel()
 
                 NewPasswordScreen(
                     onSavePasswordChangeClick = {
                         Log.d(
                             "changePassword",
-                            "ServixApp:  || ${notificationViewModel.oldPassword} || ${notificationViewModel.newPassword}  ||"
+                            "ServixApp:  || ${settingsViewModel.oldPassword} || ${settingsViewModel.newPassword}  ||"
                         )
-                        notificationViewModel.changePassword(
+                        settingsViewModel.changePassword(
                             NewOldPassword(
-                                notificationViewModel.oldPassword,
-                                notificationViewModel.newPassword
+                                settingsViewModel.oldPassword,
+                                settingsViewModel.newPassword
                             )
                         )
 //                        navController.navigate(ServixScreens.Home.name)
                     },
-                    notificationViewModel = notificationViewModel
+                    vm = settingsViewModel
                 )
             }
             composable(ServixScreens.AddNeWorkToProfileItems.name) {
@@ -630,23 +633,23 @@ fun ServixApp(
             }
 
             composable(ServixScreens.NewPasswordScreen.name) {
-                val notificationViewModel: NotificationViewModel = hiltViewModel()
+                val settingsViewModel: SettingsViewModel = hiltViewModel()
 
                 NewPasswordScreen(
                     onSavePasswordChangeClick = {
                         Log.d(
                             "changePassword",
-                            "ServixApp:  || ${notificationViewModel.oldPassword} || ${notificationViewModel.newPassword}  ||"
+                            "ServixApp:  || ${settingsViewModel.oldPassword} || ${settingsViewModel.newPassword}  ||"
                         )
-                        notificationViewModel.changePassword(
+                        settingsViewModel.changePassword(
                             NewOldPassword(
-                                notificationViewModel.oldPassword,
-                                notificationViewModel.newPassword
+                                settingsViewModel.oldPassword,
+                                settingsViewModel.newPassword
                             )
                         )
 //                        navController.navigate(ServixScreens.Home.name)
                     },
-                    notificationViewModel = notificationViewModel
+                    vm = settingsViewModel
                 )
             }
 

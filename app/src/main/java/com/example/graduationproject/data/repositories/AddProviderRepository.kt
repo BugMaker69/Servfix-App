@@ -603,6 +603,10 @@ class AddProviderRepository @Inject constructor(
         val fileToSend = prepareFilePart("image", image)
         apiService.addWork("Bearer ${dataStoreToken.getToken()}", fileToSend)
     }
+    suspend fun deleteAccount(password:String){
+        apiService.deleteAccount("Bearer ${dataStoreToken.getToken()}",password)
+        Log.d("wwwww", "deleteAccount: ${ apiService.deleteAccount("Bearer ${dataStoreToken.getToken()}",password).body()}")
+    }
 
 
 }

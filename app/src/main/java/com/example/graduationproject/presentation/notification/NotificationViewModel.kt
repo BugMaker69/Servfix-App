@@ -31,17 +31,6 @@ class NotificationViewModel @Inject constructor(
     var getAllWorks by mutableStateOf(emptyList<GetWorksItem>())
 
 
-    var oldPassword by mutableStateOf("")
-    var newPassword by mutableStateOf("")
-
-
-    fun onOldPasswordChange(oldPassword1: String) {
-        oldPassword = oldPassword1
-    }
-
-    fun onNewPasswordChange(newPassword1: String) {
-        newPassword = newPassword1
-    }
 
     fun getAllNotifications() {
         viewModelScope.launch {
@@ -62,11 +51,7 @@ class NotificationViewModel @Inject constructor(
     }
 
 
-    fun changePassword(newOldPassword: NewOldPassword) {
-        viewModelScope.launch {
-            addProviderRepository.changePassword(newOldPassword)
-        }
-    }
+
 
     fun getAllWorks() {
         viewModelScope.launch {

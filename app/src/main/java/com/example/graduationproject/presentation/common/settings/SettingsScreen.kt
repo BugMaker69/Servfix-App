@@ -71,17 +71,20 @@ fun SettingsScreen(
     innerPadding:PaddingValues,
     modifier: Modifier = Modifier,
     onAccountInfoClick: () -> Unit,
-    onDeleteMyAccountClick: () -> Unit,
+    onDeleteMyAccountClick: (String) -> Unit,
     onSecurityClick: () -> Unit,
     onSignOutClick: () -> Unit,
+    settingsViewModel: SettingsViewModel
 ) {
 
     SettingsScreenContent(
         modifier.padding(top = innerPadding.calculateTopPadding()),
         onAccountInfoClick = onAccountInfoClick,
-        onDeleteMyAccountClick = onDeleteMyAccountClick,
+        onDeleteMyAccountClick ={pass->
+            onDeleteMyAccountClick(pass)} ,
         onSecurityClick = onSecurityClick,
-        onSignOutClick = onSignOutClick
+        onSignOutClick = onSignOutClick,
+        vm = settingsViewModel
     )
 
 }
@@ -92,8 +95,9 @@ fun SettingsScreenContent(
     modifier: Modifier = Modifier,
     onAccountInfoClick: () -> Unit,
     onSecurityClick: () -> Unit,
-    onDeleteMyAccountClick: () -> Unit,
+    onDeleteMyAccountClick: (String) -> Unit,
     onSignOutClick: () -> Unit,
+    vm:SettingsViewModel
 ) {
     //  TODO Place This Values In ViewModel
     var showSignOutDialog by remember { mutableStateOf(false) }
@@ -160,10 +164,10 @@ fun SettingsScreenContent(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             if (showDeleteDialog){
-                DeleteAccountDialog(onDeleteAccountConfirmButtonClick = {
+                DeleteAccountDialog(vm=vm,onDeleteAccountConfirmButtonClick = {
                     //  TODO We Need To Check First If Password He Enters Is Correct
                     Log.d("SignOUT", "SettingsScreenContent: SignOUT")
-                    onDeleteMyAccountClick()
+                    onDeleteMyAccountClick(vm.confirmedPassword)
                     showDeleteDialog = false
                 },
                     onDeleteAccountDismissButtonClick = {showDeleteDialog = false}
@@ -233,6 +237,7 @@ fun SettingsScreenContent(
 
 @Composable
 fun DeleteAccountDialog(
+    vm:SettingsViewModel,
     modifier: Modifier = Modifier,
     onDeleteAccountConfirmButtonClick: () -> Unit,
     onDeleteAccountDismissButtonClick: () -> Unit,
@@ -257,8 +262,7 @@ fun DeleteAccountDialog(
                     text = "Enter Your Password to Confirm Your Action",
                     modifier = Modifier.padding(vertical = 4.dp),
                 )
-                //  TODO Place This Values In ViewModel
-                OutlinedTextField(value = "", onValueChange = {},)
+                OutlinedTextField(value = vm.confirmedPassword, onValueChange = {vm.confirmedPasswordChange(it)},)
             }
         },
         onConfirmButtonClick = onDeleteAccountConfirmButtonClick,
@@ -390,7 +394,7 @@ fun SecurityScreen(
 fun NewPasswordScreen(
     modifier: Modifier = Modifier,
     onSavePasswordChangeClick: () -> Unit,
-    notificationViewModel: NotificationViewModel
+    vm: SettingsViewModel
 
 ) {
 
@@ -434,8 +438,8 @@ fun NewPasswordScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp),
-            value = notificationViewModel.oldPassword,
-            onValueChange = {notificationViewModel.onOldPasswordChange(it)},
+            value = vm.oldPassword,
+            onValueChange = {vm.onOldPasswordChange(it)},
             placeholder = { Text(text = "Old Password") },
             trailingIcon = {
                 IconButton(onClick = {
@@ -464,8 +468,8 @@ fun NewPasswordScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp),
-            value = notificationViewModel.newPassword,
-            onValueChange = {notificationViewModel.onNewPasswordChange(it)},
+            value = vm.newPassword,
+            onValueChange = {vm.onNewPasswordChange(it)},
             placeholder = { Text(text = "New Password") },
             trailingIcon = {
                 IconButton(onClick = {
@@ -600,10 +604,10 @@ fun DeleteAccountScreenPreview() {
 }
 
 @Preview(showBackground = true)
-@Composable
-fun DeleteAccountDialogPreview() {
-    DeleteAccountDialog(Modifier, {}, {})
-}
+//@Composable
+//fun DeleteAccountDialogPreview() {
+//    DeleteAccountDialog(Modifier, {}, {})
+//}
 
 @Preview(showBackground = true)
 @Composable
@@ -611,11 +615,11 @@ fun SignOutDialogPreview() {
     SignOutDialog(Modifier, {}, {})
 }
 
-@Preview(showBackground = true)
-@Composable
-fun SettingsScreenContentPreview() {
-    SettingsScreenContent(Modifier, {}, {}, {}, {})
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun SettingsScreenContentPreview() {
+//    SettingsScreenContent(Modifier, {}, {}, {}, {})
+//}
 
 
 @Preview(showBackground = true)
