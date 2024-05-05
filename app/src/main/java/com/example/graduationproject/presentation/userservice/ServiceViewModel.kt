@@ -13,6 +13,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.geometry.Size
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.graduationproject.MyApplication
@@ -31,12 +32,18 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ServiceViewModel @Inject constructor(    val addProviderRepository :AddProviderRepository
-                                               ,val userServicesRep: UserServicesRepository): ViewModel() {
+                                               ,val userServicesRep: UserServicesRepository,
+                                               val savedStateHandle: SavedStateHandle
+
+): ViewModel() {
     var servicesState = mutableStateOf(emptyList<Services>())
+
+
+
 
     init {
         getServicesList()
-        getAllWorks()
+//        getAllWorks()
     }
 
     fun getServicesList() {
@@ -72,7 +79,7 @@ class ServiceViewModel @Inject constructor(    val addProviderRepository :AddPro
         }
     }
 
-    var getAllWork by mutableStateOf(emptyList<GetWorksItem>())
+//    var getAllWork by mutableStateOf(emptyList<GetWorksItem>())
 
 
     //  DropdownMenu Of Service Inside Share Problem
@@ -116,9 +123,9 @@ class ServiceViewModel @Inject constructor(    val addProviderRepository :AddPro
     fun removeImage(id: String) {
         imageMap.remove(id)
     }
-    fun removeImage() {
+/*    fun removeImage() {
         imageUri=null
-    }
+    }*/
     fun startLoading() {
         isLoading.value = true
     }
@@ -198,6 +205,7 @@ class ServiceViewModel @Inject constructor(    val addProviderRepository :AddPro
 
 
 
+/*
     fun getAllWorks() {
         viewModelScope.launch {
             getAllWork = addProviderRepository.getAllWorks()
@@ -216,6 +224,7 @@ class ServiceViewModel @Inject constructor(    val addProviderRepository :AddPro
             addProviderRepository.addWork(imageMap.values.toList())
         }
     }
+*/
 
 
 

@@ -34,6 +34,7 @@ import com.example.graduationproject.BeforeSignup
 import com.example.graduationproject.data.NewOldPassword
 import com.example.graduationproject.presentation.AddNeWorkToProfileItems
 import com.example.graduationproject.presentation.SeeWork
+import com.example.graduationproject.presentation.SeeWorkViewModel
 import com.example.graduationproject.presentation.accountinfo.ProviderAccountInfoDetailsScreen
 import com.example.graduationproject.presentation.accountinfo.ProviderAccountInfoScreen
 import com.example.graduationproject.presentation.accountinfo.ProviderAccountInfoViewModel
@@ -428,22 +429,25 @@ fun ServixApp(
             }
             composable(ServixScreens.ProviderAccountInfo.name) {
                 val providerAccountInfoViewModel: ProviderAccountInfoViewModel = hiltViewModel()
-                val serviceViewModel: ServiceViewModel = hiltViewModel()
-                serviceViewModel.getAllWorks()
-                Log.d("ServixApp", "ServixApp: ${serviceViewModel.getAllWork}")
+//                val serviceViewModel: ServiceViewModel = hiltViewModel()
+//                serviceViewModel.getAllWorks()
+                providerAccountInfoViewModel.getAllWorks()
+                Log.d("ServixApp", "ServixApp: ${providerAccountInfoViewModel.getAllWork}")
 
                 ProviderAccountInfoScreen(
                     modifier = Modifier.padding(innerPadding),
                     onAccountInfoDetailsClick = {
                         navController.navigate(ServixScreens.ProviderAccountInfoDetails.name)
                     },
-                    onAddWorkToProfileItemOpenPhoto = {
-                        navController.navigate(ServixScreens.SeeWork.name)
+                    onAddWorkToProfileItemOpenPhoto = { pid,pname ->
+                        Log.d("ServixApp onAddWorkToProfileItemOpenPhoto", "ServixApp: $pid")
+                        Log.d("ServixApp onAddWorkToProfileItemOpenPhoto", "ServixApp: $pname")
+                        navController.navigate(ServixScreens.SeeWork.name + "/$pid" + "/$pname")
                     },
                     onAddWorkToProfile = {
                         navController.navigate(ServixScreens.AddNeWorkToProfileItems.name)
                     },
-                    getWorks = serviceViewModel.getAllWork,
+                    getWorks = providerAccountInfoViewModel.getAllWork,
                     providerAccountInfoViewModel = providerAccountInfoViewModel
                 )
             }
@@ -652,30 +656,43 @@ fun ServixApp(
                 )
             }
             composable(ServixScreens.AddNeWorkToProfileItems.name) {
-                val serviceViewModel: ServiceViewModel = hiltViewModel()
+                val providerAccountInfoViewModel: ProviderAccountInfoViewModel = hiltViewModel()
 
 //                serviceViewModel.getAllWorks()
                 AddNeWorkToProfileItems(
                     onAddWorkToProfileItemOpenPhoto = {},
-                    serviceViewModel = serviceViewModel,
-                    getWorks = serviceViewModel.getAllWork,
+                    providerAccountInfoViewModel = providerAccountInfoViewModel,
+                    getWorks = providerAccountInfoViewModel.getAllWork,
                     onSaveWorkClick = {
-                        serviceViewModel.addWork()
+                        providerAccountInfoViewModel.addWork()
                         navController.navigate(ServixScreens.ProviderAccountInfo.name)
                     },
 //                    onDeleteIconClick = serviceViewModel.deleteWork()
                 )
             }
 
-/*            composable(ServixScreens.SeeWork.name){
-                val serviceViewModel:ServiceViewModel= hiltViewModel()
+            composable(
+                ServixScreens.SeeWork.name + "/{pid}" + "/{pname}",
+                arguments = listOf(
+                    navArgument("pid") { type = NavType.IntType },
+                    navArgument("pname") { type = NavType.StringType },
+                )
+            ) {
+                val seeWorkViewModel: SeeWorkViewModel = hiltViewModel()
+//                val serviceViewModel: ServiceViewModel = hiltViewModel()
+//                val providerAccountInfoViewModel: ProviderAccountInfoViewModel = hiltViewModel()
                 SeeWork(
                     onBackIconClick = { navController.popBackStack() },
-                    onDeleteIconClick = { *//*TODO*//* },
-                    id = ,
-                    serviceViewModel = serviceViewModel
+                    seeWorkViewModel = seeWorkViewModel,
+//                    image = providerAccountInfoViewModel.imageWork,
+                    onDeleteIconClick = {
+//                        Log.d("ImageID", "ServixApp: ${providerAccountInfoViewModel.imageId}")
+//                        serviceViewModel.deleteWork(seeWorkViewModel.imageId)
+                                        },
+//                    id =,
+//                    serviceViewModel = serviceViewModel
                 )
-            }*/
+            }
 
             composable(ServixScreens.ShareProblemScreen.name) {
                 val serviceViewmodel: ServiceViewModel = hiltViewModel()
