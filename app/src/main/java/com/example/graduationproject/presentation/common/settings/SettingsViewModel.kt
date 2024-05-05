@@ -35,9 +35,9 @@ class SettingsViewModel @Inject constructor(val repo: AddProviderRepository) : V
         newPassword = newPassword1
     }
 
-    fun deleteAccount(password: String) {
-        viewModelScope.launch {
-            repo.deleteAccount(password = password)
-        }
-    }
+//    fun deleteAccount(password: String) {
+//        viewModelScope.launch {
+//            repo.deleteAccount(password = password)
+//        }
+//    }
 }

@@ -1,7 +1,6 @@
 package com.example.graduationproject.data.retrofit
 
 import com.example.graduationproject.data.AllNotification
-import com.example.graduationproject.data.DeleteResponse
 import com.example.graduationproject.data.FavouritesList
 import com.example.graduationproject.data.GeneralPostAccept
 import com.example.graduationproject.data.GetChatListForProviders
@@ -39,11 +38,11 @@ import retrofit2.http.Query
 
 interface ApiService {
 
-    @DELETE("/api/delete-account/")
-    suspend fun deleteAccount(
-        @Header("Authorization") token: String,
-        @Body password: String
-    ): Response<DeleteResponse>
+//    @DELETE("/api/delete-account/")
+//    suspend fun deleteAccount(
+//        @Header("Authorization") token: String,
+//        @Body password: String
+//    ): Response<DeleteResponse>
 
 
 //    @DELETE("/api/delete-account/{password}")

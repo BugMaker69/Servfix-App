@@ -15,6 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,9 +25,8 @@ var showDialog = mutableStateOf(false)
 
     var providersFavList = MutableStateFlow(listOf<ReturnedProviderData>())
     init {
-        viewModelScope.launch {
             showAllFavourites()
-        }
+
     }
 
     fun deleteFavourite(id: Int) {
@@ -37,12 +37,14 @@ var showDialog = mutableStateOf(false)
     }
 
     fun showAllFavourites() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.Main) {
             repo.showAllFavourites().collect { favouritesList ->
                 val x = favouritesList.providerFavourite
                 x.map {
                     it.image = Constant.BASE_URL + it.image
                 }
+
+
                 providersFavList.value = x
             }
         }

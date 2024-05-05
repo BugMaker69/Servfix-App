@@ -108,6 +108,22 @@ fun ServixApp(
         val loginResult = dataStoreToken.getLogin()
         isLoggedIn = loginResult
         userTypeFlow.value
+
+        // Check login state and user type after data retrieval
+        if (isLoggedIn && userTypeFlow.value != "") {
+            Log.d("mmmm1", "ServixApp: ${userTypeFlow.value}")
+            if (userTypeFlow.value == UserType.OwnerPerson.name) {
+                navController.navigate(ServixScreens.HomeUser.name) {
+                    popUpTo(ServixScreens.OnBoarding.name) { inclusive = true }
+                    launchSingleTop = true
+                }
+            } else if (userTypeFlow.value == UserType.HirePerson.name) {
+                navController.navigate(ServixScreens.HomeProvider.name) {
+                    popUpTo(ServixScreens.OnBoarding.name) { inclusive = true }
+                    launchSingleTop = true
+                }
+            }
+        }
     }
 
     BackHandler {
@@ -300,6 +316,8 @@ fun ServixApp(
                 Login(
                     onLoginClick = {
                         runBlocking {
+                            userViewModel.loginEnabled=false
+
                             userViewModel.login()
                             delay(4000)
                             if (dataStoreToken.getToken() != "") {
@@ -323,6 +341,8 @@ fun ServixApp(
 
                             }
                         }
+                        userViewModel.loginEnabled=true
+
 
                     },
                     onSignupClick = {
@@ -362,7 +382,7 @@ fun ServixApp(
                         }
                     },
                     onDeleteMyAccountClick = { pass ->
-                        settingsViewModel.deleteAccount(pass)
+//                        settingsViewModel.deleteAccount(pass)
 //                        navController.navigate(ServixScreens.Login.name) {
 //                            popUpTo(ServixScreens.Settings.name) {
 //                                inclusive = true
@@ -692,7 +712,7 @@ fun ServixApp(
 //                        Log.d("ImageID", "ServixApp: ${providerAccountInfoViewModel.imageId}")
                         providerAccountInfoViewModel.deleteWork(seeWorkViewModel.imageId)
                         navController.navigate(ServixScreens.ProviderAccountInfo.name)
-                                        },
+                    },
 //                    id =,
 //                    serviceViewModel = serviceViewModel
                 )

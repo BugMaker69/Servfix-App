@@ -79,7 +79,7 @@ data class Provider (
     @SerializedName("service_id"   ) var serviceId   : Int?    = null
 
 )
-data class  DeleteResponse(val message: String)
+data class  LogOutResponse(val detail: String)
 data class ReturnedUserData(
     val address: String,
     val city: String,

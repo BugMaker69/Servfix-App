@@ -41,6 +41,7 @@ class UserViewModel @Inject constructor(
     ) : ViewModel() {
     lateinit var callbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks
     var verificationID by mutableStateOf("")
+    var loginEnabled by mutableStateOf(true)
     var otpText by mutableStateOf("")
     var sucsess by mutableStateOf(false)
     var failed by mutableStateOf(false)

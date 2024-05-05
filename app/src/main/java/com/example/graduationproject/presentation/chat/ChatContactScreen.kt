@@ -105,14 +105,7 @@ fun ChatContactItem(id: Int, name: String, image: String) {
                         .padding(end = 2.dp)
                 ) {
                     Icon(imageVector = Icons.Default.Done, contentDescription = "check")
-                    Text(
-                        text = "try and try you will succeess don't stop please you  ",
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.Light,
-                        modifier = Modifier.fillMaxWidth(),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
+
 
                 }
 

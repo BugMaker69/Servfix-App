@@ -1,5 +1,6 @@
 package com.example.graduationproject.presentation.common.login
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,6 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -46,6 +48,7 @@ import com.example.graduationproject.ui.theme.DarkBlue
 import com.example.graduationproject.ui.theme.White
 
 
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun Login(
     modifier: Modifier = Modifier,
@@ -128,22 +131,19 @@ fun Login(
 
             Spacer(modifier = Modifier.height(64.dp))
 
+Button(modifier= Modifier
+    .fillMaxWidth()
+    .padding(horizontal = 8.dp, vertical = 4.dp),
+    shape =  RoundedCornerShape(36.dp) ,
+    enabled = userViewModel.loginEnabled,
+    onClick = {
+        if (userViewModel.email.isNotEmpty() && userViewModel.password.isNotEmpty())
+            onLoginClick()
+    }) {
 
-            CustomButtonAndText(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp, vertical = 4.dp),
-                text = R.string.login,
-                indication = rememberRipple(),
-                onClick = {
-                    if (userViewModel.email.isNotEmpty() && userViewModel.password.isNotEmpty()) {
-                        onLoginClick()
-                    }
-                },
-                backgroundColor = DarkBlue,
-                contentColor = White,
-                shape = RoundedCornerShape(36.dp)
-            )
+    Text(text = "Login")
+}
+
         }
         Spacer(modifier = Modifier.height(16.dp))
         Divider(thickness = 3.dp, color = Color.Gray)
