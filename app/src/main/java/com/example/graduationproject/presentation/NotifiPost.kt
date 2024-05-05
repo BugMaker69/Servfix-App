@@ -12,10 +12,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
@@ -56,6 +59,8 @@ import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import com.example.graduationproject.R
 import com.example.graduationproject.data.GetWorksItem
+import com.example.graduationproject.data.constants.Constant
+import com.example.graduationproject.presentation.accountinfo.ProviderAccountInfoViewModel
 import com.example.graduationproject.presentation.common.CustomButtonAndText
 import com.example.graduationproject.presentation.common.CustomDialog
 import com.example.graduationproject.presentation.userservice.ServiceViewModel
@@ -69,7 +74,7 @@ import com.example.graduationproject.ui.theme.DarkBlue
 fun AddWorkToProfileItem(
     modifier: Modifier = Modifier,
     onAddWorkToProfileItemOpenPhoto: () -> Unit,
-//    onDeleteIconClick: () -> Unit,
+    onDeleteIconClick: () -> Unit,
     image: Uri
 
 ) {
@@ -82,9 +87,9 @@ fun AddWorkToProfileItem(
 //            .clip(RoundedCornerShape(16.dp))
     ) {
         Icon(
-            modifier = Modifier.align(Alignment.TopEnd)
-//                .clickable { onDeleteIconClick() },
-                    ,
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .clickable { onDeleteIconClick() },
             imageVector = Icons.Filled.Cancel,
             contentDescription = ""
         )
@@ -126,7 +131,7 @@ fun AddWorkToProfileItem(
 @Composable
 fun AddNeWorkToProfileItem(
     modifier: Modifier = Modifier,
-    serviceViewModel: ServiceViewModel
+    providerAccountInfoViewModel:ProviderAccountInfoViewModel
 ) {
 
 
@@ -135,7 +140,7 @@ fun AddNeWorkToProfileItem(
 
     val galleryLauncher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.GetMultipleContents()) { uris ->
-            serviceViewModel.handleGalleryResult(context, uris)
+            providerAccountInfoViewModel.handleGalleryResult(context, uris)
         }
 
     Box(
@@ -191,7 +196,7 @@ fun AddNeWorkToProfileItem(
                 .background(DarkBlue)
                 .clickable {
 //                    if (serviceViewModel.imageMap.size != serviceViewModel.maxImages) {
-                    serviceViewModel.startLoading()
+                    providerAccountInfoViewModel.startLoading()
                     galleryLauncher.launch("image/*")
 //                    }
                 }
@@ -211,7 +216,7 @@ fun AddNeWorkToProfileItems(
     onAddWorkToProfileItemOpenPhoto: () -> Unit,
     onSaveWorkClick: () -> Unit,
 //    onDeleteIconClick: () -> Unit,
-    serviceViewModel: ServiceViewModel,
+    providerAccountInfoViewModel: ProviderAccountInfoViewModel,
 //    viewModel: NotificationViewModel,
     getWorks: List<GetWorksItem>
 ) {
@@ -222,13 +227,13 @@ fun AddNeWorkToProfileItems(
         horizontalArrangement = Arrangement.Center
     ) {
         item {
-            AddNeWorkToProfileItem(serviceViewModel = serviceViewModel)
+            AddNeWorkToProfileItem(providerAccountInfoViewModel = providerAccountInfoViewModel)
         }
-        items(serviceViewModel.imageMap.values.toList()) { item ->
+        items(providerAccountInfoViewModel.imageMap.entries.toList()) { (id,uri) ->
             AddWorkToProfileItem(
                 onAddWorkToProfileItemOpenPhoto = onAddWorkToProfileItemOpenPhoto,
-                image = item,
-//                onDeleteIconClick = onDeleteIconClick
+                image = uri,
+                onDeleteIconClick = { providerAccountInfoViewModel.removeImage(id) }
             )
         }
         item(span = { GridItemSpan(3) }) {
@@ -257,9 +262,10 @@ fun AddNeWorkToProfileItems(
 fun SeeWork(
     modifier: Modifier = Modifier,
     onBackIconClick: () -> Unit,
-    onDeleteIconClick: () -> Unit,
-    id: Int,
-    serviceViewModel: ServiceViewModel
+//    image:String,
+    onDeleteIconClick: (Int) -> Unit,
+//    id: Int,
+    seeWorkViewModel: SeeWorkViewModel
 ) {
 
     var showDialog by remember { mutableStateOf(false) }
@@ -309,7 +315,9 @@ fun SeeWork(
                 DeleteImageDialog(
                     onDismissButtonClick = { showDialog = false },
                     onConfirmButtonClick = {
-                        serviceViewModel.deleteWork(id)
+                        onDeleteIconClick(seeWorkViewModel.imageId)
+                        showDialog = false
+//                        serviceViewModel.deleteWork(serviceViewModel.imageId)
                     }
                 )
             }
@@ -322,12 +330,35 @@ fun SeeWork(
                 .clip(RoundedCornerShape(16.dp))
                 .align(Alignment.CenterHorizontally),
         ) {
-            Image(
+
+            SubcomposeAsyncImage(
+                model = Constant.BASE_URL + seeWorkViewModel.imageWork,
+                clipToBounds = true,
+                contentDescription = "",
+                modifier = Modifier
+                    .width(200.dp)
+                    .height(200.dp)
+                    .aspectRatio(1f),
+                contentScale = ContentScale.Inside,
+                loading = { CircularProgressIndicator(Modifier.wrapContentSize()) },
+                error = {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_become),
+                        contentDescription = "",
+                        modifier = Modifier
+                            .size(200.dp)
+                            .aspectRatio(1f),
+                        contentScale = ContentScale.Inside
+                    )
+                }
+            )
+
+/*            Image(
                 //  TODO Image Want To Be Dynamic I don't Know yet if i will use painter or ImageVector or What?
                 painter = painterResource(id = R.drawable.forgot_password),
                 contentDescription = "",
                 contentScale = ContentScale.Crop,
-            )
+            )*/
         }
 
     }

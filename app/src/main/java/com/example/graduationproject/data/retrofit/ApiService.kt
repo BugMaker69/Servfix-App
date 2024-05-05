@@ -220,10 +220,10 @@ interface ApiService {
         @Header("Authorization") token: String
     ): GetWorks
 
-    @DELETE("/api/all_work/{id}")
+    @DELETE("/api/delete_work/{work_id}")
     fun deleteWork(
         @Header("Authorization") token: String,
-        @Path("id") id: Int
+        @Path("work_id") work_id: Int
     ): Call<ResponseBody>
 
     @Multipart
