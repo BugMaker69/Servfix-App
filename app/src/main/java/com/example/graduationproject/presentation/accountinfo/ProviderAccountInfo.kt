@@ -32,6 +32,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material.icons.filled.CameraAlt
+import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.ManageAccounts
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
@@ -75,8 +76,9 @@ import com.example.graduationproject.ui.theme.LightBrown
 fun ProviderAccountInfoScreen(
     modifier: Modifier,
     onAccountInfoDetailsClick: () -> Unit,
-    onAddWorkToProfileItemOpenPhoto: () -> Unit,
+    onAddWorkToProfileItemOpenPhoto: (Int,String) -> Unit,
     onAddWorkToProfile: () -> Unit,
+//    onDeleteIconClick: (Int) -> Unit,
     getWorks: List<GetWorksItem>,
     providerAccountInfoViewModel: ProviderAccountInfoViewModel
 
@@ -85,8 +87,9 @@ fun ProviderAccountInfoScreen(
     ProviderAccountInfo(
         modifier = modifier,
         onAccountInfoDetailsClick = onAccountInfoDetailsClick,
-        onAddWorkToProfileItemOpenPhoto = onAddWorkToProfileItemOpenPhoto,
+        onAddWorkToProfileItemOpenPhoto = {id,name-> onAddWorkToProfileItemOpenPhoto(id,name) },
         onAddWorkToProfile = onAddWorkToProfile,
+//        onDeleteIconClick = onDeleteIconClick,
         getWorks = getWorks,
         providerAccountInfoViewModel = providerAccountInfoViewModel
     )
@@ -116,8 +119,9 @@ fun ProviderAccountInfoDetailsScreen(
 fun ProviderAccountInfo(
     modifier: Modifier = Modifier,
     onAccountInfoDetailsClick: () -> Unit,
-    onAddWorkToProfileItemOpenPhoto: () -> Unit,
+    onAddWorkToProfileItemOpenPhoto: (Int,String) -> Unit,
     onAddWorkToProfile: () -> Unit,
+//    onDeleteIconClick: (Int) -> Unit,
     getWorks: List<GetWorksItem>,
     providerAccountInfoViewModel: ProviderAccountInfoViewModel
 ) {
@@ -323,27 +327,49 @@ fun ProviderAccountInfo(
         ) {
             items(getWorks) { work ->
                 Column {
-                    SubcomposeAsyncImage(
-                        model = Constant.BASE_URL + work.image,
-                        clipToBounds = true,
-                        contentDescription = "",
+
+
+                    Box(
                         modifier = Modifier
-                            .width(200.dp)
-                            .height(200.dp)
-                            .aspectRatio(1f),
-                        contentScale = ContentScale.Inside,
-                        loading = { CircularProgressIndicator(Modifier.wrapContentSize()) },
-                        error = {
-                            Image(
-                                painter = painterResource(id = R.drawable.ic_become),
-                                contentDescription = "",
-                                modifier = Modifier
-                                    .size(200.dp)
-                                    .aspectRatio(1f),
-                                contentScale = ContentScale.Inside
-                            )
-                        }
-                    )
+                            .size(150.dp)
+                            .padding(4.dp)
+                            .clickable {
+                                Log.d("ProviderAccountInfo", "ProviderAccountInfo: ${work.id}")
+                                Log.d("ProviderAccountInfo", "ProviderAccountInfo: ${work.image}")
+                                onAddWorkToProfileItemOpenPhoto(work.id, work.image)
+                            }
+//            .clip(RoundedCornerShape(16.dp))
+                    ) {
+/*                        Icon(
+                            modifier = Modifier
+                                .align(Alignment.TopEnd)
+                                .clickable { onDeleteIconClick },
+                            imageVector = Icons.Filled.Cancel,
+                            contentDescription = ""
+                        )*/
+
+                        SubcomposeAsyncImage(
+                            model = Constant.BASE_URL + work.image,
+                            clipToBounds = true,
+                            contentDescription = "",
+                            modifier = Modifier
+                                .width(200.dp)
+                                .height(200.dp)
+                                .aspectRatio(1f),
+                            contentScale = ContentScale.Inside,
+                            loading = { CircularProgressIndicator(Modifier.wrapContentSize()) },
+                            error = {
+                                Image(
+                                    painter = painterResource(id = R.drawable.ic_become),
+                                    contentDescription = "",
+                                    modifier = Modifier
+                                        .size(200.dp)
+                                        .aspectRatio(1f),
+                                    contentScale = ContentScale.Inside
+                                )
+                            }
+                        )
+                    }
                 }
             }
         }

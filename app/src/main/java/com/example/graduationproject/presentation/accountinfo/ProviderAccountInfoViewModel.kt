@@ -1,14 +1,18 @@
 package com.example.graduationproject.presentation.accountinfo
 
+import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.geometry.Size
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.graduationproject.R
+import com.example.graduationproject.data.GetWorksItem
 import com.example.graduationproject.data.ReturnedProviderData
 import com.example.graduationproject.data.constants.Constant
 import com.example.graduationproject.data.constants.Constant.BASE_URL
@@ -22,10 +26,79 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class ProviderAccountInfoViewModel @Inject constructor(val addProviderRepository: AddProviderRepository,val dataStoreToken: DataStoreToken): ViewModel() {
+class ProviderAccountInfoViewModel @Inject constructor(val addProviderRepository: AddProviderRepository,val dataStoreToken: DataStoreToken,val savedStateHandle: SavedStateHandle): ViewModel() {
     var returnedProviderData: ReturnedProviderData? by mutableStateOf<ReturnedProviderData?>(null)
     var userName by mutableStateOf("")
     var rating by mutableStateOf("")
+
+/*    var imageId by mutableStateOf(0)
+    var imageWork by mutableStateOf("")
+
+    init {
+        imageId = savedStateHandle.get<Int>("pid") ?: 0
+        imageWork = savedStateHandle.get<String>("pname") ?: ""
+        Log.d("savedStateHandle Image ID", "savedStateHandle Image ID : $imageId")
+        Log.d("savedStateHandle Image ID", "savedStateHandle Image ID : $imageWork")
+    }*/
+
+    var getAllWork by mutableStateOf(emptyList<GetWorksItem>())
+
+    val isLoading = mutableStateOf(false)
+    val maxImages = 5
+    val launchCamera = mutableStateOf(false)
+//    var imageUri by mutableStateOf<Uri?>(null)
+
+    val permissionDenied = mutableStateOf(false)
+    val imageMap = mutableStateMapOf<String, Uri>()
+
+
+    fun addImage(id: String, uri: Uri) {
+        if (imageMap.size < maxImages) {
+            imageMap[id] = uri
+        }
+    }
+
+    fun removeImage(id: String) {
+        imageMap.remove(id)
+    }
+
+    fun startLoading() {
+        isLoading.value = true
+    }
+
+    fun stopLoading() {
+        isLoading.value = false
+    }
+
+
+    fun handleGalleryResult(context: Context, uris: List<Uri>) {
+        uris.mapNotNull { uri ->
+            Pair(uri.toString(),uri)
+        }.forEach { (id, uri) ->
+            addImage(id, uri)
+        }
+        stopLoading()
+    }
+
+    fun getAllWorks() {
+        viewModelScope.launch {
+            getAllWork = addProviderRepository.getAllWorks()
+        }
+    }
+
+    fun deleteWork(id: Int) {
+        viewModelScope.launch {
+            addProviderRepository.deleteWork(id)
+        }
+    }
+
+    fun addWork() {
+        viewModelScope.launch {
+            Log.d("addWork Images", "addWork: ${imageMap.values.toList()}")
+            addProviderRepository.addWork(imageMap.values.toList())
+        }
+    }
+
 
 
     //    var city by mutableStateOf("")

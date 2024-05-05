@@ -678,6 +678,51 @@ class AddProviderRepository @Inject constructor(
 
     suspend fun deleteWork(id: Int) {
         apiService.deleteWork("Bearer ${dataStoreToken.getToken()}", id)
+            .enqueue(object : Callback<ResponseBody> {
+                override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+
+                    if (response.body() != null && response.isSuccessful) {
+                        try {
+
+                            if (response.code() == 201) {
+                                Log.d(
+                                    "Work deleted Successfully",
+                                    "onResponse: Work deleted Successfully ${response} ||  ${response.code()} ||  ${response.body()} ||  ${response.errorBody()} ||  ${response.isSuccessful} ||  ||  ${response.message()} ||  ||  ${response.headers()} ||  ||  ${response.raw()} || "
+                                )
+
+                            } else {
+                                Log.d(
+                                    "Error",
+                                    "onResponse: Work deleted Error ${response} ||  ${response.code()} ||  ${response.body()} ||  ${response.errorBody()} ||  ${response.isSuccessful} ||  ||  ${response.message()} ||  ||  ${response.headers()} ||  ||  ${response.raw()} || "
+                                )
+
+                            }
+                        } catch (e: Exception) {
+                            Log.d(
+                                "Catched Error Created",
+                                "onResponse: Work deleted Error  ${response} ||  ${response.code()} ||  ${response.body()} ||  ${response.errorBody()} ||  ${response.isSuccessful} ||  ||  ${response.message()} ||  ||  ${response.headers()} ||  ||  ${response.raw()} || "
+                            )
+
+                        }
+                    } else {
+                        Log.d("onFailure Error Work deleted", "onResponse: Updated Nothing Happen Why ")
+                        Log.d(
+                            "onFailure Error Work deleted",
+                            "onResponse: Work deleted onFailure Error ${response} ||  ${response.isSuccessful} ||  ${response.message()} ||  ${response.code()} ||  ${response.errorBody()} ||  ${response.headers()} ||  ${response.raw()} || "
+                        )
+                    }
+
+                }
+
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                    Log.d(
+                        "onFailure Error Updated",
+                        "onResponse: Work deleted onFailure Error ${t} ||  ${t.message} ||  ${t.cause} ||  ${t.localizedMessage} ||  ${t.stackTrace} ||  ${t.suppressed} || "
+                    )
+
+                }
+            })
+
     }
 
     suspend fun addWork(images: List<Uri>) {
