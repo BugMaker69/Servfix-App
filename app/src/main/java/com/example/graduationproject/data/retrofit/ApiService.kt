@@ -38,11 +38,10 @@ import retrofit2.http.Query
 
 interface ApiService {
 
-//    @DELETE("/api/delete-account/")
-//    suspend fun deleteAccount(
-//        @Header("Authorization") token: String,
-//        @Body password: String
-//    ): Response<DeleteResponse>
+    @DELETE("/api/delete-account/")
+    suspend fun deleteAccount(
+        @Header("Authorization") token: String,
+    )
 
 
 //    @DELETE("/api/delete-account/{password}")

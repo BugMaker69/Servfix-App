@@ -781,10 +781,10 @@ class AddProviderRepository @Inject constructor(
         })
 
     }
-//    suspend fun deleteAccount(password:String){
-//        apiService.deleteAccount("Bearer ${dataStoreToken.getToken()}",password)
-//        Log.d("wwwww", "deleteAccount: ${ apiService.deleteAccount("Bearer ${dataStoreToken.getToken()}",password).body()}")
-//    }
+    suspend fun deleteAccount(){
+        apiService.deleteAccount("Bearer ${dataStoreToken.getToken()}")
+     //   Log.d("wwwww", "deleteAccount: ${ apiService.deleteAccount("Bearer ${dataStoreToken.getToken()}",password).body()}")
+    }
 
 
 }

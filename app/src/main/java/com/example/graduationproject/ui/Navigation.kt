@@ -381,8 +381,13 @@ fun ServixApp(
                             navController.navigate(ServixScreens.ProviderAccountInfo.name)
                         }
                     },
-                    onDeleteMyAccountClick = { pass ->
-//                        settingsViewModel.deleteAccount(pass)
+                    onDeleteMyAccountClick = {
+                        settingsViewModel.deleteAccount()
+                        runBlocking {
+                            dataStoreToken.saveLoginState(false)
+                            dataStoreToken.saveToken("")
+                            dataStoreToken.saveUserType("") // Clear user type as well
+                        }
 //                        navController.navigate(ServixScreens.Login.name) {
 //                            popUpTo(ServixScreens.Settings.name) {
 //                                inclusive = true
@@ -390,6 +395,7 @@ fun ServixApp(
 //                            launchSingleTop = true
 //                            restoreState = true
 //                        }
+//                    },
                     },
                     onSignOutClick = {
                         runBlocking {
@@ -399,12 +405,12 @@ fun ServixApp(
                         }
 
 
-                        navController.navigate(ServixScreens.Login.name) {
-                            popUpTo(navController.graph.id) {
-                                inclusive = true
-                            }
-                            launchSingleTop = true
-                        }
+//                        navController.navigate(ServixScreens.Login.name) {
+//                            popUpTo(navController.graph.id) {
+//                                inclusive = true
+//                            }
+//                            launchSingleTop = true
+//                        }
                     },
                     settingsViewModel = settingsViewModel,
 
