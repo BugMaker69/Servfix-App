@@ -98,26 +98,26 @@ fun ServixApp(
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val dataStoreToken = DataStoreToken()
     var isLoggedIn = runBlocking { dataStoreToken.getLogin() }
-    val userTypeFlow = dataStoreToken.userType.collectAsState(initial = "")
+    val userTypeFlow = runBlocking { dataStoreToken.getUserType() }
     val notificationViewModel: NotificationViewModel = hiltViewModel()
 
-    Log.d("vvv", "ServixApp:up ${userTypeFlow.value} ")
+    Log.d("vvv", "ServixApp:up ${userTypeFlow} ")
     Log.d("qqqqqqqqq", "ServixApp: ${isLoggedIn}")
 
     LaunchedEffect(Unit) {
         val loginResult = dataStoreToken.getLogin()
         isLoggedIn = loginResult
-        userTypeFlow.value
+        userTypeFlow
 
         // Check login state and user type after data retrieval
-        if (isLoggedIn && userTypeFlow.value != "") {
-            Log.d("mmmm1", "ServixApp: ${userTypeFlow.value}")
-            if (userTypeFlow.value == UserType.OwnerPerson.name) {
+        if (isLoggedIn && userTypeFlow != "") {
+            Log.d("mmmm1", "ServixApp: ${userTypeFlow}")
+            if (userTypeFlow == UserType.OwnerPerson.name) {
                 navController.navigate(ServixScreens.HomeUser.name) {
                     popUpTo(ServixScreens.OnBoarding.name) { inclusive = true }
                     launchSingleTop = true
                 }
-            } else if (userTypeFlow.value == UserType.HirePerson.name) {
+            } else if (userTypeFlow == UserType.HirePerson.name) {
                 navController.navigate(ServixScreens.HomeProvider.name) {
                     popUpTo(ServixScreens.OnBoarding.name) { inclusive = true }
                     launchSingleTop = true
@@ -212,7 +212,7 @@ fun ServixApp(
                     ServixScreens.PostDetails.name + "/{id}",
                 )
             ) {
-                BottomAppBar(navController = navController, userTypeFlow.value)
+                BottomAppBar(navController = navController, userTypeFlow)
 
             }
         }
@@ -223,11 +223,11 @@ fun ServixApp(
         NavHost(
             navController = navController,
             startDestination = if (isFirstLaunch) ServixScreens.OnBoarding.name else {
-                if (isLoggedIn && userTypeFlow.value != "") {
-                    Log.d("mmmm1", "ServixApp: ${userTypeFlow.value}")
-                    if (userTypeFlow.value == UserType.OwnerPerson.name) ServixScreens.HomeUser.name else ServixScreens.HomeProvider.name
+                if (isLoggedIn && userTypeFlow != "") {
+                    Log.d("mmmm1", "ServixApp: ${userTypeFlow}")
+                    if (userTypeFlow == UserType.OwnerPerson.name) ServixScreens.HomeUser.name else ServixScreens.HomeProvider.name
                 } else {
-                    Log.d("mmmm6", "ServixApp: ${userTypeFlow.value}")
+                    Log.d("mmmm6", "ServixApp: ${userTypeFlow}")
                     ServixScreens.Login.name
                 }
             }
@@ -321,15 +321,15 @@ fun ServixApp(
                             userViewModel.login()
                             delay(4000)
                             if (dataStoreToken.getToken() != "") {
-                                Log.d("vvv", "ServixApp: ${userTypeFlow.value}")
-                                if (userTypeFlow.value == UserType.HirePerson.name) {
+                                Log.d("vvv", "ServixApp: ${userTypeFlow}")
+                                if (userTypeFlow == UserType.HirePerson.name) {
                                     navController.navigate(ServixScreens.HomeProvider.name) {
                                         popUpTo(ServixScreens.Login.name) {
                                             inclusive = true
                                         }
 
                                     }
-                                } else if (userTypeFlow.value == UserType.OwnerPerson.name) {
+                                } else if (userTypeFlow == UserType.OwnerPerson.name) {
                                     navController.navigate(ServixScreens.HomeUser.name) {
                                         popUpTo(ServixScreens.Login.name) {
                                             inclusive = true
@@ -375,7 +375,7 @@ fun ServixApp(
                     onAccountInfoClick = {
                         /*                        //TODO NEED TO BE HANDLED IN BETTER WAY USING SUCH DATA STORE
                         userViewModel.getData()*/
-                        if (userTypeFlow.value == UserType.OwnerPerson.name) {
+                        if (userTypeFlow == UserType.OwnerPerson.name) {
                             navController.navigate(ServixScreens.UserAccountInfo.name)
                         } else {
                             navController.navigate(ServixScreens.ProviderAccountInfo.name)
@@ -761,10 +761,10 @@ fun ServixApp(
 
             composable(ServixScreens.HomeProvider.name) {
                 val homeProviderHomeViewModel: ProviderHomeViewModel = hiltViewModel()
-                if (userTypeFlow.value == UserType.HirePerson.name) {
+                if (userTypeFlow == UserType.HirePerson.name) {
                     homeProviderHomeViewModel.getPostsForProvider()
 
-                    Log.d("getPostsForProvider", "ServixApp: ${userTypeFlow.value.toString()}")
+                    Log.d("getPostsForProvider", "ServixApp: ${userTypeFlow.toString()}")
                     //    Log.d("getPostsForProvider", "ServixApp: ${notificationViewModel.getPostsForProvider()}")
                     //    Log.d("getPostsForProvider", "ServixApp: ${notificationViewModel.getPostsForProvider}")
                     Log.d("getPostsForProvider", "here:")
@@ -802,7 +802,7 @@ fun ServixApp(
                 ChatContactScreen(
                     modifier = Modifier.padding(innerPadding),
                     vm = vm,
-                    userType = userTypeFlow.value
+                    userType = userTypeFlow
                 )
             }
 
