@@ -3,6 +3,7 @@ package com.example.graduationproject.presentation.share_problem
 import android.Manifest
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -59,7 +60,7 @@ fun ShareProblemSpecific(
     val context = LocalContext.current
 
     val galleryLauncher =
-        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetMultipleContents()) { uris ->
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.PickMultipleVisualMedia()) { uris ->
             serviceViewModel.handleGalleryResult(context, uris)
         }
 
@@ -212,7 +213,7 @@ fun ShareProblemSpecific(
                         onClick = {
                             if (serviceViewModel.imageMap.size != serviceViewModel.maxImages) {
                                 serviceViewModel.startLoading()
-                                galleryLauncher.launch("image/*")
+                                galleryLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
                             }
                         },
                         enabled = !serviceViewModel.isLoading.value,

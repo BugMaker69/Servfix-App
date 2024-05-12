@@ -4,6 +4,7 @@ import android.app.Activity
 import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -602,9 +603,14 @@ fun SignupThirdScreen(
 
 // National ID
             val launcher =
-                rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
+                rememberLauncherForActivityResult(contract = ActivityResultContracts.PickVisualMedia()) { uri: Uri? ->
                     userViewModel.imageUri = uri
                 }
+
+/*            val launcher =
+                rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
+                    userViewModel.imageUri = uri
+                }*/
 
             Row(
                 Modifier
@@ -613,7 +619,8 @@ fun SignupThirdScreen(
 //                        enabled = !userViewModel.isLoading.value,
                     ) {
 //                        userViewModel.startLoading()
-                        launcher.launch("image/*")
+                        launcher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+//                        launcher.launch("image/*")
 //                        userViewModel.stopLoading()
 
                     }

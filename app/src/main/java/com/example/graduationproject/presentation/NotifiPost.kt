@@ -4,6 +4,7 @@ package com.example.graduationproject.presentation
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
@@ -139,7 +140,7 @@ fun AddNeWorkToProfileItem(
 
 
     val galleryLauncher =
-        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetMultipleContents()) { uris ->
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.PickMultipleVisualMedia()) { uris ->
             providerAccountInfoViewModel.handleGalleryResult(context, uris)
         }
 
@@ -197,7 +198,7 @@ fun AddNeWorkToProfileItem(
                 .clickable {
 //                    if (serviceViewModel.imageMap.size != serviceViewModel.maxImages) {
                     providerAccountInfoViewModel.startLoading()
-                    galleryLauncher.launch("image/*")
+                    galleryLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
 //                    }
                 }
 

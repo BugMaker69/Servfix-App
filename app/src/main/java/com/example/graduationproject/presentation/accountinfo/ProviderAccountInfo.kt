@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -448,10 +449,9 @@ fun ProviderAccountInfoDetails(
     val services = context.resources.getStringArray(R.array.services).toList()
 
     val launcher =
-        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.PickVisualMedia()) { uri: Uri? ->
             providerAccountInfoViewModel.imageUri = uri
         }
-    val BASE_URL = "https://p2kjdbr8-8000.uks1.devtunnels.ms/api"
 
     Column(
         modifier = modifier
@@ -486,7 +486,7 @@ fun ProviderAccountInfoDetails(
                     }
                 )
                 IconButton(
-                    onClick = { launcher.launch("image/*") },
+                    onClick = { launcher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) },
                     Modifier
                         .padding(16.dp)
                         .border(

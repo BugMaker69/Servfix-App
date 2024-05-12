@@ -20,6 +20,7 @@ import com.example.graduationproject.data.ReturnedUserData
 import com.example.graduationproject.data.SearchProviders
 import com.example.graduationproject.data.ServicesCategories
 import com.example.graduationproject.data.ViewProfileData
+import com.example.graduationproject.data.ForgetResetPassword
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -37,6 +38,17 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiService {
+
+    @POST("/api/reset_password/{id}")
+    suspend fun resetPassword(
+        @Body password: ForgetResetPassword,
+        @Path("id") id: Int
+    )
+
+    @POST("/api/forgot_password/")
+    suspend fun forgotPassword(
+        @Body email: String,
+    )
 
     @DELETE("/api/delete-account/")
     suspend fun deleteAccount(

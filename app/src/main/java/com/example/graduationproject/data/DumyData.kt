@@ -234,3 +234,8 @@ data class GeneralPostAccept(
 data class PostStatus(
     val message: String
 )
+
+data class ForgetResetPassword(
+    val confirmPassword: String,
+    val password: String
+)

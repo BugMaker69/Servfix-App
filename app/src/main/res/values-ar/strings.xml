@@ -13,7 +13,7 @@
     <string name="password_changed_succ">تم تغيير كلمة السر الخاصة بك بنجاح</string>
     <string name="back_login">العودة لتسجيل الدخول</string>
 
-    <string name="enter_phone">لا تقلق! يحدث ذلك. الرجاء إدخال رقم الهاتف المرتبط بحسابك.</string>
+    <string name="enter_email">لا تقلق! يحدث ذلك. الرجاء إدخال البريد الالكتروني المرتبط بحسابك.</string>
     <string name="remember_pass">تذكر كلمة المرور؟</string>
     <string name="enter_pass_rem">الرجاء كتابة شيء ستتذكره</string>
 
