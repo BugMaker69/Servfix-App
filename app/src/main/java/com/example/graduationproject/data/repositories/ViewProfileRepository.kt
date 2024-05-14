@@ -16,6 +16,11 @@ class ViewProfileRepository @Inject constructor(val api:ApiService, val dataStor
         Log.d("teet", "getProviderProfile: ${dataStoreToken.getToken()}")
             return  api.viewProviderProfile(id=id,"Bearer ${dataStoreToken.getToken()}")
     }
-    suspend fun addToFavorite(id:Int){
-        api.addFavorite(id=id,"Bearer ${dataStoreToken.getToken()}")    }
+    suspend fun addToFavorite(id:Int):String{
+
+        api.addFavorite(id=id,"Bearer ${dataStoreToken.getToken()}")
+        Log.d("lol", "addToFavorite: first $id +${        api.addFavorite(id=id,"Bearer ${dataStoreToken.getToken()}").body()?.details
+        }")
+        return   api.addFavorite(id=id,"Bearer ${dataStoreToken.getToken()}").body()?.details.toString()
+    }
 }

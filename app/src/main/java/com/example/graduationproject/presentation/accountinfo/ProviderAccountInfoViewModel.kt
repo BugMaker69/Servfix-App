@@ -143,13 +143,10 @@ class ProviderAccountInfoViewModel @Inject constructor(val addProviderRepository
     init {
             getProviderData()
 
-
     }
     fun getProviderData() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Main) {
             try {
-                Log.d("whoo", "getUserData: ${ dataStoreToken.getToken()}")
-                Log.d("whoo2", returnedProviderData?.username.toString())
                 val providerData = withContext(Dispatchers.IO) {
                     addProviderRepository.getProviderData()
                 }

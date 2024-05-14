@@ -1,5 +1,7 @@
 package com.example.graduationproject.presentation.viewprofile
 
+import android.content.Intent
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -7,13 +9,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -32,10 +32,13 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -54,7 +57,9 @@ fun ViewProfileScreen(
     viewProfileViewModel: ViewProfileViewModel,
     onChatClick: (Int, String) -> Unit
 ) {
+    val context= LocalContext.current
 
+val profile=viewProfileViewModel.profile.collectAsState()
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = modifier
@@ -70,16 +75,16 @@ fun ViewProfileScreen(
                     .padding(20.dp)
                     .fillMaxSize(), horizontalArrangement = Arrangement.Center
             ) {
-                UpperScreen(viewProfileViewModel.profile.value)
+                UpperScreen(profile)
 
             }
             Text(
-                text = viewProfileViewModel.profile.value.provider!!.username.toString(),
+                text = profile.value.provider!!.username.toString(),
                 fontSize = 30.sp
             )
 
             Text(
-                text = viewProfileViewModel.profile.value.provider!!.profession.toString(),
+                text = profile.value.provider!!.profession.toString(),
                 fontSize = 20.sp
             )
             Row {
@@ -89,26 +94,17 @@ fun ViewProfileScreen(
                     modifier = Modifier.size(20.dp)
                 )
                 Text(
-                    text = viewProfileViewModel.profile.value.provider!!.city.toString(),
+                    text = profile.value.provider!!.city.toString(),
                     fontSize = 13.sp
                 )
             }
             Spacer(modifier = Modifier.padding(5.dp))
 
 
-            Row(Modifier.fillMaxSize(), Arrangement.Center) {
-                Button(modifier = Modifier.weight(1f), onClick = { /*TODO*/ }) {
-                    Text(text = stringResource(id = R.string.call), fontSize = 20.sp)
-                    Spacer(modifier = Modifier.padding(4.dp))
-                    Icon(
-                        imageVector = Icons.Filled.Phone,
-                        contentDescription = "phone",
-                        tint = White
-                    )
+            Row(Modifier.fillMaxSize(), Arrangement.SpaceBetween) {
 
-                }
-                Spacer(modifier = Modifier.padding(10.dp))
-                Button(modifier = Modifier.weight(1f), onClick = {
+                Spacer(modifier = Modifier.padding(horizontal = 10.dp))
+                Button(modifier = Modifier.wrapContentSize(), onClick = {
                     onChatClick(
                         viewProfileViewModel.profile.value.provider!!.id!!,
                         viewProfileViewModel.profile.value.provider!!.username!!,
@@ -120,28 +116,37 @@ fun ViewProfileScreen(
                     Icon(imageVector = Icons.Filled.Chat, contentDescription = "chat")
                 }
 
+                when (profile.value.isFavourite) {
+                    true -> Icon(
+                        imageVector = Icons.Filled.Favorite,
+                        contentDescription = "favourite",
+                        tint = DarkBlue,
+                        modifier = Modifier.size(30.dp).align(Alignment.CenterVertically)
+                    )
+
+                    false -> Icon(
+                        imageVector = Icons.Outlined.FavoriteBorder,
+                        contentDescription = "favourite",
+                        tint = DarkBlue,
+                        modifier = Modifier
+                            .size(30.dp)
+                            .clickable {
+                                viewProfileViewModel.addToFavourite()
+                                Toast
+                                    .makeText(context, "Added to favourite", Toast.LENGTH_SHORT)
+                                    .show()
+                            })
+
+                }
+                Spacer(modifier = Modifier.padding(horizontal = 15.dp))
+
+
 
             }
 
-            when (viewProfileViewModel.isFavourite.value) {
-                true -> Icon(
-                    imageVector = Icons.Filled.Favorite,
-                    contentDescription = "favourite",
-                    tint = DarkBlue,
-                    modifier = Modifier.size(40.dp)
-                )
 
-                false -> Icon(
-                    imageVector = Icons.Outlined.FavoriteBorder,
-                    contentDescription = "favourite",
-                    tint = DarkBlue,
-                    modifier = Modifier.clickable {
-                        viewProfileViewModel.addToFavourite()
-                    })
 
-            }
-
-            WorkList(viewProfileViewModel.profile.value.works)
+            WorkList(profile.value.works)
 
 
         }
@@ -156,29 +161,27 @@ fun ViewProfileScreen(
 fun WorkList(works: ArrayList<Works>) {
     LazyVerticalGrid(
         GridCells.Fixed(2), modifier = Modifier
-            .fillMaxWidth()
-            .height(200.dp)
+            .fillMaxSize()
+            .height(400.dp)
             .padding(20.dp)
     ) {
         items(works) { work ->
-            Column {
+            Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
                 SubcomposeAsyncImage(
                     model = work.image,
                     clipToBounds = true,
                     contentDescription = "",
                     modifier = Modifier
-                        .width(200.dp)
-                        .height(200.dp)
-                        .aspectRatio(1f), // maintain aspect ratio
-                    contentScale = ContentScale.Inside,
+                        .padding(3.dp)
+                        .size(200.dp),
+                    contentScale = ContentScale.Crop, // crop the image to fit the size
                     loading = { CircularProgressIndicator(Modifier.wrapContentSize()) },
                     error = {
                         Image(
                             painter = painterResource(id = R.drawable.ic_become),
                             contentDescription = "",
                             modifier = Modifier
-                                .size(200.dp)
-                                .aspectRatio(1f), // maintain aspect ratio
+                                .size(200.dp),
                             contentScale = ContentScale.Inside
                         )
                     }
@@ -188,12 +191,13 @@ fun WorkList(works: ArrayList<Works>) {
     }
 }
 
+
 @Composable
-fun UpperScreen(state: ViewProfileData) {
+fun UpperScreen(state: State<ViewProfileData>) {
     //Card(Modifier.fillMaxSize(), shape = RectangleShape) {
 
     SubcomposeAsyncImage(
-        model = state.provider?.image,
+        model = state.value.provider?.image,
         clipToBounds = true,
         contentDescription = "",
         contentScale = ContentScale.Inside,

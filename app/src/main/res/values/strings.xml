@@ -15,7 +15,7 @@
     <string name="enter_email">Don’t Worry! It Happens. Please Enter The Email Associated With Your Account.</string>
     <string name="remember_pass">Remember Password?</string>
     <string name="enter_pass_rem">Please type something you’ll remember</string>
-
+<string name="No_Internet">Ops ! No Internet Connection , Please connect to the internet .</string>
     <string name="congratulations">Congratulations!</string>
     <string name="redirected">You\'ll be redirected to the login screen now</string>
 

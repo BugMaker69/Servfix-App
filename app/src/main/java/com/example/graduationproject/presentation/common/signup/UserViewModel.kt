@@ -569,6 +569,8 @@ class UserViewModel @Inject constructor(
                         error = null
                         addProviderRepository.dataStoreToken.saveToken(token!!.access.toString())
                         getData()
+                     //   addProviderRepository.dataStoreToken.saveLoginState(true)
+
                     }
                 } catch (e: Exception) {
                     // Handle any exceptions that might occur during the login operation
@@ -625,6 +627,7 @@ class UserViewModel @Inject constructor(
 //                returnedProviderData= token?.let { getProviderData(it.access ) }
 
 
+
     fun clearAllData() {
         userName = ""
         address = ""
@@ -668,6 +671,8 @@ class UserViewModel @Inject constructor(
                 returnedProviderData =
                     addProviderRepository.getProviderData()
                 addProviderRepository.dataStoreToken.saveUserType(UserType.HirePerson.name)
+                addProviderRepository.dataStoreToken.saveLoginState(true)
+
 //                returnedProviderData?.let {
 //                    userName = it.username
 //                    address = it.address
@@ -701,6 +706,8 @@ class UserViewModel @Inject constructor(
                     phone = it.phone
                     imageUri = Uri.parse(Constant.BASE_URL + it.image)
                 }
+                addProviderRepository.dataStoreToken.saveLoginState(true)
+
                 //      accounType = UserType.OwnerPerson
 
                 Log.d(

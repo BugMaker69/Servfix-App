@@ -1,5 +1,7 @@
 package com.example.graduationproject.ui
 
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
@@ -19,9 +21,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -100,6 +104,7 @@ fun BottomAppBar(
 
 
     NavigationBar(
+        modifier=Modifier.fillMaxWidth(),
         containerColor = Color.Transparent,
         contentColor = DarkBlue,
     ) {
@@ -113,7 +118,6 @@ fun BottomAppBar(
                     navController.navigate(screen.route){
                         popUpTo(navController.graph.findStartDestination().id) { saveState = true }
                         launchSingleTop = true
-                        restoreState = true
                     }
                 },
                 icon = {

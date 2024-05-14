@@ -45,7 +45,9 @@ data class  SearchProviders(@SerializedName("providers" ) var providers:List<Ret
 data class ViewProfileData (
 
     @SerializedName("provider" ) var provider : Provider?         = Provider(),
-    @SerializedName("works"    ) var works    : ArrayList<Works> = arrayListOf()
+    @SerializedName("works"    ) var works    : ArrayList<Works> = arrayListOf(),
+    @SerializedName("is_favourite" ) var isFavourite : Boolean         = false
+
 
 )
 data class Works (
@@ -188,6 +190,9 @@ class GetWorks : ArrayList<GetWorksItem>()*/
 data class GetWorksItem(
     val id: Int,
     val image: String
+)
+data class Rate(
+    val rating: Long,
 )
 
 class GetWorks : ArrayList<GetWorksItem>()

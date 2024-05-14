@@ -8,6 +8,7 @@
     <!-- Permissions for Android 6 (API level 23) and above -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <!-- For Android 10 (API level 29) and above, consider using the MANAGE_EXTERNAL_STORAGE permission to access all files on external storage -->
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>

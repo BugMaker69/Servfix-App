@@ -8,6 +8,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
@@ -23,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -32,8 +34,11 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.graduationproject.BeforeSignup
+import com.example.graduationproject.MyApplication
 import com.example.graduationproject.data.NewOldPassword
+
 import com.example.graduationproject.presentation.AddNeWorkToProfileItems
+import com.example.graduationproject.presentation.LoadingScreen
 import com.example.graduationproject.presentation.SeeWork
 import com.example.graduationproject.presentation.SeeWorkViewModel
 import com.example.graduationproject.presentation.accountinfo.ProviderAccountInfoDetailsScreen
@@ -85,7 +90,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlin.system.exitProcess
 
-@SuppressLint("CoroutineCreationDuringComposition")
+@SuppressLint("CoroutineCreationDuringComposition", "UnrememberedMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ServixApp(
@@ -98,26 +103,26 @@ fun ServixApp(
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val dataStoreToken = DataStoreToken()
     var isLoggedIn = runBlocking { dataStoreToken.getLogin() }
-    val userTypeFlow = runBlocking { dataStoreToken.getUserType() }
+    val userTypeFlow = dataStoreToken.userType.collectAsState(initial = "")
     val notificationViewModel: NotificationViewModel = hiltViewModel()
 
-    Log.d("vvv", "ServixApp:up ${userTypeFlow} ")
+    Log.d("vvv", "ServixApp:up ${userTypeFlow.value} ")
     Log.d("qqqqqqqqq", "ServixApp: ${isLoggedIn}")
 
-    LaunchedEffect(Unit) {
+
+        LaunchedEffect(isLoggedIn,userTypeFlow) {
         val loginResult = dataStoreToken.getLogin()
         isLoggedIn = loginResult
-        userTypeFlow
 
         // Check login state and user type after data retrieval
-        if (isLoggedIn && userTypeFlow != "") {
+        if (isLoggedIn && userTypeFlow.value != "") {
             Log.d("mmmm1", "ServixApp: ${userTypeFlow}")
-            if (userTypeFlow == UserType.OwnerPerson.name) {
+            if (userTypeFlow.value == UserType.OwnerPerson.name) {
                 navController.navigate(ServixScreens.HomeUser.name) {
                     popUpTo(ServixScreens.OnBoarding.name) { inclusive = true }
                     launchSingleTop = true
                 }
-            } else if (userTypeFlow == UserType.HirePerson.name) {
+            } else if (userTypeFlow.value == UserType.HirePerson.name) {
                 navController.navigate(ServixScreens.HomeProvider.name) {
                     popUpTo(ServixScreens.OnBoarding.name) { inclusive = true }
                     launchSingleTop = true
@@ -126,9 +131,9 @@ fun ServixApp(
         }
     }
 
+
     BackHandler {
         if (navController.previousBackStackEntry != null) {
-            // Allow back navigation for all screens except Login
             if (navController.currentBackStackEntry?.destination?.route != ServixScreens.Login.name) {
                 navController.popBackStack()
             }
@@ -169,7 +174,6 @@ fun ServixApp(
                         scrollBarBehavior = scrollBehavior
                     )
                 }
-
 
                 ServixScreens.NewPasswordScreen.name, ServixScreens.Settings.name -> {
                     SettingsTopBar(
@@ -212,7 +216,7 @@ fun ServixApp(
                     ServixScreens.PostDetails.name + "/{id}",
                 )
             ) {
-                BottomAppBar(navController = navController, userTypeFlow)
+                BottomAppBar(navController = navController, userTypeFlow.value)
 
             }
         }
@@ -223,15 +227,22 @@ fun ServixApp(
         NavHost(
             navController = navController,
             startDestination = if (isFirstLaunch) ServixScreens.OnBoarding.name else {
-                if (isLoggedIn && userTypeFlow != "") {
-                    Log.d("mmmm1", "ServixApp: ${userTypeFlow}")
-                    if (userTypeFlow == UserType.OwnerPerson.name) ServixScreens.HomeUser.name else ServixScreens.HomeProvider.name
-                } else {
-                    Log.d("mmmm6", "ServixApp: ${userTypeFlow}")
+                if (isLoggedIn && userTypeFlow.value.isNotBlank()) {
+                    Log.d("mmmm1", "ServixApp: ${userTypeFlow.value}")
+                    if (userTypeFlow.value == UserType.OwnerPerson.name) ServixScreens.HomeUser.name else ServixScreens.HomeProvider.name
+                }
+                else if(isLoggedIn&&userTypeFlow.value.isBlank()){
+                    ServixScreens.LoadingScreen.name
+                }
+
+                else {
+                    Log.d("mmmm6", "ServixApp: ${userTypeFlow.value}")
                     ServixScreens.Login.name
                 }
             }
         ) {
+
+
             composable(ServixScreens.OnBoarding.name) {
                 OnBoardingScreen {
                     navController.navigate(ServixScreens.Login.name)
@@ -313,45 +324,45 @@ fun ServixApp(
             }
             composable(ServixScreens.Login.name) {
 
-                Login(
-                    onLoginClick = {
-                        runBlocking {
-                            userViewModel.loginEnabled=false
+                    Login(
+                        onLoginClick = {
+                            runBlocking {
+                                userViewModel.loginEnabled=false
 
-                            userViewModel.login()
-                            delay(4000)
-                            if (dataStoreToken.getToken() != "") {
-                                Log.d("vvv", "ServixApp: ${userTypeFlow}")
-                                if (userTypeFlow == UserType.HirePerson.name) {
-                                    navController.navigate(ServixScreens.HomeProvider.name) {
-                                        popUpTo(ServixScreens.Login.name) {
-                                            inclusive = true
+                                userViewModel.login()
+                                delay(4000)
+                                if (dataStoreToken.getToken() != "") {
+                                    Log.d("vvv", "ServixApp: ${userTypeFlow}")
+                                    if (userTypeFlow.value== UserType.HirePerson.name) {
+                                        navController.navigate(ServixScreens.HomeProvider.name) {
+                                            popUpTo(ServixScreens.Login.name) {
+                                                inclusive = true
+                                            }
+
                                         }
+                                    } else if (userTypeFlow.value == UserType.OwnerPerson.name) {
+                                        navController.navigate(ServixScreens.HomeUser.name) {
+                                            popUpTo(ServixScreens.Login.name) {
+                                                inclusive = true
+                                            }
 
-                                    }
-                                } else if (userTypeFlow == UserType.OwnerPerson.name) {
-                                    navController.navigate(ServixScreens.HomeUser.name) {
-                                        popUpTo(ServixScreens.Login.name) {
-                                            inclusive = true
                                         }
-
                                     }
+
+
                                 }
-
-
                             }
-                        }
-                        userViewModel.loginEnabled=true
+                            userViewModel.loginEnabled=true
 
 
-                    },
+                        },
                     onSignupClick = {
                         navController.navigate(ServixScreens.BeforeSignup.name)
                     },
                     onForgetPasswordClick = {
                         navController.navigate(ServixScreens.ForgotPassword.name)
                     },
-                    userViewModel = userViewModel
+                    userViewModel = userViewModel, modifier = Modifier.padding(innerPadding)
                 )
             }
             composable(ServixScreens.BeforeSignup.name) {
@@ -375,7 +386,7 @@ fun ServixApp(
                     onAccountInfoClick = {
                         /*                        //TODO NEED TO BE HANDLED IN BETTER WAY USING SUCH DATA STORE
                         userViewModel.getData()*/
-                        if (userTypeFlow == UserType.OwnerPerson.name) {
+                        if (userTypeFlow.value == UserType.OwnerPerson.name) {
                             navController.navigate(ServixScreens.UserAccountInfo.name)
                         } else {
                             navController.navigate(ServixScreens.ProviderAccountInfo.name)
@@ -401,16 +412,17 @@ fun ServixApp(
                         runBlocking {
                             dataStoreToken.saveLoginState(false)
                             dataStoreToken.saveToken("")
-                            dataStoreToken.saveUserType("") // Clear user type as well
+                            dataStoreToken.saveUserType("")
+                            navController.navigate(ServixScreens.Login.name) {
+                                popUpTo(navController.graph.id) {
+                                    inclusive = true
+                                }
+                                launchSingleTop = true
+                            }
                         }
 
 
-//                        navController.navigate(ServixScreens.Login.name) {
-//                            popUpTo(navController.graph.id) {
-//                                inclusive = true
-//                            }
-//                            launchSingleTop = true
-//                        }
+
                     },
                     settingsViewModel = settingsViewModel,
 
@@ -761,10 +773,10 @@ fun ServixApp(
 
             composable(ServixScreens.HomeProvider.name) {
                 val homeProviderHomeViewModel: ProviderHomeViewModel = hiltViewModel()
-                if (userTypeFlow == UserType.HirePerson.name) {
+                if (userTypeFlow.value == UserType.HirePerson.name) {
                     homeProviderHomeViewModel.getPostsForProvider()
 
-                    Log.d("getPostsForProvider", "ServixApp: ${userTypeFlow.toString()}")
+                    Log.d("getPostsForProvider", "ServixApp: ${userTypeFlow.value.toString()}")
                     //    Log.d("getPostsForProvider", "ServixApp: ${notificationViewModel.getPostsForProvider()}")
                     //    Log.d("getPostsForProvider", "ServixApp: ${notificationViewModel.getPostsForProvider}")
                     Log.d("getPostsForProvider", "here:")
@@ -802,8 +814,11 @@ fun ServixApp(
                 ChatContactScreen(
                     modifier = Modifier.padding(innerPadding),
                     vm = vm,
-                    userType = userTypeFlow
+                    userType = userTypeFlow.value
                 )
+            }
+            composable(ServixScreens.LoadingScreen.name){
+                LoadingScreen()
             }
 
         }

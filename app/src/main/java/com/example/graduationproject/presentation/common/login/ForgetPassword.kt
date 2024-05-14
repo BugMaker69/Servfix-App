@@ -93,7 +93,7 @@ fun FirstScreenOnForgotPasswordChange(
         }
 
         CustomButtonAndText(
-            text = R.string.enter_phone,
+            text = R.string.enter_email,
             contentColor = Color.Black
         )
 

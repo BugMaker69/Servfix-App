@@ -1,8 +1,6 @@
 package com.example.graduationproject.presentation.userservice
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.getValue
@@ -11,17 +9,16 @@ import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.geometry.Size
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.graduationproject.MyApplication
-import com.example.graduationproject.data.GetWorksItem
 import com.example.graduationproject.data.Services
 import com.example.graduationproject.data.constants.Constant
 import com.example.graduationproject.data.repositories.AddProviderRepository
 import com.example.graduationproject.data.repositories.UserServicesRepository
+import com.example.graduationproject.data.retrofit.InternetObserver
+import com.example.graduationproject.data.retrofit.NetworkConnectivityObserver
 import com.example.graduationproject.utils.FileUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -40,11 +37,13 @@ class ServiceViewModel @Inject constructor(    val addProviderRepository :AddPro
 
 
 
-
     init {
-        getServicesList()
-//        getAllWorks()
+       getServicesList()
+
+
+
     }
+
 
     fun getServicesList() {
         try {

@@ -1,6 +1,7 @@
 package com.example.graduationproject.presentation.common.login
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,6 +25,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -51,17 +54,17 @@ import com.example.graduationproject.ui.theme.White
 @SuppressLint("SuspiciousIndentation")
 @Composable
 fun Login(
-    modifier: Modifier = Modifier,
+    modifier: Modifier ,
     onForgetPasswordClick: () -> Unit,
     onSignupClick: () -> Unit,
     onLoginClick: () -> Unit,
     userViewModel: UserViewModel
 ) {
-
+val context= LocalContext.current
     var press by remember { mutableStateOf(false) }
     userViewModel.isPasswordForget = false
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(16.dp)
             .verticalScroll(rememberScrollState()),
@@ -92,7 +95,7 @@ fun Login(
                 fieldName = R.string.username,
                 fieldValue = userViewModel.email,
                 onValueChange = { userViewModel.onEmailChanged(it) },
-                isError = userViewModel.emailError
+                isError = userViewModel.userNameError
             )
             CustomTextField(
                 fieldName = R.string.password,
@@ -118,15 +121,12 @@ fun Login(
                 contentColor = Color.Gray,
                 modifier = Modifier.align(Alignment.End)
             )
+
             if (userViewModel.error != null) {
-                Text(
-                    text = "${userViewModel.error}",
-                    style = TextStyle(
-                        color = Color.Red,
-                        fontSize = 24.sp,
-                        textAlign = TextAlign.Start
-                    )
-                )
+                LaunchedEffect(userViewModel.error) {
+                    Toast.makeText(context, "${userViewModel.error}", Toast.LENGTH_SHORT).show()
+                    userViewModel.error = null
+                }
             }
 
             Spacer(modifier = Modifier.height(64.dp))

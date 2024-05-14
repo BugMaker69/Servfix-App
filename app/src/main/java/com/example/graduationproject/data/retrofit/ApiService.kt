@@ -1,5 +1,6 @@
 package com.example.graduationproject.data.retrofit
 
+import android.telecom.Call.Details
 import com.example.graduationproject.data.AllNotification
 import com.example.graduationproject.data.FavouritesList
 import com.example.graduationproject.data.GeneralPostAccept
@@ -12,6 +13,7 @@ import com.example.graduationproject.data.LoginRequest
 import com.example.graduationproject.data.LoginResponse
 import com.example.graduationproject.data.NewOldPassword
 import com.example.graduationproject.data.PostStatus
+import com.example.graduationproject.data.Rate
 import com.example.graduationproject.data.RefreshRequest
 import com.example.graduationproject.data.RefreshResponse
 import com.example.graduationproject.data.Register
@@ -19,6 +21,7 @@ import com.example.graduationproject.data.ReturnedProviderData
 import com.example.graduationproject.data.ReturnedUserData
 import com.example.graduationproject.data.SearchProviders
 import com.example.graduationproject.data.ServicesCategories
+import com.example.graduationproject.data.Test
 import com.example.graduationproject.data.ViewProfileData
 import com.example.graduationproject.data.ForgetResetPassword
 import okhttp3.MultipartBody
@@ -54,6 +57,10 @@ interface ApiService {
     suspend fun deleteAccount(
         @Header("Authorization") token: String,
     )
+    @POST("/api/reviews/{id}")
+    suspend fun addReview(  @Header("Authorization") token: String,@Path("id") id: Int,@Body rate:Rate){
+
+    }
 
 
 //    @DELETE("/api/delete-account/{password}")
@@ -76,8 +83,9 @@ interface ApiService {
     suspend fun showFavourites(@Header("Authorization") token: String): FavouritesList
 
 
+
     @POST("/api/favourite/{id}")
-    suspend fun addFavorite(@Path("id") id: Int, @Header("Authorization") token: String)
+    suspend fun addFavorite(@Path("id") id: Int, @Header("Authorization") token: String):Response<Test>
 
     @DELETE("/api/delete_fav/{id}")
     suspend fun deleteFavorite(@Path("id") id: Int, @Header("Authorization") token: String)

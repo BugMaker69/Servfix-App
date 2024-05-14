@@ -168,7 +168,7 @@ fun FavoriteItem(
 
         ) {
             Box(modifier = Modifier.fillMaxSize()) {
-                RatingBar(rating = 3.7, modifier = Modifier.padding(10.dp))
+                RatingBar(rating = state.ratings.toDouble(), modifier = Modifier.padding(10.dp))
                 Text(
                     text = state.profession,
                     Modifier

@@ -1,6 +1,8 @@
 package com.example.graduationproject.presentation.viewprofile
 
 
+import android.util.Log
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -10,6 +12,7 @@ import com.example.graduationproject.data.constants.Constant
 import com.example.graduationproject.data.repositories.ViewProfileRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -20,23 +23,31 @@ class ViewProfileViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    val profile = mutableStateOf(ViewProfileData())
-    val isFavourite = mutableStateOf(false)
+    val profile = MutableStateFlow(ViewProfileData())
+    var toastMessage = mutableStateOf("")
+   // val profile = MutableStateFlow(ViewProfileData())
+
 
     init {
         val id = savedStateHandle.get<Int>("pid")
-        viewModelScope.launch {
             if (id != null) {
                 getData(id)
 
-            }
+
 
         }
     }
 
     fun addToFavourite() {
         viewModelScope.launch(Dispatchers.IO) {
-            profile.value.provider?.id?.let { repo.addToFavorite(it.toInt()) }
+            profile.value.provider?.id?.let {
+                Log.d("wow", "addToFavourite: $it")
+                repo.addToFavorite(it.toInt())
+                toastMessage.value=repo.addToFavorite(it)
+                withContext(Dispatchers.Main){                profile.value = profile.value.copy(isFavourite = true)
+                }
+            }
+
         }
 
     }
@@ -66,7 +77,7 @@ class ViewProfileViewModel @Inject constructor(
 //
 //                }
 //            }
-            withContext(Dispatchers.Main) { profile.value = providerProfile }
+            withContext(Dispatchers.IO) { profile.value = providerProfile }
 
 
         }

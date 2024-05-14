@@ -32,4 +32,6 @@ FindProvider,
     ChatContactScreen,
     ShareProblemSpecific,
     SeeWork,
+    LoadingScreen,
+
 }

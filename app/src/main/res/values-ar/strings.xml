@@ -27,6 +27,7 @@
 
     <string name="have_account">هل لديك حساب بالفعل؟</string>
     <string name="have_not_account">ليس لديك حساب؟</string>
+    <string name="No_Internet">عفوا ! يرجى الإتصال بالانترنت للإستمرار</string>
 
     <string name="username">الاسم</string>
     <string name="city">مدينة</string>
