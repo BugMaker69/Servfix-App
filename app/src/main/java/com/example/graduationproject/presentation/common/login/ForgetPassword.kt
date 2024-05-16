@@ -1,6 +1,7 @@
 package com.example.graduationproject.presentation.common.login
 
 import android.app.Activity
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -99,10 +100,14 @@ fun FirstScreenOnForgotPasswordChange(
 
         CustomTextField(
             modifier = Modifier,
-            fieldName = R.string.phone,
-            fieldValue = userViewModel.phoneChange,
-            onValueChange = { userViewModel.onNewPhoneChanged(it) },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+            fieldName = R.string.email,
+            fieldValue = userViewModel.emailN,
+            onValueChange = { userViewModel.onEmailChangedN(it)
+                Log.d("FirstScreenOnForgotPasswordChange", "FirstScreenOnForgotPasswordChange: ${userViewModel.emailN}")
+                Log.d("FirstScreenOnForgotPasswordChange", "FirstScreenOnForgotPasswordChange: ${it}")
+
+                            },
+//            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
 
         )
 
@@ -113,12 +118,14 @@ fun FirstScreenOnForgotPasswordChange(
             text = R.string.send_code,
             onClick = {
                 userViewModel.isPasswordForget = true
-                userViewModel.onFinishSignupClick()
+                Log.d("FirstScreenOnForgotPasswordChange", "FirstScreenOnForgotPasswordChange: ${userViewModel.emailN}")
+                onSendClick()
+/*                userViewModel.onFinishSignupClick()
                 userViewModel.sendVerificationCode(
                     activity = context as Activity,
                     callbacks = userViewModel.callbacks
                 )
-                onSendClick()
+                onSendClick()*/
             },
             backgroundColor = DarkBlue,
             contentColor = Color.White,

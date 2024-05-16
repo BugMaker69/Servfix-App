@@ -29,7 +29,7 @@
         android:theme="@style/Theme.GraduationProject"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name="MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.GraduationProject.mySplash">
@@ -38,6 +38,71 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="https"
+                    android:host="p2kjdbr8-8000.uks1.devtunnels.ms"/>
+
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.SEND"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="https"
+                    android:pathPrefix="/api/reset_password/*"
+                    android:host="p2kjdbr8-8000.uks1.devtunnels.ms"/>
+
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.SEND"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="https"
+                    android:mimeType="text/html"
+                    android:pathPrefix="/api/reset_password/*"
+                    android:host="p2kjdbr8-8000.uks1.devtunnels.ms"/>
+
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.SEND"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="https"
+                    android:mimeType="application/json"
+                    android:pathPrefix="/api/reset_password/*"
+                    android:host="p2kjdbr8-8000.uks1.devtunnels.ms"/>
+
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="http"
+                    android:pathPrefix="/api/reset_password"
+                    android:host="p2kjdbr8-8000.uks1.devtunnels.ms"/>
+
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="app"
+                    android:pathPrefix="/api/reset_password"
+                    android:host="p2kjdbr8-8000.uks1.devtunnels.ms"/>
+
+            </intent-filter>
+
         </activity>
     </application>
 

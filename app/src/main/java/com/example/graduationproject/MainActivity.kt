@@ -1,8 +1,11 @@
 package com.example.graduationproject
 import ChatContactScreen
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
@@ -15,8 +18,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -40,13 +45,13 @@ class MainActivity : ComponentActivity() {
     private val networkConnectivityObserver = NetworkConnectivityObserver(MyApplication.getApplicationContext())
     @SuppressLint("FlowOperatorInvokedInComposition")
     @Composable
-    fun MainScreen() {
+    fun MainScreen(data:Uri) {
         val networkStatus by networkConnectivityObserver.observe().collectAsState(initial = InternetObserver.Status.Loading)
 
         Log.d("oooo", "MainScreen: $networkStatus")
         when (networkStatus) {
             InternetObserver.Status.Available -> {
-                ServixApp()
+                ServixApp(data)
             }
             InternetObserver.Status.NotAvailable -> {
                 NoInternetScreen()
@@ -60,6 +65,28 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
+        var d by mutableStateOf(Uri.EMPTY)
+
+        // Handle deep link intent
+        intent?.data?.let { uri ->
+            d  = uri
+/*            Log.d("DeepLink", "Received deep link: ${d}")
+            Log.d("DeepLink", "Received deep link: $uri")
+            Log.d("DeepLink", "Received deep link: $uri")
+            val resetToken = uri.lastPathSegment
+            Log.d("DeepLink", "Reset token: $resetToken")
+            val resetToken1 = uri.path
+            Log.d("DeepLink", "Reset token: $resetToken1")
+            val resetToken2 = uri.pathSegments
+            Log.d("DeepLink", "Reset token: $resetToken2")
+            val resetToken3 = uri.host
+            Log.d("DeepLink", "Reset token: $resetToken3")
+            // Handle resetToken, navigate to appropriate screen, etc.*/
+        }
+
+
         installSplashScreen()
         setContent {
             GraduationProjectTheme {
@@ -72,13 +99,22 @@ class MainActivity : ComponentActivity() {
                         Modifier
                             .fillMaxSize()
                     ) {
+/*                        val data = intent.data
+                        if (data != null){
+                            val host = data.host
+                            val scheme = data.scheme
+                            val path = data.path
+                            val url = "$scheme://$host$path"
+                            Log.d("URL", "onCreate: $url")
+                            Toast.makeText(this@MainActivity,"$url",Toast.LENGTH_SHORT).show()
+                        }*/
                        // FavoriteScreen(Modifier.padding(PaddingValues(start=0.0.dp, top=64.0.dp, end=0.0.dp, bottom=80.0.dp)))
 //                        AnimatedTextField()
 //                        SignupThirdScreen(Modifier,{},{})
 //                        ShareProblem(Modifier,{},{})
 //                        BeforeSignup(onBecomeClick = { /*TODO*/ }, onHireClick = { /*TODO*/ }) {}
                      //   TestScreenForApi()
-                        MainScreen()                   //     x()
+                        MainScreen(d)                   //     x()
                 //        ChatContactScreen()
 //                        val sampleMessages = listOf(
 //                            Message(1, "Hello!", false),
@@ -115,6 +151,15 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+/*    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        intent?.data?.let { uri ->
+            Log.d("DeepLink", "Received new intent with deep link: $uri")
+            val resetToken = uri.lastPathSegment
+            Log.d("DeepLink", "Reset token: $resetToken")
+            // Handle resetToken, navigate to appropriate screen, etc.
+        }
+    }*/
 }
 
 

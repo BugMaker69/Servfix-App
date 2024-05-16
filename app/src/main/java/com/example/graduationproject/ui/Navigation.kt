@@ -96,6 +96,7 @@ import kotlin.system.exitProcess
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ServixApp(
+    data:Uri,
     navController: NavHostController = rememberNavController()
 ) {
     val context = LocalContext.current
@@ -116,8 +117,12 @@ fun ServixApp(
         val loginResult = dataStoreToken.getLogin()
         isLoggedIn = loginResult
 
+            if (data.host=="p2kjdbr8-8000.uks1.devtunnels.ms"){
+                navController.navigate(ServixScreens.ResetPassword.name)
+            }
+
         // Check login state and user type after data retrieval
-        if (isLoggedIn && userTypeFlow.value != "") {
+       else if (isLoggedIn && userTypeFlow.value != "") {
             Log.d("mmmm1", "ServixApp: ${userTypeFlow}")
             if (userTypeFlow.value == UserType.OwnerPerson.name) {
                 navController.navigate(ServixScreens.HomeUser.name) {
@@ -228,7 +233,9 @@ fun ServixApp(
 
         NavHost(
             navController = navController,
-            startDestination = if (isFirstLaunch) ServixScreens.OnBoarding.name else {
+            startDestination =
+            if (data.host=="p2kjdbr8-8000.uks1.devtunnels.ms") ServixScreens.ResetPassword.name
+            else if (isFirstLaunch) ServixScreens.OnBoarding.name else {
                 if (isLoggedIn && userTypeFlow.value.isNotBlank()) {
                     Log.d("mmmm1", "ServixApp: ${userTypeFlow.value}")
                     if (userTypeFlow.value == UserType.OwnerPerson.name) ServixScreens.HomeUser.name else ServixScreens.HomeProvider.name
@@ -244,6 +251,9 @@ fun ServixApp(
             }
         ) {
 
+/*            if (data=="p2kjdbr8-8000.uks1.devtunnels.ms"){
+                navController.navigate(ServixScreens.ResetPassword.name)
+            }*/
 
             composable(ServixScreens.OnBoarding.name) {
                 OnBoardingScreen {
@@ -561,7 +571,12 @@ fun ServixApp(
 
                 FirstScreenOnForgotPasswordChange(
                     onSendClick = {
-                        navController.navigate(ServixScreens.Otp.name)
+                        Log.d("NAvFirstScreenOnForgotPasswordChange", "FirstScreenOnForgotPasswordChange: ${userViewModel.emailN}")
+                        userViewModel.forgotPassword()
+//                        navController.navigate(ServixScreens.Otp.name)
+                        if (userViewModel.isDone){
+                            navController.navigate(ServixScreens.ResetPassword.name)
+                        }
 
                     },
                     onLoginClick = {
@@ -574,7 +589,12 @@ fun ServixApp(
 
                 ResetPassword(
                     onResetClick = {
-                        navController.navigate(ServixScreens.AfterPassword.name)
+                        userViewModel.resetPassword(data.lastPathSegment.toString())
+                        navController.navigate(ServixScreens.AfterPassword.name) {
+                            popUpTo(ServixScreens.ResetPassword.name) {
+                                inclusive = true
+                            }
+                        }
                     },
                     userViewModel = userViewModel
                 )
@@ -582,7 +602,11 @@ fun ServixApp(
             composable(ServixScreens.AfterPassword.name) {
                 AfterPasswordChange(
                     onBackToLoginClick = {
-                        navController.navigate(ServixScreens.Login.name)
+                        navController.navigate(ServixScreens.Login.name) {
+                            popUpTo(ServixScreens.ResetPassword.name) {
+                                inclusive = true
+                            }
+                        }
                     }
                 )
             }
@@ -623,7 +647,8 @@ fun ServixApp(
                     "getAllNotifications",
                     "ServixApp: ${notificationViewModel.getAllNotifications()}"
                 )
-                notificationViewModel.getAllNotifications()
+//                notificationViewModel.getAllNotifications()
+//                notificationViewModel.getAllSpecificNotifications()
                 Log.d(
                     "getAllNotifications",
                     "ServixApp: ${notificationViewModel.getAllNotifications}"

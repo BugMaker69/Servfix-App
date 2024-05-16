@@ -12,12 +12,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Send
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -41,18 +37,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.graduationproject.R
 import com.example.graduationproject.data.Chat
-import com.example.graduationproject.ui.theme.DarkBlue
 import com.example.graduationproject.ui.theme.DarkWhite
-import com.example.graduationproject.ui.theme.GrayBlue
 import com.example.graduationproject.ui.theme.LightBlue
-import kotlinx.coroutines.flow.MutableStateFlow
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChatScreen(vm: ChatViewModel) {
     var textState by remember { mutableStateOf("") }
-
+    val lista = vm.chat.collectAsState()
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(id = R.drawable.oq),
@@ -65,11 +58,14 @@ fun ChatScreen(vm: ChatViewModel) {
                 modifier = Modifier.weight(1f),
                 reverseLayout = true
             ) {
-                items(vm.chat.value) {
+                items(lista.value) {
                     MessageRow(chat = it, vm.retrievedId)
                 }
             }
-            UserInputField(textState, onValueChange = { textState = it }, onSend = { /*vm.sendMessage(textState) */})
+            UserInputField(
+                textState,
+                onValueChange = { textState = it },
+                onSend = { /*vm.sendMessage(textState) */ })
         }
     }
 }
@@ -113,7 +109,7 @@ fun MessageRow(chat: Chat, receiver: Int) {
         horizontalArrangement = if (chat.sender != receiver) Arrangement.End else Arrangement.Start
     ) {
         Card(
-            colors =CardDefaults.cardColors(  if (chat.sender != receiver) LightBlue else DarkWhite)  , // Adjust this color to match WhatsApp's gray
+            colors = CardDefaults.cardColors(if (chat.sender != receiver) LightBlue else DarkWhite), // Adjust this color to match WhatsApp's gray
             modifier = Modifier.padding(4.dp)
         ) {
             Column {
@@ -133,7 +129,6 @@ fun MessageRow(chat: Chat, receiver: Int) {
         }
     }
 }
-
 
 
 //            Row(Modifier.fillMaxSize(), Arrangement.Center) {

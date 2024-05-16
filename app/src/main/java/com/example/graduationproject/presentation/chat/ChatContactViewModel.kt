@@ -12,6 +12,7 @@ import com.example.graduationproject.presentation.common.UserType
 import com.example.graduationproject.utils.DataStoreToken
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -28,44 +29,47 @@ class ChatContactViewModel @Inject constructor(private val chatRepository: ChatR
 
     private fun getChatListItems() {
         viewModelScope.launch(Dispatchers.IO) {
-            if (dataStoreToken.getUserType() == UserType.OwnerPerson.name) {
-                chatRepository.getChatListForUsers().collect { providers ->
-                    chatRepository.getChatListDetails().collect { details ->
-                        val items = providers.map { provider ->
-                            val detail = details.find { it.name == provider.name }
-                            ChatListItem(
-                                id = provider.id,
-                                name = provider.name,
-                                image = Constant.BASE_URL + provider.image,
-                                content = detail?.content,
-                                unseenMessages = detail?.unseenMessages
-                            )
-                        }
+            while (true) {
+                if (dataStoreToken.getUserType() == UserType.OwnerPerson.name) {
+                    chatRepository.getChatListForUsers().collect { providers ->
+                        chatRepository.getChatListDetails().collect { details ->
+                            val items = providers.map { provider ->
+                                val detail = details.find { it.name == provider.name }
+                                ChatListItem(
+                                    id = provider.id,
+                                    name = provider.name,
+                                    image = Constant.BASE_URL + provider.image,
+                                    content = detail?.content,
+                                    unseenMessages = detail?.unseenMessages
+                                )
+                            }
 
-                        withContext(Dispatchers.Main) {
-                            chatListItems.value = items
+                            withContext(Dispatchers.Main) {
+                                chatListItems.value = items
+                            }
+                        }
+                    }
+                } else if (dataStoreToken.getUserType() == UserType.HirePerson.name) {
+                    chatRepository.getChatListForProviders().collect { users ->
+                        chatRepository.getChatListDetails().collect { details ->
+                            val items = users.map { user ->
+                                val detail = details.find { it.name == user.name }
+                                ChatListItem(
+                                    id = user.id,
+                                    name = user.name,
+                                    image = user.image,
+                                    content = detail?.content,
+                                    unseenMessages = detail?.unseenMessages
+                                )
+                            }
+
+                            withContext(Dispatchers.Main) {
+                                chatListItems.value = items
+                            }
                         }
                     }
                 }
-            } else if (dataStoreToken.getUserType() == UserType.HirePerson.name) {
-                chatRepository.getChatListForProviders().collect { users ->
-                    chatRepository.getChatListDetails().collect { details ->
-                        val items = users.map { user ->
-                            val detail = details.find { it.name == user.name }
-                            ChatListItem(
-                                id = user.id,
-                                name = user.name,
-                                image = user.image,
-                                content = detail?.content,
-                                unseenMessages = detail?.unseenMessages
-                            )
-                        }
-
-                        withContext(Dispatchers.Main) {
-                            chatListItems.value = items
-                        }
-                    }
-                }
+                delay(8000)
             }
         }
     }

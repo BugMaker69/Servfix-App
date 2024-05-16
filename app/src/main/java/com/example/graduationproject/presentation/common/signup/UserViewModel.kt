@@ -10,6 +10,8 @@ import androidx.compose.ui.geometry.Size
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.graduationproject.R
+import com.example.graduationproject.data.Email
+import com.example.graduationproject.data.ForgetResetPassword
 import com.example.graduationproject.data.LoginRequest
 import com.example.graduationproject.data.LoginResponse
 import com.example.graduationproject.data.Register
@@ -576,6 +578,20 @@ class UserViewModel @Inject constructor(
                     // Handle any exceptions that might occur during the login operation
                 }
             }
+        }
+    }
+
+var isDone = false
+    fun forgotPassword(){
+        viewModelScope.launch {
+            val email= Email( emailN)
+           isDone = addProviderRepository.forgotPassword(email)
+        }
+    }
+
+    fun resetPassword(id:String){
+        viewModelScope.launch {
+            addProviderRepository.resetPassword(ForgetResetPassword(newPassword,newPasswordConf),id)
         }
     }
 

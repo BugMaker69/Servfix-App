@@ -18,13 +18,6 @@ import com.google.gson.annotations.SerializedName
 //"service_id": 2
 //data class (val phone:String,val userName:String,val fixed_salary: String,val image: Any,val ratings: String,val city: String,val address: String,val profession: String)
 
-data class ChatListItem(
-    val id: Int,
-    val name: String,
-    val image: String? = null,
-    val content: String? = null,
-    val unseenMessages: String? = null
-)
 
 data class Register(
     @SerializedName("username") val userName: String = "",
@@ -49,6 +42,15 @@ data class MoreTokn(
     val access: String
 )
 
+data class ChatListItem(
+    val id: Int,
+    val name: String,
+    val image: String? = null,
+    val content: String? = null,
+    val unseenMessages: String? = null
+)
+
+
 data class ChatDetails (
 
     @SerializedName("content"         ) var content        : String? = null,
@@ -70,44 +72,46 @@ data class Chat (
 data class  SearchProviders(@SerializedName("providers" ) var providers:List<ReturnedProviderData>)
 data class ViewProfileData (
 
-    @SerializedName("provider" ) var provider : Provider?         = Provider(),
-    @SerializedName("works"    ) var works    : ArrayList<Works> = arrayListOf(),
-    @SerializedName("is_favourite" ) var isFavourite : Boolean         = false
+    @SerializedName("provider") var provider: Provider? = Provider(),
+    @SerializedName("works") var works: ArrayList<Works> = arrayListOf(),
+    @SerializedName("is_favourite") var isFavourite: Boolean = false
 
 
 )
-data class Works (
 
-    @SerializedName("id"    ) var id    : Int?    = null,
-    @SerializedName("image" ) var image : String? = null
+data class Works(
+
+    @SerializedName("id") var id: Int? = null,
+    @SerializedName("image") var image: String? = null
 
 )
 
-data class Image (
+data class Image(
     @SerializedName("id") var id: Int? = null,
     @SerializedName("image") var image: String? = null
 )
 
 data class RefreshRequest(val refresh: String)
 data class RefreshResponse(val access: String)
-data class Provider (
+data class Provider(
 
-    @SerializedName("phone"        ) var phone       : String? = null,
-    @SerializedName("username"     ) var username    : String? = null,
-    @SerializedName("password"     ) var password    : String? = null,
-    @SerializedName("email"        ) var email       : String? = null,
-    @SerializedName("fixed_salary" ) var fixedSalary : String? = null,
-    @SerializedName("image"        ) var image       : String? = null,
-    @SerializedName("ratings"      ) var ratings     : String? = null,
-    @SerializedName("city"         ) var city        : String? = null,
-    @SerializedName("address"      ) var address     : String? = null,
-    @SerializedName("id"           ) var id          : Int?    = null,
-    @SerializedName("user"         ) var user        : Int?    = null,
-    @SerializedName("profession"   ) var profession  : String? = null,
-    @SerializedName("service_id"   ) var serviceId   : Int?    = null
+    @SerializedName("phone") var phone: String? = null,
+    @SerializedName("username") var username: String? = null,
+    @SerializedName("password") var password: String? = null,
+    @SerializedName("email") var email: String? = null,
+    @SerializedName("fixed_salary") var fixedSalary: String? = null,
+    @SerializedName("image") var image: String? = null,
+    @SerializedName("ratings") var ratings: String? = null,
+    @SerializedName("city") var city: String? = null,
+    @SerializedName("address") var address: String? = null,
+    @SerializedName("id") var id: Int? = null,
+    @SerializedName("user") var user: Int? = null,
+    @SerializedName("profession") var profession: String? = null,
+    @SerializedName("service_id") var serviceId: Int? = null
 
 )
-data class  LogOutResponse(val detail: String)
+
+data class LogOutResponse(val detail: String)
 data class ReturnedUserData(
     val address: String,
     val city: String,
@@ -165,11 +169,13 @@ data class ReturnedProviderData(
     val user: Int,
     val username: String
 )
-data class ServicesCategories (
 
-    @SerializedName("service" ) var service : ArrayList<Services> = arrayListOf()
+data class ServicesCategories(
+
+    @SerializedName("service") var service: ArrayList<Services> = arrayListOf()
 
 )
+
 data class FavouritesList(
     @SerializedName("provider_favourite")
     val providerFavourite: List<ReturnedProviderData>,
@@ -181,13 +187,46 @@ data class Services(
     var image: String,
     val id: Int
 )
+
 data class AllNotificationItem(
+    val created_at: String,
+    val id: Int,
+    val is_seen: Boolean,
+    val message: String,
+    val post: Int,
+    val recipient1: Int,
+    val recipient2: Any
+)
+
+/*data class AllNotificationItem(
     val id: Int,
     val message: String,
     val post: Int
-)
+)*/
 
 class AllNotification : ArrayList<AllNotificationItem>()
+
+data class AllNotificationItemSpecific(
+    val created_at: String,
+    val id: Int,
+    val image: String,
+    val message: String,
+    val post: Int,
+    val provider_recipient: Int,
+    val user_recipient: Any
+)
+
+class AllNotificationSpecific : ArrayList<AllNotificationItemSpecific>()
+
+class AllNotifications(
+    val allNotificationItem:  List<AllNotificationItem>,
+    val allNotificationItemSpecific:  List<AllNotificationItemSpecific>,
+)
+
+data class Email(
+    val email: String
+)
+
 
 data class GetPostDataItem(
     val city: String,
@@ -205,6 +244,15 @@ data class NewOldPassword(
     val new_password: String
 )
 
+data class SpecificNotificationItemByIdItem(
+    val id: Int,
+    val image: String,
+    val message: String
+)
+
+class SpecificNotificationItemById : ArrayList<SpecificNotificationItemByIdItem>()
+
+
 /*data class GetWorksItem(
     val id: Int,
     val image: String,
@@ -217,6 +265,7 @@ data class GetWorksItem(
     val id: Int,
     val image: String
 )
+
 data class Rate(
     val rating: Long,
 )
@@ -225,12 +274,12 @@ class GetWorks : ArrayList<GetWorksItem>()
 
 
 data class GetChatListForProviders(
-    var accepted_users : ArrayList<AcceptedUsers> = arrayListOf()
+    var accepted_users: ArrayList<AcceptedUsers> = arrayListOf()
 )
 
-data class GetChatListForUsers (
+data class GetChatListForUsers(
 
-    @SerializedName("accepted_providers" ) var acceptedProviderUsers : ArrayList<AcceptedProviders> = arrayListOf()
+    @SerializedName("accepted_providers") var acceptedProviderUsers: ArrayList<AcceptedProviders> = arrayListOf()
 
 )
 data class AcceptedProviders (
@@ -245,10 +294,20 @@ data class GetPostsForProviderItem(
     val created_at: String,
     val id: Int,
     val image: String,
+    val is_accepted: Boolean,
     val message: String,
     val provider: Int,
     val user: Int
 )
+
+/*data class GetPostsForProviderItem(
+    val created_at: String,
+    val id: Int,
+    val image: String,
+    val message: String,
+    val provider: Int,
+    val user: Int
+)*/
 
 class GetPostsForProvider : ArrayList<GetPostsForProviderItem>()
 

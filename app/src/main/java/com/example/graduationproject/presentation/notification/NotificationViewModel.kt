@@ -7,9 +7,12 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.graduationproject.data.AllNotificationItem
+import com.example.graduationproject.data.AllNotificationItemSpecific
+import com.example.graduationproject.data.AllNotifications
 import com.example.graduationproject.data.GetPostDataItem
 import com.example.graduationproject.data.GetWorksItem
 import com.example.graduationproject.data.NewOldPassword
+import com.example.graduationproject.data.SpecificNotificationItemByIdItem
 import com.example.graduationproject.data.repositories.AddProviderRepository
 import com.example.graduationproject.data.repositories.ProviderRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,6 +27,11 @@ class NotificationViewModel @Inject constructor(
 
     var getAllNotifications by mutableStateOf(emptyList<AllNotificationItem>())
 
+    var getAllSpecificNotifications by mutableStateOf(emptyList<AllNotificationItemSpecific>())
+    var getSpecificNotificationById by mutableStateOf(emptyList<SpecificNotificationItemByIdItem>())
+
+//    var getAllNotificationsForAll by mutableStateOf(AllNotifications(getAllNotifications,getAllSpecificNotifications))
+
     var getPostById by mutableStateOf(emptyList<GetPostDataItem>())
 
 //    var getPostsForProvider by mutableStateOf(emptyList<GetPostsForProviderItem>())
@@ -37,6 +45,26 @@ class NotificationViewModel @Inject constructor(
             getAllNotifications = providerRepository.getAllNotifications()
         }
     }
+
+
+    fun getAllSpecificNotifications() {
+        viewModelScope.launch {
+            getAllSpecificNotifications = providerRepository.getAllSpecificNotifications()
+        }
+    }
+
+    fun getSpecificNotificationById(id: Int) {
+        viewModelScope.launch {
+            getSpecificNotificationById = providerRepository.getSpecificNotificationById(id)
+        }
+    }
+
+
+    /*    fun getAllNotificationsForAll(){
+            viewModelScope.launch {
+                getAllNotificationsForAll = AllNotifications(getAllNotifications,getAllSpecificNotifications)
+            }
+        }*/
 
     fun getPostById(id: Int) {
         viewModelScope.launch {

@@ -1,10 +1,12 @@
 package com.example.graduationproject.data.retrofit
 
-import android.telecom.Call.Details
 import com.example.graduationproject.data.AllNotification
+import com.example.graduationproject.data.AllNotificationSpecific
 import com.example.graduationproject.data.Chat
 import com.example.graduationproject.data.ChatDetails
+import com.example.graduationproject.data.Email
 import com.example.graduationproject.data.FavouritesList
+import com.example.graduationproject.data.ForgetResetPassword
 import com.example.graduationproject.data.GeneralPostAccept
 import com.example.graduationproject.data.GetChatListForProviders
 import com.example.graduationproject.data.GetChatListForUsers
@@ -23,9 +25,9 @@ import com.example.graduationproject.data.ReturnedProviderData
 import com.example.graduationproject.data.ReturnedUserData
 import com.example.graduationproject.data.SearchProviders
 import com.example.graduationproject.data.ServicesCategories
+import com.example.graduationproject.data.SpecificNotificationItemById
 import com.example.graduationproject.data.Test
 import com.example.graduationproject.data.ViewProfileData
-import com.example.graduationproject.data.ForgetResetPassword
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -41,32 +43,59 @@ import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
-import java.util.concurrent.Flow
 
 interface ApiService {
     @GET("/notifi/Chatmessages")
-    suspend fun getChatListDetails(@Header("Authorization") token: String):List<ChatDetails>
+    suspend fun getChatListDetails(@Header("Authorization") token: String): List<ChatDetails>
 
     @GET("/notifi/chatforspecificperson/{id}")
-    suspend fun getChat( @Path("id") id: Int, @Header("Authorization") token: String):List<Chat>
+    suspend fun getChat(@Path("id") id: Int, @Header("Authorization") token: String): List<Chat>
+
+    @GET("/notification/immediate-notifications/")
+    suspend fun getAllSpecificNotifications(
+        @Header("Authorization") token: String,
+    ): AllNotificationSpecific
+
+    //TODO REPLACE "(AllNotificationSpecific)" With NEW DATA CLASS IN All Places
+    @GET("/notification/provider/post/{id}/")
+    suspend fun getSpecificNotificationById(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int
+    ): SpecificNotificationItemById
+
+    @GET("/notifi/allnotification/")
+    suspend fun getAllNotifications(
+        @Header("Authorization") token: String,
+    ): AllNotification
+
+    @GET("/notification/get_post_by_id/{id}")
+    suspend fun getPostById(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int
+    ): GetPostData
 
     @POST("/api/reset_password/{id}")
-    suspend fun resetPassword(
+    fun resetPassword(
         @Body password: ForgetResetPassword,
-        @Path("id") id: Int
-    )
+        @Path("id") id: String
+    ): Call<ResponseBody>
 
     @POST("/api/forgot_password/")
-    suspend fun forgotPassword(
-        @Body email: String,
-    )
+    fun forgotPassword(
+        @Body email: Email,
+    ): Call<ResponseBody>
 
     @DELETE("/api/delete-account/")
     suspend fun deleteAccount(
         @Header("Authorization") token: String,
     )
+
     @POST("/api/reviews/{id}")
-    suspend fun addReview(  @Header("Authorization") token: String,@Path("id") id: Int,@Body rate:Rate){
+    suspend fun addReview(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int,
+        @Body rate: Rate
+    ) {
 
     }
 
@@ -91,9 +120,11 @@ interface ApiService {
     suspend fun showFavourites(@Header("Authorization") token: String): FavouritesList
 
 
-
     @POST("/api/favourite/{id}")
-    suspend fun addFavorite(@Path("id") id: Int, @Header("Authorization") token: String):Response<Test>
+    suspend fun addFavorite(
+        @Path("id") id: Int,
+        @Header("Authorization") token: String
+    ): Response<Test>
 
     @DELETE("/api/delete_fav/{id}")
     suspend fun deleteFavorite(@Path("id") id: Int, @Header("Authorization") token: String)
@@ -199,17 +230,6 @@ interface ApiService {
         @Path("id") id: Int,
         @Part image: List<MultipartBody.Part>
     ): Call<ResponseBody>
-
-    @GET("/notifi/allnotification/")
-    suspend fun getAllNotifications(
-        @Header("Authorization") token: String,
-    ): AllNotification
-
-    @GET("/notification/get_post_by_id/{id}")
-    suspend fun getPostById(
-        @Header("Authorization") token: String,
-        @Path("id") id: Int
-    ): GetPostData
 
     @GET("/notification/provider/posts/")
     suspend fun getPostsForProvider(

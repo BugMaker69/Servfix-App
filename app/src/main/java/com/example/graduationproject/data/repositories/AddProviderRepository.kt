@@ -8,6 +8,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.MutableLiveData
 import com.example.graduationproject.MyApplication
 import com.example.graduationproject.data.AllNotification
+import com.example.graduationproject.data.Email
+import com.example.graduationproject.data.ForgetResetPassword
 import com.example.graduationproject.data.GeneralPostAccept
 import com.example.graduationproject.data.GetPostData
 import com.example.graduationproject.data.GetPostsForProvider
@@ -786,6 +788,105 @@ class AddProviderRepository @Inject constructor(
      //   Log.d("wwwww", "deleteAccount: ${ apiService.deleteAccount("Bearer ${dataStoreToken.getToken()}",password).body()}")
     }
 
+    // TODO Add Boolean To Test Something
+    fun forgotPassword(email: Email):Boolean{
+        var isDone = false
+        apiService.forgotPassword(email)
+            .enqueue(object : Callback<ResponseBody> {
+                override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+
+                    if (response.body() != null && response.isSuccessful) {
+                        try {
+
+                            if (response.code() == 200) {
+                                isDone = true
+                                Log.d(
+                                    "forgotPassword Successfully",
+                                    "onResponse: forgotPassword Successfully ${response} ||  ${response.code()} ||  ${response.body()} ||  ${response.errorBody()} ||  ${response.isSuccessful} ||  ||  ${response.message()} ||  ||  ${response.headers()} ||  ||  ${response.raw()} || "
+                                )
+
+                            } else {
+                                Log.d(
+                                    "Error",
+                                    "onResponse: forgotPassword Error ${response} ||  ${response.code()} ||  ${response.body()} ||  ${response.errorBody()} ||  ${response.isSuccessful} ||  ||  ${response.message()} ||  ||  ${response.headers()} ||  ||  ${response.raw()} || "
+                                )
+
+                            }
+                        } catch (e: Exception) {
+                            Log.d(
+                                "Catched Error Created",
+                                "onResponse: forgotPassword Error  ${response} ||  ${response.code()} ||  ${response.body()} ||  ${response.errorBody()} ||  ${response.isSuccessful} ||  ||  ${response.message()} ||  ||  ${response.headers()} ||  ||  ${response.raw()} || "
+                            )
+
+                        }
+                    } else {
+                        Log.d("onFailure Error forgotPassword", "onResponse: Updated Nothing Happen Why ")
+                        Log.d(
+                            "onFailure Error forgotPassword",
+                            "onResponse: forgotPassword onFailure Error ${response} ||  ${response.isSuccessful} ||  ${response.message()} ||  ${response.code()} ||  ${response.errorBody()} ||  ${response.headers()} ||  ${response.raw()} || "
+                        )
+                    }
+
+                }
+
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                    Log.d(
+                        "onFailure Error Updated",
+                        "onResponse: forgotPassword onFailure Error ${t} ||  ${t.message} ||  ${t.cause} ||  ${t.localizedMessage} ||  ${t.stackTrace} ||  ${t.suppressed} || "
+                    )
+
+                }
+            })
+        return isDone
+    }
+
+    fun resetPassword(password: ForgetResetPassword, id: String){
+        apiService.resetPassword(password, id)
+            .enqueue(object : Callback<ResponseBody> {
+                override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+
+                    if (response.body() != null && response.isSuccessful) {
+                        try {
+
+                            if (response.code() == 200) {
+                                Log.d(
+                                    "resetPassword Successfully",
+                                    "onResponse: resetPassword Successfully ${response} ||  ${response.code()} ||  ${response.body()} ||  ${response.errorBody()} ||  ${response.isSuccessful} ||  ||  ${response.message()} ||  ||  ${response.headers()} ||  ||  ${response.raw()} || "
+                                )
+
+                            } else {
+                                Log.d(
+                                    "Error",
+                                    "onResponse: resetPassword Error ${response} ||  ${response.code()} ||  ${response.body()} ||  ${response.errorBody()} ||  ${response.isSuccessful} ||  ||  ${response.message()} ||  ||  ${response.headers()} ||  ||  ${response.raw()} || "
+                                )
+
+                            }
+                        } catch (e: Exception) {
+                            Log.d(
+                                "Catched Error Created",
+                                "onResponse: resetPassword Error  ${response} ||  ${response.code()} ||  ${response.body()} ||  ${response.errorBody()} ||  ${response.isSuccessful} ||  ||  ${response.message()} ||  ||  ${response.headers()} ||  ||  ${response.raw()} || "
+                            )
+
+                        }
+                    } else {
+                        Log.d("onFailure Error resetPassword", "onResponse: Updated Nothing Happen Why ")
+                        Log.d(
+                            "onFailure Error forgotPassword",
+                            "onResponse: resetPassword onFailure Error ${response} ||  ${response.isSuccessful} ||  ${response.message()} ||  ${response.code()} ||  ${response.errorBody()} ||  ${response.headers()} ||  ${response.raw()} || "
+                        )
+                    }
+
+                }
+
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                    Log.d(
+                        "onFailure Error Updated",
+                        "onResponse: resetPassword onFailure Error ${t} ||  ${t.message} ||  ${t.cause} ||  ${t.localizedMessage} ||  ${t.stackTrace} ||  ${t.suppressed} || "
+                    )
+
+                }
+            })
+    }
 
 }
 

@@ -61,6 +61,7 @@ fun ShimmerEffect(
         content = content
     )
 }
+/*
 @Composable
 fun LoadingScreenEffect() {
     Box(modifier = Modifier.fillMaxSize()) {
@@ -69,3 +70,4 @@ fun LoadingScreenEffect() {
         }
     }
 }
+*/

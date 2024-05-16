@@ -2,10 +2,12 @@ package com.example.graduationproject.data.repositories
 
 import android.util.Log
 import com.example.graduationproject.data.AllNotification
+import com.example.graduationproject.data.AllNotificationSpecific
 import com.example.graduationproject.data.GeneralPostAccept
 import com.example.graduationproject.data.GetPostData
 import com.example.graduationproject.data.GetPostsForProvider
 import com.example.graduationproject.data.PostStatus
+import com.example.graduationproject.data.SpecificNotificationItemById
 import com.example.graduationproject.data.retrofit.ApiService
 import com.example.graduationproject.utils.DataStoreToken
 import javax.inject.Inject
@@ -22,6 +24,18 @@ class ProviderRepository @Inject constructor(
         val response = apiService.getAllNotifications("Bearer ${dataStoreToken.getToken()}")
         return response
     }
+
+    suspend fun getAllSpecificNotifications(): AllNotificationSpecific {
+        val response = apiService.getAllSpecificNotifications("Bearer ${dataStoreToken.getToken()}")
+        return response
+    }
+
+    suspend fun getSpecificNotificationById(id: Int): SpecificNotificationItemById {
+        val response = apiService.getSpecificNotificationById("Bearer ${dataStoreToken.getToken()}",id)
+        return response
+    }
+
+
 
     suspend fun getPostById(id: Int): GetPostData {
         val response = apiService.getPostById("Bearer ${dataStoreToken.getToken()}", id)
