@@ -18,6 +18,13 @@ import com.google.gson.annotations.SerializedName
 //"service_id": 2
 //data class (val phone:String,val userName:String,val fixed_salary: String,val image: Any,val ratings: String,val city: String,val address: String,val profession: String)
 
+data class ChatListItem(
+    val id: Int,
+    val name: String,
+    val image: String? = null,
+    val content: String? = null,
+    val unseenMessages: String? = null
+)
 
 data class Register(
     @SerializedName("username") val userName: String = "",
@@ -40,6 +47,25 @@ data class LoginResponse(
 )
 data class MoreTokn(
     val access: String
+)
+
+data class ChatDetails (
+
+    @SerializedName("content"         ) var content        : String? = null,
+    @SerializedName("name"            ) var name           : String? = null,
+    @SerializedName("unseen_messages" ) var unseenMessages : String? = null
+
+
+)
+data class Chat (
+
+    @SerializedName("id"        ) var id        : Int,
+    @SerializedName("content"   ) var content   : String,
+    @SerializedName("timestamp" ) var timestamp : String,
+    @SerializedName("is_seen"   ) var isSeen    : Boolean,
+    @SerializedName("sender"    ) var sender    : Int,
+    @SerializedName("recipient" ) var recipient : Int
+
 )
 data class  SearchProviders(@SerializedName("providers" ) var providers:List<ReturnedProviderData>)
 data class ViewProfileData (
@@ -209,12 +235,12 @@ data class GetChatListForUsers (
 )
 data class AcceptedProviders (
 
-    @SerializedName("provider_id" ) var id : Int,
+    @SerializedName("id" ) var id : Int,
     @SerializedName("name"        ) var name       : String,
     @SerializedName("image"       ) var image      : String?=null
 
 )
-data class AcceptedUsers( @SerializedName("user_id" )var id:Int, @SerializedName("username")var name:String   ,@SerializedName("image") var image:String?=null)
+data class AcceptedUsers( @SerializedName("id" )var id:Int, @SerializedName("username")var name:String   ,@SerializedName("image") var image:String?=null)
 data class GetPostsForProviderItem(
     val created_at: String,
     val id: Int,

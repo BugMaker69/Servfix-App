@@ -1,6 +1,7 @@
 package com.example.graduationproject.presentation.viewprofile
 
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -17,6 +18,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+@SuppressLint("SuspiciousIndentation")
 @HiltViewModel
 class ViewProfileViewModel @Inject constructor(
     val repo: ViewProfileRepository,
@@ -44,7 +46,8 @@ class ViewProfileViewModel @Inject constructor(
                 Log.d("wow", "addToFavourite: $it")
                 repo.addToFavorite(it.toInt())
                 toastMessage.value=repo.addToFavorite(it)
-                withContext(Dispatchers.Main){                profile.value = profile.value.copy(isFavourite = true)
+                withContext(Dispatchers.Main){
+                    profile.value = profile.value.copy(isFavourite = true)
                 }
             }
 

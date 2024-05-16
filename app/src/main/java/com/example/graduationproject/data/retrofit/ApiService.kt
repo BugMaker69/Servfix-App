@@ -2,6 +2,8 @@ package com.example.graduationproject.data.retrofit
 
 import android.telecom.Call.Details
 import com.example.graduationproject.data.AllNotification
+import com.example.graduationproject.data.Chat
+import com.example.graduationproject.data.ChatDetails
 import com.example.graduationproject.data.FavouritesList
 import com.example.graduationproject.data.GeneralPostAccept
 import com.example.graduationproject.data.GetChatListForProviders
@@ -39,8 +41,14 @@ import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
+import java.util.concurrent.Flow
 
 interface ApiService {
+    @GET("/notifi/Chatmessages")
+    suspend fun getChatListDetails(@Header("Authorization") token: String):List<ChatDetails>
+
+    @GET("/notifi/chatforspecificperson/{id}")
+    suspend fun getChat( @Path("id") id: Int, @Header("Authorization") token: String):List<Chat>
 
     @POST("/api/reset_password/{id}")
     suspend fun resetPassword(

@@ -33,5 +33,5 @@ FindProvider,
     ShareProblemSpecific,
     SeeWork,
     LoadingScreen,
-
+ChatScreen
 }

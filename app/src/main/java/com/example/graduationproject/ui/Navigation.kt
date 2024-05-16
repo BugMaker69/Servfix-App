@@ -48,6 +48,8 @@ import com.example.graduationproject.presentation.accountinfo.UserAccountInfoDet
 import com.example.graduationproject.presentation.accountinfo.UserAccountInfoScreen
 import com.example.graduationproject.presentation.accountinfo.UserAccountInfoViewModel
 import com.example.graduationproject.presentation.chat.ChatContactViewModel
+import com.example.graduationproject.presentation.chat.ChatScreen
+import com.example.graduationproject.presentation.chat.ChatViewModel
 import com.example.graduationproject.presentation.common.HomeTopBar
 import com.example.graduationproject.presentation.common.UserType
 import com.example.graduationproject.presentation.common.UserTypeViewModel
@@ -814,8 +816,19 @@ fun ServixApp(
                 ChatContactScreen(
                     modifier = Modifier.padding(innerPadding),
                     vm = vm,
-                    userType = userTypeFlow.value
+                    userType = userTypeFlow.value, onChatClick = {chatId->
+                        navController.navigate(ServixScreens.ChatScreen.name + "/$chatId")
+
+                    }
                 )
+            }
+            composable(ServixScreens.ChatScreen.name+ "/{chatId}", arguments = listOf(
+                navArgument("chatId") {
+                    type = NavType.IntType
+                })
+            ) {
+                val vm:ChatViewModel= hiltViewModel()
+                ChatScreen(vm)
             }
             composable(ServixScreens.LoadingScreen.name){
                 LoadingScreen()
