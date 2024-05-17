@@ -8,6 +8,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.graduationproject.data.Chat
+import com.example.graduationproject.data.Rate
+import com.example.graduationproject.data.SendChatMessage
 import com.example.graduationproject.data.repositories.ChatRepository
 import com.example.graduationproject.data.retrofit.ApiService
 import com.example.graduationproject.utils.DataStoreToken
@@ -28,13 +30,35 @@ class ChatViewModel @Inject constructor(val dataStoreToken: DataStoreToken,val a
 
     val chat = MutableStateFlow(emptyList<Chat>())
     var retrievedId by mutableStateOf(0)
+    var retrievedName by mutableStateOf("")
+    var retrievedImage by mutableStateOf("")
+    var rating by mutableStateOf(0)
     init {
-
         retrievedId= savedStateHandle.get<Int>("chatId")!!
+        retrievedName=savedStateHandle.get<String>("name")!!
+        retrievedImage=savedStateHandle.get<String>("image")!!
+
         Log.d("pop", "retrievedId:$retrievedId ")
             getData(retrievedId)
 
         Log.d("oop", "${chat.value.size}: ")
+    }
+    fun addMessage(id:Int,message: String){
+        viewModelScope.launch(Dispatchers.IO){
+            val mesg= SendChatMessage(message)
+            chatRepository.addMessage(id, sendChatMessage = mesg)
+        }
+
+    }
+    fun addReview(){
+        viewModelScope.launch(Dispatchers.IO) {
+            Log.d("ool", "addReview: $retrievedId and $rating")
+            val rate = Rate(rating)
+            chatRepository.addReview(retrievedId, rate = rate)
+
+
+
+        }
     }
     fun getData(id: Int) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -49,7 +73,7 @@ class ChatViewModel @Inject constructor(val dataStoreToken: DataStoreToken,val a
                         Log.d("donee", "getData: data updated")
                     }
                 }
-                delay(5000)
+                delay(3000)
                 Log.d("donee", "will fetch again")
 
             }

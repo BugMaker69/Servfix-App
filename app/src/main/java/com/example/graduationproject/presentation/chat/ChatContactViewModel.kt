@@ -27,7 +27,7 @@ class ChatContactViewModel @Inject constructor(private val chatRepository: ChatR
         getChatListItems()
     }
 
-    private fun getChatListItems() {
+     fun getChatListItems() {
         viewModelScope.launch(Dispatchers.IO) {
             while (true) {
                 if (dataStoreToken.getUserType() == UserType.OwnerPerson.name) {
@@ -69,7 +69,7 @@ class ChatContactViewModel @Inject constructor(private val chatRepository: ChatR
                         }
                     }
                 }
-                delay(8000)
+                delay(4000)
             }
         }
     }

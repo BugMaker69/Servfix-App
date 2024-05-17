@@ -48,10 +48,12 @@ import com.example.graduationproject.ui.theme.DarkBlue
 
 
 @Composable
-fun ChatContactScreen(modifier: Modifier, vm: ChatContactViewModel, userType: String, onChatClick: (Int) -> Unit) {
-    vm.chatListItems.collectAsState().value.let { chatListItems ->
+fun ChatContactScreen(modifier: Modifier, vm: ChatContactViewModel, userType: String, onChatClick: (Int,String,String) -> Unit) {
+
+   val list= vm.chatListItems.collectAsState()
+    Log.d("donee", "ChatContactScreen: ${list.value.size}")
         LazyColumn(modifier.fillMaxSize()) {
-            items(chatListItems) { item ->
+            items(list.value) { item ->
                 ChatContactItem(
                     id = item.id,
                     name = item.name,
@@ -63,17 +65,17 @@ fun ChatContactScreen(modifier: Modifier, vm: ChatContactViewModel, userType: St
             }
         }    }
 
-}
+
 
 @Composable
-fun ChatContactItem(id: Int, name: String, image: String, lastMessage: String, unseenCount: Int, onChatClick: (Int) -> Unit) {
+fun ChatContactItem(id: Int, name: String, image: String, lastMessage: String, unseenCount: Int, onChatClick: (Int,String,String) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
             .clickable {
                 Log.d("popo", "ChatContactItem:$id ")
-                onChatClick(id)
+                onChatClick(id,name,image)
             },
         elevation = CardDefaults.cardElevation(8.dp),
         shape = RectangleShape

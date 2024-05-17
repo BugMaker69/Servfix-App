@@ -24,9 +24,11 @@ import com.example.graduationproject.data.Register
 import com.example.graduationproject.data.ReturnedProviderData
 import com.example.graduationproject.data.ReturnedUserData
 import com.example.graduationproject.data.SearchProviders
+import com.example.graduationproject.data.SendChatMessage
 import com.example.graduationproject.data.ServicesCategories
 import com.example.graduationproject.data.SpecificNotificationItemById
 import com.example.graduationproject.data.Test
+import com.example.graduationproject.data.Test2
 import com.example.graduationproject.data.ViewProfileData
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -45,6 +47,8 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiService {
+    @POST("/notification/chat/{id}")
+    suspend fun AddChat(@Header("Authorization") token: String,@Path("id") id: Int,@Body content:SendChatMessage)
     @GET("/notifi/Chatmessages")
     suspend fun getChatListDetails(@Header("Authorization") token: String): List<ChatDetails>
 
@@ -95,9 +99,7 @@ interface ApiService {
         @Header("Authorization") token: String,
         @Path("id") id: Int,
         @Body rate: Rate
-    ) {
-
-    }
+    ):Response<Test2>
 
 
 //    @DELETE("/api/delete-account/{password}")
