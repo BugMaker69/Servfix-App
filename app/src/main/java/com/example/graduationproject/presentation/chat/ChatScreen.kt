@@ -22,13 +22,14 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.Send
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -47,11 +48,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.SubcomposeAsyncImage
 import com.example.graduationproject.R
 import com.example.graduationproject.data.Chat
+import com.example.graduationproject.presentation.common.UserType
+import com.example.graduationproject.presentation.favourite.FavouriteAlertDialog
 import com.example.graduationproject.presentation.search_for_provider.RatingBar
 import com.example.graduationproject.ui.theme.DarkWhite
 import com.example.graduationproject.ui.theme.LightBlue
@@ -59,7 +64,7 @@ import com.example.graduationproject.ui.theme.LightBlue
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChatScreen(vm: ChatViewModel,modifier: Modifier) {
+fun ChatScreen(vm: ChatViewModel,modifier: Modifier,userType: String) {
     var textState by remember { mutableStateOf("") }
     val lista = vm.chat.collectAsState()
     val context= LocalContext.current
@@ -94,11 +99,16 @@ fun ChatScreen(vm: ChatViewModel,modifier: Modifier) {
                             context.startActivity(dialIntent)
 
                         })
-RatingBar(rating = vm.rating, onRateClick = {
-        starRating ->
-    vm.rating = starRating
-    vm.addReview()
-})
+                        if (userType==UserType.OwnerPerson.name){
+                            RatingBar(rating = vm.rating, onRateClick = {
+                                    starRating ->
+                                vm.rating = starRating
+                                vm.addReview()
+                                vm.terminateChat()
+
+                            })
+                        }
+
                     }
 
                 }
@@ -109,6 +119,15 @@ RatingBar(rating = vm.rating, onRateClick = {
             Box(modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()) {
+                if(vm.showAlert){
+                    ChatAlert(onDismissClick = { vm.showAlert=false }) {
+                        vm.deleteMessage()
+                        vm.showAlert=false
+
+                    }
+                }
+
+
                 Image(
                     painter = painterResource(id = R.drawable.oq),
                     contentDescription = null,
@@ -122,21 +141,26 @@ RatingBar(rating = vm.rating, onRateClick = {
                         reverseLayout = true
                     ) {
                         items(lista.value) {
-                            MessageRow(chat = it, vm.retrievedId)
+                            MessageRow(chat = it, vm.retrievedId){
+                                vm.deletedMessageId=it.id
+                                vm.showAlert=true
+                            }
                         }
                     }
                     UserInputField(
                         textState,
                         onValueChange = { textState = it },
                         onSend = {
-                            vm.addMessage(message = textState, id = vm.retrievedId)
-                            textState = ""
+                            if(textState.isNotBlank()){
+                                vm.addMessage(message = textState, id = vm.retrievedId)
+                                textState = ""
+                            }
+
                         })
                 }
             }
         })
 }
-
 
 
 
@@ -152,7 +176,7 @@ fun UserInputField(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
+            .padding(6.dp)
             .background(Color(0xFFECE5DD)) // Adjust this color to match WhatsApp's gray
     ) {
         TextField(
@@ -171,37 +195,68 @@ fun UserInputField(
 }
 
 @Composable
-fun MessageRow(chat: Chat, receiver: Int) {
+fun MessageRow(chat: Chat, receiver: Int,onDeleteMessage:()->Unit) {
     Log.d("momo", "MessageRow: ${chat.sender} and ${chat.recipient}")
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(4.dp),
+            .padding(4.dp)
+
+        ,
         horizontalArrangement = if (chat.sender != receiver) Arrangement.End else Arrangement.Start
     ) {
         Card(
             colors = CardDefaults.cardColors(if (chat.sender != receiver) LightBlue else DarkWhite), // Adjust this color to match WhatsApp's gray
-            modifier = Modifier.padding(4.dp)
+            modifier = Modifier
+                .padding(4.dp)
+                .clickable {
+                    onDeleteMessage()
+                }
         ) {
             Column {
                 Text(
                     text = chat.content,
-                    modifier = Modifier.padding(8.dp),
-                    color = Color.Black
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .align(Alignment.End)
+                        .padding(8.dp),
+                    color = Color.Black, fontSize = 20.sp
                 )
                 Text(
                     text = chat.timestamp,
                     textAlign = TextAlign.End,
+                    fontSize = 13.sp,
                     modifier = Modifier
                         .align(Alignment.End)
-                        .padding(end = 8.dp)
+                        .padding(end = 5.dp)
                 )
             }
         }
     }
 }
 
+@Composable
+fun ChatAlert(onDismissClick:()->Unit,onConfirmClick:()->Unit){
+    AlertDialog(
+        text = { Text(text = stringResource(id = R.string.delete_message)) },
+        onDismissRequest = {
+            onDismissClick()
 
+        },
+        confirmButton = {
+            Button(onClick = { onConfirmClick() }) {
+                Text(text = stringResource(id = R.string.confirm))
+            }
+        },
+
+        dismissButton = {
+            Button(onClick = { onDismissClick() }) {
+                Text(text = stringResource(id = R.string.cancel))
+
+            }
+
+        })
+}
 
 //@Preview(showBackground = true)
 //@Composable

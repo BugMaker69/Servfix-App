@@ -43,6 +43,7 @@ data class MoreTokn(
 )
 
 data class ChatListItem(
+    val terminate_id: Int,
     val id: Int,
     val name: String,
     val image: String? = null,
@@ -59,6 +60,7 @@ data class ChatDetails (
 
 
 )
+data class  TerminateMessage(  @SerializedName("message"         ) var message        : String)
 data class SendChatMessage(  @SerializedName("content" ) var content : String)
 data class Chat (
 
@@ -288,12 +290,15 @@ data class GetChatListForUsers(
 )
 data class AcceptedProviders (
 
-    @SerializedName("id" ) var id : Int,
+@SerializedName("provider_id" ) var terminate_id : Int,
+
+
+@SerializedName("id" ) var id : Int,
     @SerializedName("name"        ) var name       : String,
     @SerializedName("image"       ) var image      : String?=null
 
 )
-data class AcceptedUsers( @SerializedName("id" )var id:Int, @SerializedName("username")var name:String   ,@SerializedName("image") var image:String?=null)
+data class AcceptedUsers( @SerializedName("user_id" ) var terminate_id:Int,@SerializedName("id" )var id:Int, @SerializedName("username")var name:String   ,@SerializedName("image") var image:String?=null)
 data class GetPostsForProviderItem(
     val created_at: String,
     val id: Int,

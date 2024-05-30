@@ -841,23 +841,24 @@ fun ServixApp(
                 ChatContactScreen(
                     modifier = Modifier.padding(innerPadding),
                     vm = vm,
-                    userType = userTypeFlow.value, onChatClick = {chatId,name,image->
+                    userType = userTypeFlow.value, onChatClick = {chatId,name,image,terminate_id->
                         val uriEncode = Uri.encode(image)
-
-                        navController.navigate(ServixScreens.ChatScreen.name + "/$chatId"+"/$name"+"/$uriEncode")
+                        val route = "ChatScreen/$chatId/$name/$uriEncode/$terminate_id"
+                        Log.d("btx", "navigation problem url : ${ServixScreens.ChatScreen.name + "/$chatId"+"/$name"+"/$uriEncode"+"/$terminate_id"} ")
+                        navController.navigate(route)
 
                     }
                 )
             }
-            composable(ServixScreens.ChatScreen.name+ "/{chatId}"+"/{name}"+"/{image}", arguments = listOf(
+            composable(ServixScreens.ChatScreen.name+ "/{chatId}"+"/{name}"+"/{image}"+"/{terminate_id}", arguments = listOf(
                 navArgument("chatId") {
                     type = NavType.IntType
                 }, navArgument("name"){type= NavType.StringType}, navArgument("image"){type=
-                    NavType.StringType}
+                    NavType.StringType}, navArgument("terminate_id"){type= NavType.IntType}
             )
             ) {
                 val vm:ChatViewModel= hiltViewModel()
-                ChatScreen(vm,modifier=Modifier.padding(innerPadding))
+                ChatScreen(vm,modifier=Modifier.padding(innerPadding),userType=userTypeFlow.value)
             }
             composable(ServixScreens.LoadingScreen.name){
                 LoadingScreen()

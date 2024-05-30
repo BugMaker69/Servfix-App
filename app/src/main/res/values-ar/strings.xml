@@ -21,6 +21,7 @@
     <string name="redirected">سوف يتم إعادة توجيهك إلى شاشة الدخول الآن</string>
 
 
+    <string name="delete_message">هل انت متأكد انك تريد حذف هذه الرسالة ؟</string>
 
     <string name="login">تسجيل الدخول</string>
     <string name="signup">سجل</string>

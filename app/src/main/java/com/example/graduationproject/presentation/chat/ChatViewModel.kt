@@ -27,21 +27,29 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ChatViewModel @Inject constructor(val dataStoreToken: DataStoreToken,val apiService: ApiService,val savedStateHandle: SavedStateHandle,val chatRepository: ChatRepository) : ViewModel() {
-
+var deletedMessageId by mutableStateOf(0)
+    var showAlert by mutableStateOf(false)
     val chat = MutableStateFlow(emptyList<Chat>())
     var retrievedId by mutableStateOf(0)
     var retrievedName by mutableStateOf("")
     var retrievedImage by mutableStateOf("")
     var rating by mutableStateOf(0)
+    var terminate_id by mutableStateOf(0)
     init {
         retrievedId= savedStateHandle.get<Int>("chatId")!!
         retrievedName=savedStateHandle.get<String>("name")!!
         retrievedImage=savedStateHandle.get<String>("image")!!
-
+         terminate_id=savedStateHandle.get<Int>("terminate_id")!!
         Log.d("pop", "retrievedId:$retrievedId ")
             getData(retrievedId)
 
         Log.d("oop", "${chat.value.size}: ")
+    }
+    fun terminateChat(){
+
+        viewModelScope.launch (Dispatchers.IO){
+            chatRepository.determinateChat(terminate_id)
+        }
     }
     fun addMessage(id:Int,message: String){
         viewModelScope.launch(Dispatchers.IO){
@@ -59,6 +67,12 @@ class ChatViewModel @Inject constructor(val dataStoreToken: DataStoreToken,val a
 
 
         }
+    }
+    fun deleteMessage(){
+        viewModelScope.launch(Dispatchers.IO) {
+            chatRepository.deleteMessage(deletedMessageId)
+        }
+
     }
     fun getData(id: Int) {
         viewModelScope.launch(Dispatchers.IO) {

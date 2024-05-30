@@ -40,6 +40,16 @@ class ChatRepository @Inject constructor(val apiService: ApiService,val dataStor
 
         }")
     }
+    suspend fun deleteMessage(id:Int){
+        apiService.deleteChat("Bearer ${dataStoreToken.getToken()}", id = id)
+    }
+    suspend fun  determinateChat(id:Int){
+      val determinate=  apiService.terminateChat("Bearer ${dataStoreToken.getToken()}", id = id)
+        determinate
+        Log.d("TAG", "determinateChat: $determinate}")
+
+
+    }
     suspend fun getChat(id:Int): Flow<List<Chat>> {
 return flow {
     emit( apiService.getChat(id=id, token = "Bearer ${dataStoreToken.getToken()}"))

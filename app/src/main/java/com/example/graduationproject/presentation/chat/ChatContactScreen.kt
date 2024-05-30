@@ -48,34 +48,38 @@ import com.example.graduationproject.ui.theme.DarkBlue
 
 
 @Composable
-fun ChatContactScreen(modifier: Modifier, vm: ChatContactViewModel, userType: String, onChatClick: (Int,String,String) -> Unit) {
+fun ChatContactScreen(modifier: Modifier, vm: ChatContactViewModel, userType: String, onChatClick: (Int,String,String,Int) -> Unit) {
 
    val list= vm.chatListItems.collectAsState()
     Log.d("donee", "ChatContactScreen: ${list.value.size}")
         LazyColumn(modifier.fillMaxSize()) {
             items(list.value) { item ->
-                ChatContactItem(
-                    id = item.id,
-                    name = item.name,
-                    image = item.image ?: "",
-                    lastMessage = item.content ?: "",
-                    unseenCount = item.unseenMessages?.toIntOrNull() ?: 0,
-                    onChatClick = onChatClick
-                )
+                    ChatContactItem(
+                        terminate_id= item.terminate_id,
+                        id = item.id,
+                        name = item.name,
+                        image = item.image ?: "empty",
+                        lastMessage = item.content ?: "",
+                        unseenCount = item.unseenMessages?.toIntOrNull() ?: 0,
+                        onChatClick = onChatClick
+                    )
+
             }
         }    }
 
 
 
 @Composable
-fun ChatContactItem(id: Int, name: String, image: String, lastMessage: String, unseenCount: Int, onChatClick: (Int,String,String) -> Unit) {
+fun ChatContactItem(terminate_id:Int,id: Int, name: String, image: String, lastMessage: String, unseenCount: Int, onChatClick: (Int,String,String,Int) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
             .clickable {
                 Log.d("popo", "ChatContactItem:$id ")
-                onChatClick(id,name,image)
+                Log.d("btx", "ChatContactItem: $image ")
+
+                onChatClick(id, name, image, terminate_id)
             },
         elevation = CardDefaults.cardElevation(8.dp),
         shape = RectangleShape

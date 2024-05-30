@@ -36,6 +36,7 @@ class ChatContactViewModel @Inject constructor(private val chatRepository: ChatR
                             val items = providers.map { provider ->
                                 val detail = details.find { it.name == provider.name }
                                 ChatListItem(
+                                    terminate_id=provider.terminate_id,
                                     id = provider.id,
                                     name = provider.name,
                                     image = Constant.BASE_URL + provider.image,
@@ -51,10 +52,14 @@ class ChatContactViewModel @Inject constructor(private val chatRepository: ChatR
                     }
                 } else if (dataStoreToken.getUserType() == UserType.HirePerson.name) {
                     chatRepository.getChatListForProviders().collect { users ->
+                        Log.d("pooo", "getChatListItems: ${users.size}")
                         chatRepository.getChatListDetails().collect { details ->
+                            Log.d("poo", "getChatListItems: ${details.size}")
+
                             val items = users.map { user ->
                                 val detail = details.find { it.name == user.name }
                                 ChatListItem(
+                                    terminate_id =user.terminate_id,
                                     id = user.id,
                                     name = user.name,
                                     image = user.image,

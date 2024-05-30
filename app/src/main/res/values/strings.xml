@@ -11,7 +11,7 @@
     <string name="password_changed">Password Changed</string>
     <string name="password_changed_succ">Your Password has been Changed Successfully</string>
     <string name="back_login">Back To Login</string>
-
+<string name="delete_message">Do you want to delete this message ?</string>
     <string name="enter_email">Don’t Worry! It Happens. Please Enter The Email Associated With Your Account.</string>
     <string name="remember_pass">Remember Password?</string>
     <string name="enter_pass_rem">Please type something you’ll remember</string>

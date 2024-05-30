@@ -27,6 +27,7 @@ import com.example.graduationproject.data.SearchProviders
 import com.example.graduationproject.data.SendChatMessage
 import com.example.graduationproject.data.ServicesCategories
 import com.example.graduationproject.data.SpecificNotificationItemById
+import com.example.graduationproject.data.TerminateMessage
 import com.example.graduationproject.data.Test
 import com.example.graduationproject.data.Test2
 import com.example.graduationproject.data.ViewProfileData
@@ -47,6 +48,12 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiService {
+    @POST("/notification/terminate_chat/{id}/")
+    suspend fun terminateChat(@Header("Authorization") token: String, @Path("id") id: Int): TerminateMessage
+
+    @DELETE("/notification/delete_message/{id}")
+    suspend fun deleteChat(@Header("Authorization") token: String,@Path("id") id: Int)
+
     @POST("/notification/chat/{id}")
     suspend fun AddChat(@Header("Authorization") token: String,@Path("id") id: Int,@Body content:SendChatMessage)
     @GET("/notifi/Chatmessages")
@@ -60,7 +67,6 @@ interface ApiService {
         @Header("Authorization") token: String,
     ): AllNotificationSpecific
 
-    //TODO REPLACE "(AllNotificationSpecific)" With NEW DATA CLASS IN All Places
     @GET("/notification/provider/post/{id}/")
     suspend fun getSpecificNotificationById(
         @Header("Authorization") token: String,
