@@ -59,6 +59,7 @@ data class ChatDetails (
 
 
 )
+data class SendChatMessage(  @SerializedName("content" ) var content : String)
 data class Chat (
 
     @SerializedName("id"        ) var id        : Int,
@@ -153,6 +154,8 @@ data class ProviderData(
 )
 
 data class Test(val details: String)
+data class Test2(val detail: String)
+
 
 data class ReturnedProviderData(
     val address: String,
@@ -250,6 +253,7 @@ data class SpecificNotificationItemByIdItem(
     val message: String
 )
 
+
 class SpecificNotificationItemById : ArrayList<SpecificNotificationItemByIdItem>()
 
 
@@ -267,7 +271,7 @@ data class GetWorksItem(
 )
 
 data class Rate(
-    val rating: Long,
+    val rating: Int,
 )
 
 class GetWorks : ArrayList<GetWorksItem>()

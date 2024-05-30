@@ -841,19 +841,23 @@ fun ServixApp(
                 ChatContactScreen(
                     modifier = Modifier.padding(innerPadding),
                     vm = vm,
-                    userType = userTypeFlow.value, onChatClick = {chatId->
-                        navController.navigate(ServixScreens.ChatScreen.name + "/$chatId")
+                    userType = userTypeFlow.value, onChatClick = {chatId,name,image->
+                        val uriEncode = Uri.encode(image)
+
+                        navController.navigate(ServixScreens.ChatScreen.name + "/$chatId"+"/$name"+"/$uriEncode")
 
                     }
                 )
             }
-            composable(ServixScreens.ChatScreen.name+ "/{chatId}", arguments = listOf(
+            composable(ServixScreens.ChatScreen.name+ "/{chatId}"+"/{name}"+"/{image}", arguments = listOf(
                 navArgument("chatId") {
                     type = NavType.IntType
-                })
+                }, navArgument("name"){type= NavType.StringType}, navArgument("image"){type=
+                    NavType.StringType}
+            )
             ) {
                 val vm:ChatViewModel= hiltViewModel()
-                ChatScreen(vm)
+                ChatScreen(vm,modifier=Modifier.padding(innerPadding))
             }
             composable(ServixScreens.LoadingScreen.name){
                 LoadingScreen()

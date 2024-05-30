@@ -434,7 +434,6 @@ fun RateSection(rating: Int, onRateClick: (Int) -> Unit) {
         RatingBar(rating = rating, onRateClick = onRateClick)
 
 
-        // TODO: Implement the rating stars and checkboxes
     }
 }
 
