@@ -52,17 +52,17 @@ class UserViewModel @Inject constructor(
     val resendEnabled = MutableStateFlow(true)
 
     // LOGIN
-    var email by mutableStateOf("")
+    var userNameLogin by mutableStateOf("")
     var password by mutableStateOf("")
 
-    var emailError by mutableStateOf(false)
+    var userNameLoginError by mutableStateOf(false)
     var passwordError by mutableStateOf(false)
 
     var isPasswordForget by mutableStateOf(false)
 
-    fun onEmailChanged(email1: String) {
-        email = email1.trim()
-        emailError = email1.isEmpty()
+    fun onuserNameChanged(userName: String) {
+        userNameLogin = userName.trim()
+        userNameLoginError = userName.isEmpty()
     }
 
     fun onPasswordChanged(password1: String) {
@@ -225,6 +225,7 @@ class UserViewModel @Inject constructor(
         R.string.password_requirement_capital to { s: String -> s.any { it.isUpperCase() } },
         R.string.password_requirement_special to { s: String -> s.any { !it.isLetterOrDigit() } }
     )
+    // TODO Spaces
 
     val usernameRequirements = listOf(
         R.string.username_requirement_words to { s: String ->
@@ -551,17 +552,17 @@ class UserViewModel @Inject constructor(
     var accounType by mutableStateOf(UserType.OwnerPerson)
     fun login() {
         viewModelScope.launch {
-            if (email.isEmpty()) {
-                emailError = true
+            if (userNameLogin.isEmpty()) {
+                userNameLoginError = true
             }
             if (password.isEmpty()) {
                 passwordError = true
             }
-            if (email.isNotEmpty() && password.isNotEmpty()) {
+            if (userNameLogin.isNotEmpty() && password.isNotEmpty()) {
                 try {
                     token = addProviderRepository.login(
                         loginRequest = LoginRequest(
-                            username = email,
+                            username = userNameLogin,
                             password = password
                         )
                     )

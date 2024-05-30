@@ -35,6 +35,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.rememberImagePainter
 import com.example.graduationproject.R
@@ -174,8 +175,8 @@ fun NotificationDetails(
 
         Text(
             text = getPostDataItem.problem_description,
-            modifier = Modifier.padding(8.dp),
-            style = TextStyle(textAlign = TextAlign.Start)
+            modifier = Modifier.padding(8.dp).padding(horizontal = 16.dp, vertical = 32.dp),
+            style = TextStyle(textAlign = TextAlign.Start, fontSize = 22.sp)
         )
         Box(
             modifier = Modifier
@@ -189,17 +190,18 @@ fun NotificationDetails(
                 clipToBounds = true,
                 contentDescription = "",
                 modifier = Modifier
-                    .width(200.dp)
-                    .height(200.dp)
-                    .aspectRatio(1f),
-                contentScale = ContentScale.Inside,
+                    .width(250.dp)
+                    .height(250.dp)
+                    .aspectRatio(1f)
+                ,
+//                contentScale = ContentScale.Inside,
                 loading = { CircularProgressIndicator(Modifier.wrapContentSize()) },
                 error = {
                     Image(
                         painter = painterResource(id = R.drawable.ic_become),
                         contentDescription = "",
                         modifier = Modifier
-                            .size(200.dp)
+                            .size(250.dp)
                             .aspectRatio(1f),
                         contentScale = ContentScale.Inside
                     )
@@ -226,6 +228,7 @@ fun NotificationDetails(
                 modifier = Modifier.padding(end = 50.dp)
             )*/
             CustomButtonAndText(
+                modifier = Modifier.fillMaxWidth(.5f).height(40.dp),
                 text = R.string.accept,
                 onClick = onAcceptButtonClick,
                 backgroundColor = DarkBlue,

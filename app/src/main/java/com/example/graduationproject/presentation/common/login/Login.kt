@@ -18,7 +18,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
@@ -36,19 +35,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.graduationproject.R
 import com.example.graduationproject.presentation.common.CustomButtonAndText
 import com.example.graduationproject.presentation.common.CustomTextField
 import com.example.graduationproject.presentation.common.signup.UserViewModel
 import com.example.graduationproject.ui.theme.Black
-import com.example.graduationproject.ui.theme.DarkBlue
-import com.example.graduationproject.ui.theme.White
 
 
 @SuppressLint("SuspiciousIndentation")
@@ -93,8 +87,8 @@ val context= LocalContext.current
 
             CustomTextField(
                 fieldName = R.string.username,
-                fieldValue = userViewModel.email,
-                onValueChange = { userViewModel.onEmailChanged(it) },
+                fieldValue = userViewModel.userNameLogin,
+                onValueChange = { userViewModel.onuserNameChanged(it) },
                 isError = userViewModel.userNameError
             )
             CustomTextField(
@@ -137,7 +131,7 @@ Button(modifier= Modifier
     shape =  RoundedCornerShape(36.dp) ,
     enabled = userViewModel.loginEnabled,
     onClick = {
-        if (userViewModel.email.isNotEmpty() && userViewModel.password.isNotEmpty())
+        if (userViewModel.userNameLogin.isNotEmpty() && userViewModel.password.isNotEmpty())
             onLoginClick()
     }) {
 

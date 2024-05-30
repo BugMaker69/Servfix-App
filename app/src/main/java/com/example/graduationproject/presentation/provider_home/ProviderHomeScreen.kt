@@ -16,6 +16,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.graduationproject.R
 import com.example.graduationproject.data.GetPostsForProviderItem
 
@@ -38,10 +39,10 @@ fun PostItem(
         ) {
         Text(
             text = getPostsForProviderItem.message,
-            modifier = Modifier.padding(8.dp),
+            modifier = Modifier.padding(16.dp),
             maxLines = 3,
             overflow = TextOverflow.Ellipsis,
-            style = TextStyle(textAlign = TextAlign.Start)
+            style = TextStyle(textAlign = TextAlign.Start, fontSize = 18.sp)
         )
         Text(
             text = stringResource(R.string.see_more),

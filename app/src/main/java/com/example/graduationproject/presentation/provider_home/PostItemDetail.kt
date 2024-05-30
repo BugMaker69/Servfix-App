@@ -27,6 +27,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.SubcomposeAsyncImage
 import com.example.graduationproject.R
 import com.example.graduationproject.data.constants.Constant
@@ -64,8 +65,8 @@ fun PostItemDetail(
         Log.d("PostItemDetail", "PostItemDetail: ${viewModel.getPostById}")
         Text(
             text = viewModel.getPostById!!.problem_description,
-            modifier = Modifier.padding(8.dp),
-            style = TextStyle(textAlign = TextAlign.Start)
+            modifier = Modifier.padding(8.dp).padding(horizontal = 16.dp, vertical = 32.dp),
+            style = TextStyle(textAlign = TextAlign.Start, fontSize = 22.sp)
         )
         Box(
             modifier = Modifier
