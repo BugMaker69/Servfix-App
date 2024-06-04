@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.graduationproject.data.AcceptedProviders
 import com.example.graduationproject.data.AcceptedUsers
 import com.example.graduationproject.data.Chat
+import com.example.graduationproject.data.ChatContactList
 import com.example.graduationproject.data.ChatDetails
 import com.example.graduationproject.data.Rate
 import com.example.graduationproject.data.SendChatMessage
@@ -16,24 +17,31 @@ import javax.inject.Singleton
 
 @Singleton
 class ChatRepository @Inject constructor(val apiService: ApiService,val dataStoreToken: DataStoreToken) {
-    suspend fun  getChatListForUsers():Flow<List<AcceptedProviders>>{
-        Log.d("do", "getChatListProviders: ${apiService.getChatListForUsers("Bearer ${dataStoreToken.getToken()}").acceptedProviderUsers.size}")
-
-        return flow {
-            emit(        apiService.getChatListForUsers("Bearer ${dataStoreToken.getToken()}").acceptedProviderUsers
-            )
-        }
-    }
+//    suspend fun  getChatListForUsers():Flow<List<AcceptedProviders>>{
+//        Log.d("do", "getChatListProviders: ${apiService.getChatListForUsers("Bearer ${dataStoreToken.getToken()}").acceptedProviderUsers.size}")
+//
+//        return flow {
+//            emit(        apiService.getChatListForUsers("Bearer ${dataStoreToken.getToken()}").acceptedProviderUsers
+//            )
+//        }
+//    }
     suspend fun addMessage(id:Int,sendChatMessage: SendChatMessage){
         apiService.AddChat(id=id, token = "Bearer ${dataStoreToken.getToken()}", content = sendChatMessage)
     }
-    suspend fun  getChatListForProviders():Flow<List<AcceptedUsers>>{
-        return flow{
-            emit(        apiService.getChatListForProviders("Bearer ${dataStoreToken.getToken()}").accepted_users
-            )
-        }
+    suspend fun getChatList(): Flow<ChatContactList> {
+        return flow {
 
+            when (val response = apiService.getChatContactList("Bearer ${dataStoreToken.getToken()}")) {
+                is ChatContactList.UserResponse -> {
+                    emit(ChatContactList.UserResponse(response.accepted_users))
+                }
+                is ChatContactList.ProviderResponse -> {
+                    emit(ChatContactList.ProviderResponse(response.accepted_providers))
+                }
+            }
+        }
     }
+
     suspend fun addReview(id:Int,rate:Rate){
         apiService.addReview(token = "Bearer ${dataStoreToken.getToken()}", id = id,rate=rate)
         Log.d("ool", "addReview: ${apiService.addReview(token = "Bearer ${dataStoreToken.getToken()}", id = id,rate=rate).body()?.detail.toString()

@@ -1,8 +1,12 @@
 package com.example.graduationproject.data.di
 
+import com.example.graduationproject.data.ChatContactList
 import com.example.graduationproject.data.retrofit.ApiService
+import com.example.graduationproject.data.retrofit.ChatContactListAdapter
 import com.example.graduationproject.utils.DataStoreToken
 import com.google.firebase.auth.FirebaseAuth
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,10 +20,17 @@ import javax.inject.Singleton
 object ServfixDataModule {
     @Provides
     @Singleton
-    fun provideApiService(): Retrofit {
+    fun provideApiService(gson: Gson): Retrofit {
         return Retrofit.Builder().baseUrl("https://p2kjdbr8-8000.uks1.devtunnels.ms")
-            .addConverterFactory(GsonConverterFactory.create()).build()
+            .addConverterFactory(GsonConverterFactory.create(gson)).build()
 
+    }
+    @Provides
+    fun provideGson(): Gson {
+        return GsonBuilder()
+            .registerTypeAdapter(ChatContactList::class.java, ChatContactListAdapter())
+
+            .create()
     }
 
     @Provides

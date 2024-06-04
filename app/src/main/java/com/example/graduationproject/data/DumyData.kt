@@ -279,9 +279,12 @@ data class Rate(
 class GetWorks : ArrayList<GetWorksItem>()
 
 
-data class GetChatListForProviders(
-    var accepted_users: ArrayList<AcceptedUsers> = arrayListOf()
-)
+
+sealed class ChatContactList {
+    data class UserResponse(val accepted_users: List<AcceptedUsers>) : ChatContactList()
+    data class ProviderResponse(val accepted_providers: List<AcceptedProviders>) : ChatContactList()
+}
+
 
 data class GetChatListForUsers(
 

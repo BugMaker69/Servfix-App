@@ -3,12 +3,12 @@ package com.example.graduationproject.data.retrofit
 import com.example.graduationproject.data.AllNotification
 import com.example.graduationproject.data.AllNotificationSpecific
 import com.example.graduationproject.data.Chat
+import com.example.graduationproject.data.ChatContactList
 import com.example.graduationproject.data.ChatDetails
 import com.example.graduationproject.data.Email
 import com.example.graduationproject.data.FavouritesList
 import com.example.graduationproject.data.ForgetResetPassword
 import com.example.graduationproject.data.GeneralPostAccept
-import com.example.graduationproject.data.GetChatListForProviders
 import com.example.graduationproject.data.GetChatListForUsers
 import com.example.graduationproject.data.GetPostData
 import com.example.graduationproject.data.GetPostsForProvider
@@ -112,11 +112,11 @@ interface ApiService {
 //    suspend fun deleteAccount(@Header("Authorization") token: String, @Path("password") password: String)
 
     @GET("/notification/get_accepted_users_and_providers")
-    suspend fun getChatListForUsers(@Header("Authorization") token: String): GetChatListForUsers
+    suspend fun getChatContactList(@Header("Authorization") token: String): ChatContactList
 
 
-    @GET("/notification/accepted-users-and-providers/")
-    suspend fun getChatListForProviders(@Header("Authorization") token: String): GetChatListForProviders
+//    @GET("/notification/accepted-users-and-providers/")
+//    suspend fun getChatListForProviders(@Header("Authorization") token: String): GetChatListForProviders
 
     @POST("/api/register/")
     suspend fun postRegister(@Body register: Register): Response<Register>

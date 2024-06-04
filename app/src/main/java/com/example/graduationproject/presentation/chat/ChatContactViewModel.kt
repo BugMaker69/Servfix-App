@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.graduationproject.data.ChatContactList
 
 import com.example.graduationproject.data.ChatListItem
 import com.example.graduationproject.data.constants.Constant
@@ -19,7 +20,10 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class ChatContactViewModel @Inject constructor(private val chatRepository: ChatRepository, val dataStoreToken: DataStoreToken) :
+class ChatContactViewModel @Inject constructor(
+    private val chatRepository: ChatRepository,
+    val dataStoreToken: DataStoreToken
+) :
     ViewModel() {
     val chatListItems = MutableStateFlow(listOf<ChatListItem>())
 
@@ -27,49 +31,61 @@ class ChatContactViewModel @Inject constructor(private val chatRepository: ChatR
         getChatListItems()
     }
 
-     fun getChatListItems() {
+    fun getChatListItems() {
         viewModelScope.launch(Dispatchers.IO) {
             while (true) {
                 if (dataStoreToken.getUserType() == UserType.OwnerPerson.name) {
-                    chatRepository.getChatListForUsers().collect { providers ->
-                        chatRepository.getChatListDetails().collect { details ->
-                            val items = providers.map { provider ->
-                                val detail = details.find { it.name == provider.name }
-                                ChatListItem(
-                                    terminate_id=provider.terminate_id,
-                                    id = provider.id,
-                                    name = provider.name,
-                                    image = Constant.BASE_URL + provider.image,
-                                    content = detail?.content,
-                                    unseenMessages = detail?.unseenMessages
-                                )
+                    chatRepository.getChatList().collect { response ->
+                        when (response) {
+                            is ChatContactList.ProviderResponse -> {
+                                chatRepository.getChatListDetails().collect { details ->
+                                    val items = response.accepted_providers.map { provider ->
+                                        val detail = details.find { it.name == provider.name }
+                                        ChatListItem(
+                                            terminate_id = provider.terminate_id,
+                                            id = provider.id,
+                                            name = provider.name,
+                                            image = Constant.BASE_URL + provider.image,
+                                            content = detail?.content,
+                                            unseenMessages = detail?.unseenMessages
+                                        )
+
+                                    }
+                                    withContext(Dispatchers.Main) {
+                                        chatListItems.value = items
+                                    }
+
+                                }
+
+
                             }
 
-                            withContext(Dispatchers.Main) {
-                                chatListItems.value = items
-                            }
+                            else -> {}
                         }
                     }
                 } else if (dataStoreToken.getUserType() == UserType.HirePerson.name) {
-                    chatRepository.getChatListForProviders().collect { users ->
-                        Log.d("pooo", "getChatListItems: ${users.size}")
-                        chatRepository.getChatListDetails().collect { details ->
-                            Log.d("poo", "getChatListItems: ${details.size}")
-
-                            val items = users.map { user ->
-                                val detail = details.find { it.name == user.name }
-                                ChatListItem(
-                                    terminate_id =user.terminate_id,
-                                    id = user.id,
-                                    name = user.name,
-                                    image = user.image,
-                                    content = detail?.content,
-                                    unseenMessages = detail?.unseenMessages
-                                )
+                    chatRepository.getChatList().collect { response ->
+                        when (response) {
+                            is ChatContactList.UserResponse -> {
+                                chatRepository.getChatListDetails().collect { details ->
+                                    val items = response.accepted_users.map { user ->
+                                        val detail = details.find { it.name == user.name }
+                                        ChatListItem(
+                                            terminate_id = user.terminate_id,
+                                            id = user.id,
+                                            name = user.name,
+                                            image = user.image,
+                                            content = detail?.content,
+                                            unseenMessages = detail?.unseenMessages
+                                        )
+                                    }
+                                    withContext(Dispatchers.Main) {
+                                        chatListItems.value = items
+                                    }
+                                }
                             }
+                           else -> {
 
-                            withContext(Dispatchers.Main) {
-                                chatListItems.value = items
                             }
                         }
                     }
