@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -279,9 +280,15 @@ fun UserAccountInfoDetails(
     val phoneNumberFocusRequester = remember { FocusRequester() }
     val emailFocusRequester = remember { FocusRequester() }
 
+    val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.PickVisualMedia()) { uri: Uri? ->
+        userAccountInfoViewModel.imageUri = uri
+    }
+/*
+
     val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
         userAccountInfoViewModel.imageUri = uri
     }
+*/
 
     Column(
         modifier = modifier
@@ -308,7 +315,10 @@ fun UserAccountInfoDetails(
                     alignment = Alignment.TopCenter,
                 )
                 IconButton(
-                    onClick = { launcher.launch("image/*") },
+                    onClick = {
+                              launcher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+//                        launcher.launch("image/*")
+                              },
                     Modifier
                         .padding(16.dp)
                         .border(

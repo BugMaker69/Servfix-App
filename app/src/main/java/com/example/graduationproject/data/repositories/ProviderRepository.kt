@@ -11,6 +11,10 @@ import com.example.graduationproject.data.PostStatus
 import com.example.graduationproject.data.SpecificNotificationItemById
 import com.example.graduationproject.data.retrofit.ApiService
 import com.example.graduationproject.utils.DataStoreToken
+import okhttp3.ResponseBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -18,7 +22,7 @@ import javax.inject.Singleton
 @Singleton
 class ProviderRepository @Inject constructor(
     val dataStoreToken: DataStoreToken,
-    val apiService: ApiService
+    val apiService: ApiService,
 ) {
 
     suspend fun getAllNotifications(): AllNotification {
@@ -48,9 +52,57 @@ class ProviderRepository @Inject constructor(
         return response
     }
 
-    suspend fun acceptPost(id: Int): GeneralPostAccept {
-        val response = apiService.acceptPost(token = "Bearer ${dataStoreToken.getToken()}", id = id)
-        return response
+    suspend fun acceptPost(id: Int):GeneralPostAccept{
+                var response1 = GeneralPostAccept("")
+        apiService.acceptPost("Bearer ${dataStoreToken.getToken()}", id)
+            .enqueue(object : Callback<ResponseBody> {
+                override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                    response1 = GeneralPostAccept( response.message())
+                    if (response.body() != null && response.isSuccessful) {
+                        try {
+
+                            if (response.code() == 201) {
+                                Log.d(
+                                    "Post Accepted Successfully",
+                                    "onResponse: Post Accepted Successfully ${response} ||  ${response.code()} ||  ${response.body()} ||  ${response.errorBody()} ||  ${response.isSuccessful} ||  ||  ${response.message()} ||  ||  ${response.headers()} ||  ||  ${response.raw()} || "
+                                )
+
+                            } else {
+                                Log.d(
+                                    "Error",
+                                    "onResponse: Post Accepted Error ${response} ||  ${response.code()} ||  ${response.body()} ||  ${response.errorBody()} ||  ${response.isSuccessful} ||  ||  ${response.message()} ||  ||  ${response.headers()} ||  ||  ${response.raw()} || "
+                                )
+
+                            }
+                        } catch (e: Exception) {
+                            Log.d(
+                                "Catched Error Post Accepted",
+                                "onResponse: Post Accepted Error  ${response} ||  ${response.code()} ||  ${response.body()} ||  ${response.errorBody()} ||  ${response.isSuccessful} ||  ||  ${response.message()} ||  ||  ${response.headers()} ||  ||  ${response.raw()} || "
+                            )
+
+                        }
+                    } else {
+                        Log.d("onFailure Error Post Accepted", "onResponse: Updated Nothing Happen Why ")
+                        Log.d(
+                            "onFailure Error Post Accepted",
+                            "onResponse: Post Accepted onFailure Error ${response} ||  ${response.isSuccessful} ||  ${response.message()} ||  ${response.code()} ||  ${response.errorBody()} ||  ${response.headers()} ||  ${response.raw()} || "
+                        )
+                    }
+
+                }
+
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                    response1 = GeneralPostAccept(t.message.toString())
+                    Log.d(
+                        "onFailure Error Updated",
+                        "onResponse: Post Accepted onFailure Error ${t} ||  ${t.message} ||  ${t.cause} ||  ${t.localizedMessage} ||  ${t.stackTrace} ||  ${t.suppressed} || "
+                    )
+
+                }
+            })
+/*        val response = apiService.acceptPost(token = "Bearer ${dataStoreToken.getToken()}", id = id)
+        return response*/
+        return response1
     }
 
     suspend fun acceptPostForSpecificProvider(id: Int): PostStatus {

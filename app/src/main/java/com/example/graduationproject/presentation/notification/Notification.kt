@@ -1,5 +1,6 @@
 package com.example.graduationproject.presentation.notification
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -50,7 +51,7 @@ import com.example.graduationproject.ui.theme.DarkBlue
 @Composable
 fun NotificationScreen(
     modifier: Modifier = Modifier,
-    onNotificationItemClick: (Int) -> Unit,
+    onNotificationItemClick: (Int,Int?) -> Unit,
 
     //notificationDescription: String,
     allNotification: List<AllNotificationItem>
@@ -61,7 +62,7 @@ fun NotificationScreen(
 
     NotificationItems(
         modifier = modifier,
-        onNotificationItemClick = { onNotificationItemClick(it) },
+        onNotificationItemClick = {id,recipient1-> onNotificationItemClick(id,recipient1) },
         allNotification = allNotification
     )
 }
@@ -70,7 +71,7 @@ fun NotificationScreen(
 @Composable
 fun NotificationItems(
     modifier: Modifier = Modifier,
-    onNotificationItemClick: (Int) -> Unit,
+    onNotificationItemClick: (Int,Int?) -> Unit,
 //    notificationDescription: String,
     allNotification: List<AllNotificationItem>
 ) {
@@ -79,7 +80,7 @@ fun NotificationItems(
     ) {
         items(allNotification) { item ->
             NotificationItem(
-                onNotificationItemClick = { onNotificationItemClick(item.post) },
+                onNotificationItemClick = { onNotificationItemClick(item.post,item.recipient1) },
                 allNotificationItem = item
             )
         }
@@ -152,9 +153,10 @@ fun NotificationDetails(
     modifier: Modifier = Modifier,
     onNotifiPostItemDetailToOpenIt: () -> Unit,
     onAcceptButtonClick: () -> Unit,
-    getPostDataItem: GetPostDataItem
+    getPostDataItem: GetPostDataItem,
+    recipient1:Int?
 ) {
-
+    Log.d("NotificationDetails", "NotificationDetails: $recipient1")
 
     Card(
         modifier = Modifier
@@ -175,7 +177,9 @@ fun NotificationDetails(
 
         Text(
             text = getPostDataItem.problem_description,
-            modifier = Modifier.padding(8.dp).padding(horizontal = 16.dp, vertical = 32.dp),
+            modifier = Modifier
+                .padding(8.dp)
+                .padding(horizontal = 16.dp, vertical = 32.dp),
             style = TextStyle(textAlign = TextAlign.Start, fontSize = 22.sp)
         )
         Box(
@@ -215,11 +219,12 @@ fun NotificationDetails(
             )*/
         }
 
-        Row(
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .padding(8.dp),
-        ) {
+        if (recipient1 !=0) {
+            Row(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(8.dp),
+            ) {
 /*            CustomButtonAndText(
                 text = R.string.reject,
                 backgroundColor = DarkBlue,
@@ -227,16 +232,18 @@ fun NotificationDetails(
                 alignment = Alignment.Center,
                 modifier = Modifier.padding(end = 50.dp)
             )*/
-            CustomButtonAndText(
-                modifier = Modifier.fillMaxWidth(.5f).height(40.dp),
-                text = R.string.accept,
-                onClick = onAcceptButtonClick,
-                backgroundColor = DarkBlue,
-                contentColor = Color.White,
-                alignment = Alignment.Center,
-            )
+                CustomButtonAndText(
+                    modifier = Modifier
+                        .fillMaxWidth(.5f)
+                        .height(40.dp),
+                    text = R.string.accept,
+                    onClick = onAcceptButtonClick,
+                    backgroundColor = DarkBlue,
+                    contentColor = Color.White,
+                    alignment = Alignment.Center,
+                )
+            }
         }
-
     }
 
 }

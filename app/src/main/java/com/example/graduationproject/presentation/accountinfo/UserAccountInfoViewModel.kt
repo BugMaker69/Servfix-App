@@ -63,8 +63,9 @@ class UserAccountInfoViewModel @Inject constructor(val addProviderRepository: Ad
     }
     fun updateUserData() {
 viewModelScope.launch (Dispatchers.IO){
+    Log.d("updateUserData", "updateUserData: $imageUri")
     addProviderRepository.updateUserData(
-        token = dataStoreToken.getToken(),
+//        token = dataStoreToken.getToken(),
         address = address,
         city = selectedCityValue,
         email = emailN,

@@ -1,6 +1,7 @@
 package com.example.graduationproject.presentation.common.login
 
 import android.annotation.SuppressLint
+import android.content.res.Configuration
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -33,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -48,13 +50,15 @@ import com.example.graduationproject.ui.theme.Black
 @SuppressLint("SuspiciousIndentation")
 @Composable
 fun Login(
-    modifier: Modifier ,
+    modifier: Modifier,
     onForgetPasswordClick: () -> Unit,
     onSignupClick: () -> Unit,
     onLoginClick: () -> Unit,
     userViewModel: UserViewModel
 ) {
-val context= LocalContext.current
+    val context = LocalContext.current
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
     var press by remember { mutableStateOf(false) }
     userViewModel.isPasswordForget = false
     Column(
@@ -66,14 +70,36 @@ val context= LocalContext.current
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
 
-        Box(contentAlignment = Alignment.TopCenter) {
-            Image(
-                painter = painterResource(id = R.drawable.servix_frame),
-                contentDescription = "",
-                contentScale = ContentScale.Crop,
-                alignment = Alignment.TopCenter,
-            )
+        if (isLandscape) {
+            Box(contentAlignment = Alignment.TopCenter) {
+                Image(
+//                    modifier = Modifier.fillMaxSize(),
+                    painter = painterResource(id = R.drawable.servix_frame),
+                    contentDescription = "",
+                    contentScale = ContentScale.Crop,
+                    alignment = Alignment.TopCenter,
+                )
+            }
+        } else {
+            Box(contentAlignment = Alignment.TopCenter, modifier = Modifier.fillMaxSize()) {
+                Image(
+                    modifier = Modifier.fillMaxSize(),
+                    painter = painterResource(id = R.drawable.servix_frame),
+                    contentDescription = "",
+                    contentScale = ContentScale.Crop,
+                    alignment = Alignment.TopCenter,
+                )
+            }
         }
+
+        /*        Box(contentAlignment = Alignment.TopCenter) {
+                    Image(
+                        painter = painterResource(id = R.drawable.servix_frame),
+                        contentDescription = "",
+                        contentScale = ContentScale.Crop,
+                        alignment = Alignment.TopCenter,
+                    )
+                }*/
 
 
         Column(
@@ -125,18 +151,18 @@ val context= LocalContext.current
 
             Spacer(modifier = Modifier.height(64.dp))
 
-Button(modifier= Modifier
-    .fillMaxWidth()
-    .padding(horizontal = 8.dp, vertical = 4.dp),
-    shape =  RoundedCornerShape(36.dp) ,
-    enabled = userViewModel.loginEnabled,
-    onClick = {
-        if (userViewModel.userNameLogin.isNotEmpty() && userViewModel.password.isNotEmpty())
-            onLoginClick()
-    }) {
+            Button(modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp, vertical = 4.dp),
+                shape = RoundedCornerShape(36.dp),
+                enabled = userViewModel.loginEnabled,
+                onClick = {
+                    if (userViewModel.userNameLogin.isNotEmpty() && userViewModel.password.isNotEmpty())
+                        onLoginClick()
+                }) {
 
-    Text(text = "Login")
-}
+                Text(text = "Login")
+            }
 
         }
         Spacer(modifier = Modifier.height(16.dp))

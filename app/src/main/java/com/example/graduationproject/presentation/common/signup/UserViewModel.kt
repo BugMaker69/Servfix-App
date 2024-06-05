@@ -755,7 +755,7 @@ var isDone = false
         }*/
 
 
-    fun updateProviderData() {
+/*    fun updateProviderData() {
 
         val updateProviderData = addProviderRepository.updateProviderData(
             token = token!!.access,
@@ -768,15 +768,15 @@ var isDone = false
             phone = phone,
             profession = selectedServiceValue,
             username = userName,
-            /*            ratings = "5",
+            *//*            ratings = "5",
                         service_id = 1,
-                        user = 1,*/
+                        user = 1,*//*
         )
 
 
-    }
+    }*/
 
-    fun updateUserData() {
+/*    fun updateUserData() {
 
         val updateUserData = addProviderRepository.updateUserData(
             token = token!!.access,
@@ -789,7 +789,7 @@ var isDone = false
         )
 
 
-    }
+    }*/
 
 
     /*

@@ -168,6 +168,7 @@ interface ApiService {
     @GET("api/all/{id}")
     suspend fun getProviders(@Path("id") id: Int, @Query("page") page: Int): SearchProviders
 
+    @Multipart
     @PUT("api/userinfo/update")
     fun updateUserData(
         @Header("Authorization") token: String,
@@ -246,10 +247,10 @@ interface ApiService {
     ): GetPostsForProvider
 
     @POST("/notification/post_accept/{id}")
-    suspend fun acceptPost(
+    fun acceptPost(
         @Header("Authorization") token: String,
         @Path("id") id: Int
-    ): GeneralPostAccept
+    ): Call<ResponseBody>
 
     @POST("/notification/post/accept/{post_id}/")
     suspend fun acceptPostForSpecificProvider(

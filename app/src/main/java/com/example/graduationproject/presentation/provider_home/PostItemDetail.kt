@@ -1,6 +1,7 @@
 package com.example.graduationproject.presentation.provider_home
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -18,6 +19,10 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,6 +34,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.SubcomposeAsyncImage
+import com.example.graduationproject.MyApplication
 import com.example.graduationproject.R
 import com.example.graduationproject.data.constants.Constant
 import com.example.graduationproject.presentation.common.CustomButtonAndText
@@ -65,7 +71,9 @@ fun PostItemDetail(
         Log.d("PostItemDetail", "PostItemDetail: ${viewModel.getPostById}")
         Text(
             text = viewModel.getPostById!!.message,
-            modifier = Modifier.padding(8.dp).padding(horizontal = 16.dp, vertical = 32.dp),
+            modifier = Modifier
+                .padding(8.dp)
+                .padding(horizontal = 16.dp, vertical = 32.dp),
             style = TextStyle(textAlign = TextAlign.Start, fontSize = 22.sp)
         )
         Box(
@@ -109,21 +117,44 @@ fun PostItemDetail(
                 .padding(8.dp),
 //            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            CustomButtonAndText(
-                text = R.string.reject,
-                onClick = onRejectButtonClickForSpecificProvider,
-                backgroundColor = DarkBlue,
-                contentColor = Color.White,
-                alignment = Alignment.Center,
-                modifier = Modifier.padding(end = 50.dp)
-            )
-            CustomButtonAndText(
-                text = R.string.accept,
-                onClick = onAcceptButtonClickForSpecificProvider,
-                backgroundColor = DarkBlue,
-                contentColor = Color.White,
-                alignment = Alignment.Center,
-            )
+            var showToast by remember { mutableStateOf(false)}
+            var isAccept by remember { mutableStateOf(false)}
+            if (!viewModel.getPostById.is_accepted) {
+                CustomButtonAndText(
+                    text = R.string.reject,
+                    onClick = {
+                        isAccept = false
+                        showToast = true
+                        onRejectButtonClickForSpecificProvider()},
+                    backgroundColor = DarkBlue,
+                    contentColor = Color.White,
+                    alignment = Alignment.Center,
+                    modifier = Modifier.padding(end = 50.dp)
+                )
+                CustomButtonAndText(
+                    text = R.string.accept,
+                    onClick = {
+                        isAccept = true
+                        showToast = true
+                        onAcceptButtonClickForSpecificProvider() },
+                    backgroundColor = DarkBlue,
+                    contentColor = Color.White,
+                    alignment = Alignment.Center,
+                )
+                if (isAccept && showToast){
+                    Toast.makeText(MyApplication.getApplicationContext().applicationContext,"Post Accepted Successfully",Toast.LENGTH_SHORT).show()
+                    showToast = false
+                    isAccept =false
+                }
+                if (!isAccept && showToast){
+                    Toast.makeText(MyApplication.getApplicationContext().applicationContext,"Post Rejected Successfully",Toast.LENGTH_SHORT).show()
+                    showToast = false
+                    isAccept =false
+                }
+            }
+            else{
+                Text(text = "You Already Choose")
+            }
         }
 
     }

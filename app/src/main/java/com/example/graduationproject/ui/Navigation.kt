@@ -8,7 +8,6 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
@@ -24,7 +23,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -34,7 +32,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.graduationproject.BeforeSignup
-import com.example.graduationproject.MyApplication
 import com.example.graduationproject.data.NewOldPassword
 
 import com.example.graduationproject.presentation.AddNeWorkToProfileItems
@@ -96,7 +93,7 @@ import kotlin.system.exitProcess
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ServixApp(
-    data:Uri,
+    intentUriData:Uri,
     navController: NavHostController = rememberNavController()
 ) {
     val context = LocalContext.current
@@ -117,7 +114,7 @@ fun ServixApp(
         val loginResult = dataStoreToken.getLogin()
         isLoggedIn = loginResult
 
-            if (data.host=="p2kjdbr8-8000.uks1.devtunnels.ms"){
+            if (intentUriData.host=="p2kjdbr8-8000.uks1.devtunnels.ms"){
                 navController.navigate(ServixScreens.ResetPassword.name)
             }
 
@@ -234,8 +231,9 @@ fun ServixApp(
         NavHost(
             navController = navController,
             startDestination =
-            if (data.host=="p2kjdbr8-8000.uks1.devtunnels.ms") ServixScreens.ResetPassword.name
-            else if (isFirstLaunch) ServixScreens.OnBoarding.name else {
+            if (isFirstLaunch) ServixScreens.OnBoarding.name
+            else if (intentUriData.host=="p2kjdbr8-8000.uks1.devtunnels.ms") ServixScreens.ResetPassword.name
+            else {
                 if (isLoggedIn && userTypeFlow.value.isNotBlank()) {
                     Log.d("mmmm1", "ServixApp: ${userTypeFlow.value}")
                     if (userTypeFlow.value == UserType.OwnerPerson.name) ServixScreens.HomeUser.name else ServixScreens.HomeProvider.name
@@ -589,7 +587,7 @@ fun ServixApp(
 
                 ResetPassword(
                     onResetClick = {
-                        userViewModel.resetPassword(data.lastPathSegment.toString())
+                        userViewModel.resetPassword(intentUriData.lastPathSegment.toString())
                         navController.navigate(ServixScreens.AfterPassword.name) {
                             popUpTo(ServixScreens.ResetPassword.name) {
                                 inclusive = true
@@ -657,13 +655,13 @@ fun ServixApp(
                     modifier = Modifier.padding(innerPadding),
                     onNotificationItemClick = {
 //                                              navController.navigate(ServixScreens.AddNeWorkToProfileItems.name)
-                            id ->
+                            id,recipient1 ->
                         notificationViewModel.getPostById(id)
                         Log.d("getPostById", "ServixApp: ${notificationViewModel.getPostById(id)}")
                         Log.d("getPostById", "ServixApp: ${id}")
                         Log.d("getPostById", "ServixApp: ${notificationViewModel.getPostById}")
 //                        id->
-                        navController.navigate(ServixScreens.NotifiPostItemDetailByID.name + "/$id")
+                        navController.navigate(ServixScreens.NotifiPostItemDetailByID.name + "/$id" + "/$recipient1")
                     },
                     allNotification = notificationViewModel.getAllNotifications
                 )
@@ -678,14 +676,18 @@ fun ServixApp(
                     serviceViewModel = serviceViewmodel
                 )
             }
-            composable(ServixScreens.NotifiPostItemDetailByID.name + "/{id}", arguments =
+            composable(ServixScreens.NotifiPostItemDetailByID.name + "/{id}" + "/{recipient1}", arguments =
             listOf(
-                navArgument("id") { type = NavType.IntType }
+                navArgument("id") { type = NavType.IntType },
+                navArgument("recipient1") { type = NavType.IntType }
+
             )
             ) { backStackEntry ->
 //                val notificationViewModel:NotificationViewModel= hiltViewModel()
 
 
+                val recipient1 = backStackEntry.arguments?.getInt("recipient1")
+                Log.d("NotificationDetails", "NotificationDetails: $recipient1")
                 val itemId = backStackEntry.arguments?.getInt("id")
                 val item = notificationViewModel.getPostById.find { it.id == itemId }
                 Log.d("PostDetails", "ServixApp: itemId:  ${itemId} || item: ${item}||")
@@ -693,6 +695,7 @@ fun ServixApp(
                     NotificationDetails(
                         onNotifiPostItemDetailToOpenIt = { /*TODO*/ },
                         getPostDataItem = item,
+                        recipient1 = recipient1,
                         onAcceptButtonClick = {
                             if (itemId != null) {
                                 notificationViewModel.acceptPost(itemId)
@@ -830,9 +833,11 @@ fun ServixApp(
                     viewModel = viewModel,
                     onAcceptButtonClickForSpecificProvider = {
                         viewModel.acceptPostForSpecificProvider(itemId!!)
+                        navController.navigate(ServixScreens.HomeProvider.name)
                     },
                     onRejectButtonClickForSpecificProvider = {
                         viewModel.rejectPostForSpecificProvider(itemId!!)
+                        navController.navigate(ServixScreens.HomeProvider.name)
                     }, modifier = Modifier.padding(innerPadding)
                 )
             }

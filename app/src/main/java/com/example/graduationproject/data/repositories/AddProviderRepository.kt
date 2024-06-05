@@ -215,8 +215,8 @@ class AddProviderRepository @Inject constructor(
     }
 
 
-    fun updateProviderData(
-        token: String,
+    suspend fun updateProviderData(
+//        token: String,
         address: String,
         city: String,
         email: String,
@@ -279,7 +279,7 @@ class AddProviderRepository @Inject constructor(
 
 
         apiService.updateProviderData(
-            token = "Bearer $dataStoreToken",
+            token = "Bearer ${dataStoreToken.getToken()}",
             address = addressRequestBody,
             city = cityRequestBody,
             email = emailRequestBody,
@@ -323,12 +323,13 @@ class AddProviderRepository @Inject constructor(
                         connectionError.value = e.message.toString()
                     }
                 }
-                Log.d("onFailure Error Updated", "onResponse: Updated Nothing Happen Why ")
-                Log.d(
-                    "onFailure Error Updated",
-                    "onResponse: Updated onFailure Error ${response} ||  ${response.isSuccessful} ||  ${response.message()} ||  ${response.code()} ||  ${response.errorBody()} ||  ${response.headers()} ||  ${response.raw()} || "
-                )
-
+                else {
+                    Log.d("onFailure Error Updated", "onResponse: Updated Nothing Happen Why ")
+                    Log.d(
+                        "onFailure Error Updated",
+                        "onResponse: Updated onFailure Error ${response} ||  ${response.isSuccessful} ||  ${response.message()} ||  ${response.code()} ||  ${response.errorBody()} ||  ${response.headers()} ||  ${response.raw()} || "
+                    )
+                }
             }
 
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
@@ -342,8 +343,8 @@ class AddProviderRepository @Inject constructor(
     }
 
 
-    fun updateUserData(
-        token: String,
+    suspend fun updateUserData(
+//        token: String,
         address: String,
         city: String,
         email: String,
@@ -351,6 +352,7 @@ class AddProviderRepository @Inject constructor(
         phone: String,
         username: String,
     ) {
+        Log.d("updateUserData Repoo", "updateProviderData: $image")
 
         val fileToSend = prepareFilePart("image", image)
         val addressRequestBody: RequestBody = RequestBody.create(
@@ -375,7 +377,7 @@ class AddProviderRepository @Inject constructor(
         )
 
         apiService.updateUserData(
-            token = "Bearer $dataStoreToken",
+            token = "Bearer ${dataStoreToken.getToken()}",
             address = addressRequestBody,
             city = cityRequestBody,
             email = emailRequestBody,
@@ -412,11 +414,13 @@ class AddProviderRepository @Inject constructor(
                         connectionError.value = e.message.toString()
                     }
                 }
-                Log.d("onFailure Error Updated", "onResponse: Updated Nothing Happen Why ")
-                Log.d(
-                    "onFailure Error Updated",
-                    "onResponse: Updated onFailure Error ${response} ||  ${response.isSuccessful} ||  ${response.message()} ||  ${response.code()} ||  ${response.errorBody()} ||  ${response.headers()} ||  ${response.raw()} || "
-                )
+                else {
+                    Log.d("onFailure Error Updated", "onResponse: Updated Nothing Happen Why ")
+                    Log.d(
+                        "onFailure Error Updated",
+                        "onResponse: Updated onFailure Error ${response} ||  ${response.isSuccessful} ||  ${response.message()} ||  ${response.code()} ||  ${response.errorBody()} ||  ${response.headers()} ||  ${response.raw()} || "
+                    )
+                }
 
             }
 

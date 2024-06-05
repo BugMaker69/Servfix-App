@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.graduationproject.data.AllNotificationItem
 import com.example.graduationproject.data.AllNotificationItemSpecific
 import com.example.graduationproject.data.AllNotifications
+import com.example.graduationproject.data.GeneralPostAccept
 import com.example.graduationproject.data.GetPostDataItem
 import com.example.graduationproject.data.GetWorksItem
 import com.example.graduationproject.data.NewOldPassword
@@ -37,6 +38,8 @@ class NotificationViewModel @Inject constructor(
 //    var getPostsForProvider by mutableStateOf(emptyList<GetPostsForProviderItem>())
 
     var getAllWorks by mutableStateOf(emptyList<GetWorksItem>())
+
+    var acceptPost= GeneralPostAccept("")
 
 
 
@@ -74,7 +77,7 @@ class NotificationViewModel @Inject constructor(
 
     fun acceptPost(id: Int) {
         viewModelScope.launch {
-            providerRepository.acceptPost(id)
+            acceptPost = providerRepository.acceptPost(id)
         }
     }
 

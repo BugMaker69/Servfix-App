@@ -211,8 +211,7 @@ class ProviderAccountInfoViewModel @Inject constructor(val addProviderRepository
 
         viewModelScope.launch(Dispatchers.IO) {
             addProviderRepository.updateProviderData(
-                token =  addProviderRepository.dataStoreToken.getToken(),
-
+//                token =  addProviderRepository.dataStoreToken.getToken(),
                 address = address,
                 city = selectedCityValue,
                 email = emailN,
