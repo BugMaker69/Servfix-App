@@ -53,11 +53,11 @@ class NotificationViewModel @Inject constructor(
         }
     }
 
-    fun getSpecificNotificationById(id: Int) {
+/*    fun getSpecificNotificationById(id: Int) {
         viewModelScope.launch {
             getSpecificNotificationById = providerRepository.getSpecificNotificationById(id)
         }
-    }
+    }*/
 
 
     /*    fun getAllNotificationsForAll(){

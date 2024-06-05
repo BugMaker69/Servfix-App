@@ -6,6 +6,7 @@ import com.example.graduationproject.data.AllNotificationSpecific
 import com.example.graduationproject.data.GeneralPostAccept
 import com.example.graduationproject.data.GetPostData
 import com.example.graduationproject.data.GetPostsForProvider
+import com.example.graduationproject.data.GetPostsForProviderItem
 import com.example.graduationproject.data.PostStatus
 import com.example.graduationproject.data.SpecificNotificationItemById
 import com.example.graduationproject.data.retrofit.ApiService
@@ -30,7 +31,7 @@ class ProviderRepository @Inject constructor(
         return response
     }
 
-    suspend fun getSpecificNotificationById(id: Int): SpecificNotificationItemById {
+    suspend fun getSpecificNotificationById(id: Int): GetPostsForProviderItem {
         val response = apiService.getSpecificNotificationById("Bearer ${dataStoreToken.getToken()}",id)
         return response
     }

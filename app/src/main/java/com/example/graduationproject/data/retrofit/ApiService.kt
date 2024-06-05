@@ -12,6 +12,7 @@ import com.example.graduationproject.data.GeneralPostAccept
 import com.example.graduationproject.data.GetChatListForUsers
 import com.example.graduationproject.data.GetPostData
 import com.example.graduationproject.data.GetPostsForProvider
+import com.example.graduationproject.data.GetPostsForProviderItem
 import com.example.graduationproject.data.GetWorks
 import com.example.graduationproject.data.LoginRequest
 import com.example.graduationproject.data.LoginResponse
@@ -71,7 +72,7 @@ interface ApiService {
     suspend fun getSpecificNotificationById(
         @Header("Authorization") token: String,
         @Path("id") id: Int
-    ): SpecificNotificationItemById
+    ): GetPostsForProviderItem
 
     @GET("/notifi/allnotification/")
     suspend fun getAllNotifications(

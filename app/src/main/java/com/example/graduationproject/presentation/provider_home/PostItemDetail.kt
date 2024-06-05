@@ -64,7 +64,7 @@ fun PostItemDetail(
 
         Log.d("PostItemDetail", "PostItemDetail: ${viewModel.getPostById}")
         Text(
-            text = viewModel.getPostById!!.problem_description,
+            text = viewModel.getPostById!!.message,
             modifier = Modifier.padding(8.dp).padding(horizontal = 16.dp, vertical = 32.dp),
             style = TextStyle(textAlign = TextAlign.Start, fontSize = 22.sp)
         )

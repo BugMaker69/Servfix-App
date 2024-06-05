@@ -8,6 +8,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.graduationproject.data.GetPostDataItem
+import com.example.graduationproject.data.GetPostsForProviderItem
+import com.example.graduationproject.data.SpecificNotificationItemByIdItem
 import com.example.graduationproject.data.repositories.ProviderRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -21,7 +23,9 @@ class PostDetailViewModel @Inject constructor(
     val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    var getPostById by mutableStateOf<GetPostDataItem>(GetPostDataItem("", 1, "", "", ""))
+    var getPostById by mutableStateOf<GetPostsForProviderItem>(GetPostsForProviderItem("",1, "", false,"",1,1))
+//    var getPostById by mutableStateOf<SpecificNotificationItemByIdItem>(SpecificNotificationItemByIdItem(1, "", ""))
+//    var getPostById by mutableStateOf<GetPostDataItem>(GetPostDataItem("", 1, "", "", ""))
 
     init {
         val id = savedStateHandle.get<Int>("id")
@@ -35,8 +39,8 @@ class PostDetailViewModel @Inject constructor(
 
     fun getPostById(id: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            Log.d("getPostById", "getPostById: ${providerRepository.getPostById(id)}")
-            val x = providerRepository.getPostById(id).get(0)
+            Log.d("getPostById", "getPostById: ${providerRepository.getSpecificNotificationById(id)}")
+            val x = providerRepository.getSpecificNotificationById(id)
             withContext(Dispatchers.Main) { getPostById = x }
         }
     }
