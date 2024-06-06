@@ -712,7 +712,7 @@ fun SignupThirdScreen(
 //                            activity = context as Activity,
 //                            callbacks = userViewModel.callbacks
 //                        )
-//                        onFinishClick()
+                        onFinishClick()
                     },
                     backgroundColor = DarkBlue,
                     contentColor = Color.White,
