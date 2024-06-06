@@ -1,6 +1,7 @@
 package com.example.graduationproject.presentation.common.login
 
 import android.app.Activity
+import android.content.res.Configuration
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -37,6 +38,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -67,7 +69,8 @@ fun FirstScreenOnForgotPasswordChange(
 ) {
     val context = LocalContext.current
     val emailFocusRequester = remember { FocusRequester() }
-
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -83,15 +86,28 @@ fun FirstScreenOnForgotPasswordChange(
             style = TextStyle(fontSize = 32.sp, fontWeight = FontWeight.Bold)
         )
 
+        if (isLandscape) {
+            Box(contentAlignment = Alignment.TopCenter) {
 
-        Box(contentAlignment = Alignment.TopCenter) {
+                Image(
+                    modifier = Modifier.size(100.dp),
+                    painter = painterResource(id = R.drawable.forgot_password),
+                    contentDescription = "",
+                    contentScale = ContentScale.Crop,
+                    alignment = Alignment.TopCenter,
+                )
+            }
+        }
+        else{
+            Box(contentAlignment = Alignment.TopCenter) {
 
-            Image(
-                painter = painterResource(id = R.drawable.forgot_password),
-                contentDescription = "",
-                contentScale = ContentScale.Crop,
-                alignment = Alignment.TopCenter,
-            )
+                Image(
+                    painter = painterResource(id = R.drawable.forgot_password),
+                    contentDescription = "",
+                    contentScale = ContentScale.Crop,
+                    alignment = Alignment.TopCenter,
+                )
+            }
         }
 
         CustomButtonAndText(
