@@ -1,8 +1,6 @@
 package com.example.graduationproject.data.repositories
 
 import android.util.Log
-import com.example.graduationproject.data.AcceptedProviders
-import com.example.graduationproject.data.AcceptedUsers
 import com.example.graduationproject.data.Chat
 import com.example.graduationproject.data.ChatContactList
 import com.example.graduationproject.data.ChatDetails

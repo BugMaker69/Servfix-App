@@ -48,7 +48,8 @@ data class ChatListItem(
     val name: String,
     val image: String? = null,
     val content: String? = null,
-    val unseenMessages: String? = null
+    val unseenMessages: String? = null,
+    val phone:String?=null
 )
 
 
@@ -293,12 +294,14 @@ data class GetChatListForUsers(
 )
 data class AcceptedProviders (
 
-@SerializedName("provider_id" ) var terminate_id : Int,
+    @SerializedName("provider_id" ) var terminate_id : Int,
 
 
-@SerializedName("id" ) var id : Int,
+    @SerializedName("id" ) var id : Int,
     @SerializedName("name"        ) var name       : String,
-    @SerializedName("image"       ) var image      : String?=null
+    @SerializedName("image"       ) var image      : String?=null,
+    @SerializedName("phone"       ) var phone      : String
+
 
 )
 data class AcceptedUsers( @SerializedName("user_id" ) var terminate_id:Int,@SerializedName("id" )var id:Int, @SerializedName("username")var name:String   ,@SerializedName("image") var image:String?=null)

@@ -21,6 +21,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 
 import androidx.compose.ui.Modifier
@@ -29,6 +30,7 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.navigation.compose.rememberNavController
 import com.example.graduationproject.data.retrofit.InternetObserver
 import com.example.graduationproject.data.retrofit.NetworkConnectivityObserver
 import com.example.graduationproject.data.retrofit.NoInternetScreen
@@ -47,7 +49,6 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun MainScreen(data:Uri) {
         val networkStatus by networkConnectivityObserver.observe().collectAsState(initial = InternetObserver.Status.Loading)
-
         Log.d("oooo", "MainScreen: $networkStatus")
         when (networkStatus) {
             InternetObserver.Status.Available -> {

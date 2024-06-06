@@ -468,7 +468,7 @@ fun ProviderAccountInfoDetails(
             contentAlignment = Alignment.TopCenter
         ) {
 
-            Box(modifier = Modifier.size(130.dp)) {
+            Box(modifier = Modifier.size(300.dp), contentAlignment = Alignment.Center) {
                 ///edit this
                 SubcomposeAsyncImage(
                     model = providerAccountInfoViewModel.imageUri,

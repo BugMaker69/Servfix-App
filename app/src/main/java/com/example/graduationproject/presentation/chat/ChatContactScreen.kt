@@ -16,18 +16,13 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Done
+
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -43,25 +38,25 @@ import androidx.compose.ui.unit.sp
 import coil.compose.SubcomposeAsyncImage
 import com.example.graduationproject.R
 import com.example.graduationproject.presentation.chat.ChatContactViewModel
-import com.example.graduationproject.presentation.common.UserType
 import com.example.graduationproject.ui.theme.DarkBlue
 
 
 @Composable
-fun ChatContactScreen(modifier: Modifier, vm: ChatContactViewModel, userType: String, onChatClick: (Int,String,String,Int) -> Unit) {
+fun ChatContactScreen(modifier: Modifier, vm: ChatContactViewModel,onChatClick: (Int,String,String,Int,String) -> Unit) {
 
    val list= vm.chatListItems.collectAsState()
     Log.d("donee", "ChatContactScreen: ${list.value.size}")
         LazyColumn(modifier.fillMaxSize()) {
             items(list.value) { item ->
                     ChatContactItem(
-                        terminate_id= item.terminate_id,
+                        terminateId= item.terminate_id,
                         id = item.id,
                         name = item.name,
                         image = item.image ?: "empty",
                         lastMessage = item.content ?: "",
                         unseenCount = item.unseenMessages?.toIntOrNull() ?: 0,
-                        onChatClick = onChatClick
+                        onChatClick = onChatClick,
+                        phone=item.phone.toString()
                     )
 
             }
@@ -70,7 +65,7 @@ fun ChatContactScreen(modifier: Modifier, vm: ChatContactViewModel, userType: St
 
 
 @Composable
-fun ChatContactItem(terminate_id:Int,id: Int, name: String, image: String, lastMessage: String, unseenCount: Int, onChatClick: (Int,String,String,Int) -> Unit) {
+fun ChatContactItem(phone:String, terminateId:Int, id: Int, name: String, image: String, lastMessage: String, unseenCount: Int, onChatClick: (Int, String, String, Int, String) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -79,9 +74,9 @@ fun ChatContactItem(terminate_id:Int,id: Int, name: String, image: String, lastM
                 Log.d("popo", "ChatContactItem:$id ")
                 Log.d("btx", "ChatContactItem: $image ")
 
-                onChatClick(id, name, image, terminate_id)
+                onChatClick(id, name, image, terminateId,phone)
             },
-        elevation = CardDefaults.cardElevation(8.dp),
+        elevation = CardDefaults.cardElevation(20.dp),
         shape = RectangleShape
     ) {
         Row(

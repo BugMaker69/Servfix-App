@@ -41,6 +41,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -110,7 +111,7 @@ fun SettingsScreenContent(
                 modifier = Modifier.padding(horizontal = 4.dp)
             )
             Text(
-                text = "Account Info", modifier = Modifier
+                text = stringResource(id = R.string.AccountInfo), modifier = Modifier
                     .padding(horizontal = 8.dp)
                     .weight(1f)
             )
@@ -135,7 +136,7 @@ fun SettingsScreenContent(
                 modifier = Modifier.padding(horizontal = 4.dp)
             )
             Text(
-                text = "Security", modifier = Modifier
+                text = stringResource(id =R.string.security), modifier = Modifier
                     .padding(horizontal = 8.dp)
                     .weight(1f)
             )
@@ -170,7 +171,7 @@ fun SettingsScreenContent(
                 modifier = Modifier.padding(horizontal = 4.dp)
             )
             Text(
-                text = "Delete My Account", modifier = Modifier
+                text = stringResource(id = R.string.deleteAccount), modifier = Modifier
                     .padding(horizontal = 8.dp)
                     .weight(1f)
             )
@@ -212,7 +213,7 @@ fun SettingsScreenContent(
                 modifier = Modifier.padding(horizontal = 4.dp)
             )
             Text(
-                text = "Sign Out",
+                text = stringResource(id = R.string.signOut),
                 color = Color.Red,
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp,

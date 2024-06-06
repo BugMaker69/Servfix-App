@@ -11,7 +11,14 @@
     <string name="password_changed">Password Changed</string>
     <string name="password_changed_succ">Your Password has been Changed Successfully</string>
     <string name="back_login">Back To Login</string>
-<string name="delete_message">Do you want to delete this message ?</string>
+    <string name="terminate_chat"> Chat will be terminated after the rating , are you sure ?</string>
+    <string name="boarding1">Welcome to ServFix ! Your one-stop solution for all home services. Let\'s get started !</string>
+    <string name="boarding2">From plumbing to cleaning, we\'ve got you covered. Reliable help is now at your fingertips</string>
+    <string name="boarding3">Ready to explore? Let\'s make your home maintenance hassle-free. Dive in!</string>
+
+    <string name="TypeMessage">Type a message </string>
+
+    <string name="delete_message">Do you want to delete this message ?</string>
     <string name="enter_email">Don’t Worry! It Happens. Please Enter The Email Associated With Your Account.</string>
     <string name="remember_pass">Remember Password?</string>
     <string name="enter_pass_rem">Please type something you’ll remember</string>
@@ -54,10 +61,14 @@
     <string name="password_requirement_length">At least 8 characters</string>
     <string name="password_requirement_capital">One capital letter</string>
     <string name="password_requirement_special">One special character</string>
+    <string name="security">Security</string>
+    <string name="deleteAccount">Delete my account </string>
+    <string name="signOut">Sign Out</string>
+
 
     <string name="username_requirement_words">Username must contain only letters, digits, underscores, and hyphens without spaces</string>
 <!--    <string name="username_requirement_words">At least 2 words each with at least 4 characters</string>-->
-
+<string name="AccountInfo">Account Info</string>
     <string name="phone_requirement_start">Must start with 010, 011, 012, or 015</string>
     <string name="phone_requirement_length">Must be exactly 11 digits</string>
 
@@ -76,6 +87,7 @@
     <string name="want_job">I want to find a job</string>
     <string name="look_specialist">Looking for a specialist</string>
     <string name="Egyptian_Currency">E£</string>
+
     <string name="number_transactions">transactions</string>
     <string name="view_profile">view profile</string>
     <string name="filters">Filters</string>

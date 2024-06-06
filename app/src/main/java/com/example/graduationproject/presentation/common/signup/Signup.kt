@@ -396,13 +396,13 @@ fun SignupSecondScreen(
                         userViewModel.eyeIconPressC = !userViewModel.eyeIconPressC
                     }) {
                         Icon(
-                            imageVector = if (!userViewModel.eyeIconPressC) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
+                            imageVector = if (userViewModel.eyeIconPressC) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
                             contentDescription = "",
                             tint = Color.Black,
                         )
                     }
                 },
-                visualTransformation = if (!userViewModel.eyeIconPressC) PasswordVisualTransformation() else VisualTransformation.None
+                visualTransformation = if (userViewModel.eyeIconPressC) PasswordVisualTransformation() else VisualTransformation.None
             )
 
         }
@@ -707,11 +707,11 @@ fun SignupThirdScreen(
                             userViewModel.showText = true
                         }
 
-//                        userViewModel.onFinishSignupClick()
-//                        userViewModel.sendVerificationCode(
-//                            activity = context as Activity,
-//                            callbacks = userViewModel.callbacks
-//                        )
+                        userViewModel.onFinishSignupClick()
+                        userViewModel.sendVerificationCode(
+                           activity = context as Activity,
+                        callbacks = userViewModel.callbacks
+                  )
                         onFinishClick()
                     },
                     backgroundColor = DarkBlue,
@@ -726,7 +726,7 @@ fun SignupThirdScreen(
                 CustomButtonAndText(
                     text = R.string.login,
                     contentColor = Color.Blue,
-                    onClick = onLoginClick
+                  onClick = onLoginClick
                 )
             }
         }

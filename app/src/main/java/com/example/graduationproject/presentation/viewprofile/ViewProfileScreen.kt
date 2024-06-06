@@ -101,9 +101,9 @@ val profile=viewProfileViewModel.profile.collectAsState()
             Spacer(modifier = Modifier.padding(5.dp))
 
 
-            Row(Modifier.fillMaxSize(), Arrangement.SpaceBetween) {
+            Row(Modifier.fillMaxSize(), Arrangement.Center) {
 
-                Spacer(modifier = Modifier.padding(horizontal = 10.dp))
+                Spacer(modifier = Modifier.padding(horizontal = 20.dp))
                 Button(modifier = Modifier.wrapContentSize(), onClick = {
                     onChatClick(
                         viewProfileViewModel.profile.value.provider!!.id!!,
@@ -111,10 +111,12 @@ val profile=viewProfileViewModel.profile.collectAsState()
                     )
                 }) {
                     Text(text = stringResource(id = R.string.chat), fontSize = 20.sp)
-                    Spacer(modifier = Modifier.padding(4.dp))
+                    Spacer(modifier = Modifier.padding(5.dp))
 
                     Icon(imageVector = Icons.Filled.Chat, contentDescription = "chat")
                 }
+                Spacer(modifier = Modifier.padding(horizontal =10.dp))
+
 
                 when (profile.value.isFavourite) {
                     true -> Icon(
@@ -200,9 +202,9 @@ fun UpperScreen(state: State<ViewProfileData>) {
         model = state.value.provider?.image,
         clipToBounds = true,
         contentDescription = "",
-        contentScale = ContentScale.Inside,
+        contentScale = ContentScale.Crop,
         modifier = Modifier
-            .size(150.dp)
+            .size(130.dp)
             .clip(CircleShape),
         loading = { CircularProgressIndicator(Modifier.wrapContentSize()) },
         error = {

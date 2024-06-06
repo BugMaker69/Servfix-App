@@ -47,7 +47,9 @@ class ChatContactViewModel @Inject constructor(
                                             name = provider.name,
                                             image = Constant.BASE_URL + provider.image,
                                             content = detail?.content,
-                                            unseenMessages = detail?.unseenMessages
+                                            unseenMessages = detail?.unseenMessages,
+                                            phone = provider.phone
+
                                         )
 
                                     }
@@ -76,7 +78,8 @@ class ChatContactViewModel @Inject constructor(
                                             name = user.name,
                                             image = user.image,
                                             content = detail?.content,
-                                            unseenMessages = detail?.unseenMessages
+                                            unseenMessages = detail?.unseenMessages,
+                                            phone=null
                                         )
                                     }
                                     withContext(Dispatchers.Main) {

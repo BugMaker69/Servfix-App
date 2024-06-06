@@ -3,6 +3,8 @@ package com.example.graduationproject.presentation.otp
 import android.app.Activity
 
 import android.util.Log
+import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,8 +21,10 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -45,6 +49,7 @@ import com.example.graduationproject.ui.theme.GrayBlue
 import com.example.graduationproject.ui.theme.LightBlue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -55,6 +60,9 @@ fun OtpScreen(userViewModel: UserViewModel,
     val context = LocalContext.current
     val countdownTime by userViewModel.countdownTime.collectAsState()
     val resendEnabled by userViewModel.resendEnabled.collectAsState()
+    BackHandler {
+        Toast.makeText(context,"Sorry can't back",Toast.LENGTH_SHORT).show()
+    }
     Log.d(
         "yalla2",
         "OtpScreen: verificationid:${userViewModel.verificationID},otptext:${userViewModel.otpText},auth:${userViewModel.mAuth},phone:${userViewModel.phone}"
@@ -104,7 +112,6 @@ fun OtpScreen(userViewModel: UserViewModel,
                 onClick = {
                     userViewModel.startCountdown()
                     if(resendEnabled){
-
                         userViewModel.sendVerificationCode(activity=context as Activity, callbacks = userViewModel.callbacks
                         )
                     }
@@ -115,43 +122,75 @@ fun OtpScreen(userViewModel: UserViewModel,
                 Text(text = countdownTime.toString(), Modifier.padding(8.dp))
             }
         }
+Button(
+    enabled = userViewModel.otpEnabled,
+    shape = RoundedCornerShape(36.dp), modifier = Modifier
+        .size(width = 350.dp, height = 85.dp)
+        .padding(20.dp),onClick = {
 
 
-        CustomButtonAndText(
-            modifier = Modifier
-                .size(width = 350.dp, height = 85.dp)
-                .padding(20.dp),
-            text = R.string.next,
-            shape = RoundedCornerShape(36.dp),
+        CoroutineScope(Dispatchers.Main).launch {
+            if(userViewModel.verificationID!=""&&userViewModel.otpText!=""){
+                userViewModel.signInWithPhoneAuthCredential(
+                    activity =  context as Activity,
 
-            backgroundColor = DarkBlue,
-            contentColor = Color.White,
-            fontSize = 20,
-            fontWeight = FontWeight.Normal,
-            onClick = {
-                if(userViewModel.verificationID!=""&&userViewModel.otpText!=""){
-                    userViewModel.signInWithPhoneAuthCredential(
-                        activity =  context as Activity,
                     )
 
-                }
-                if(userViewModel.sucsess){
-                    CoroutineScope(Dispatchers.Main).launch {
-                        delay(3000)
-                        onLoginClick()
-                    }
-                }
-                else if (userViewModel.failed){
-                    userViewModel.otpText=""
-                }
-
-
-
-
-
-
             }
-        )
+            delay(2000)
+            if(userViewModel.sucsess){
+                    userViewModel.otpEnabled=false
+                    delay(3000)
+                    onLoginClick()
+                }
+
+            else if (userViewModel.failed){
+                userViewModel.otpText=""
+            }
+
+        }
+
+    }) {
+Text(text =  stringResource(id = R.string.next))
+}
+
+//        CustomButtonAndText(
+//
+//            modifier = Modifier
+//                .size(width = 350.dp, height = 85.dp)
+//                .padding(20.dp),
+//            text = R.string.next,
+//            shape = RoundedCornerShape(36.dp),
+//
+//            backgroundColor = DarkBlue,
+//            contentColor = Color.White,
+//            fontSize = 20,
+//            fontWeight = FontWeight.Normal,
+//            onClick = {
+//                if(userViewModel.verificationID!=""&&userViewModel.otpText!=""){
+//                    userViewModel.signInWithPhoneAuthCredential(
+//                        activity =  context as Activity,
+//                    )
+//
+//                }
+//                if(userViewModel.sucsess){
+//                    CoroutineScope(Dispatchers.Main).launch {
+//
+//                        delay(3000)
+//                        onLoginClick()
+//                    }
+//                }
+//                else if (userViewModel.failed){
+//                    userViewModel.otpText=""
+//                }
+//
+//
+//
+//
+//
+//
+//            }
+//        )
 
     }
 

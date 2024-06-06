@@ -12,6 +12,17 @@
     <string name="password_changed">تم تغيير كلمة السر</string>
     <string name="password_changed_succ">تم تغيير كلمة السر الخاصة بك بنجاح</string>
     <string name="back_login">العودة لتسجيل الدخول</string>
+    <string name="terminate_chat"> سيتم انهاء هذه المعاملة بعد التقييم هل انت متأكد ؟</string>
+    <string name="boarding1">مرحبا بك فى سيرفيكس الحل الشامل لجميع خدماتك المنزلية فلنبدأ !</string>
+    <string name="boarding2">من السباكة إلى التنظيف، نحن نوفر لك كل ما تحتاجه. المساعدة الموثوقة أصبحت الآن في متناول يدك </string>
+<string name="boarding3">هل أنت مستعد للاستكشاف؟ دعونا نجعل صيانة منزلك خالية من المتاعب. لنبدأ!</string>
+<string name="TypeMessage">اكتب رسالتك</string>
+    <string name="AccountInfo"> تفاصيل الحساب</string>
+    <string name="security">الحماية</string>
+    <string name="deleteAccount">حذف حسابى</string>
+<string name="signOut">تسجيل الخروج</string>
+
+
 
     <string name="enter_email">لا تقلق! يحدث ذلك. الرجاء إدخال البريد الالكتروني المرتبط بحسابك.</string>
     <string name="remember_pass">تذكر كلمة المرور؟</string>

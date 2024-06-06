@@ -29,13 +29,17 @@ import javax.inject.Inject
 class ChatViewModel @Inject constructor(val dataStoreToken: DataStoreToken,val apiService: ApiService,val savedStateHandle: SavedStateHandle,val chatRepository: ChatRepository) : ViewModel() {
 var deletedMessageId by mutableStateOf(0)
     var showAlert by mutableStateOf(false)
+    var terminateAlert  by mutableStateOf(false)
     val chat = MutableStateFlow(emptyList<Chat>())
     var retrievedId by mutableStateOf(0)
+    var retrievedPhone by mutableStateOf("")
     var retrievedName by mutableStateOf("")
     var retrievedImage by mutableStateOf("")
     var rating by mutableStateOf(0)
     var terminate_id by mutableStateOf(0)
     init {
+        retrievedPhone=savedStateHandle.get<String>("phone")!!
+
         retrievedId= savedStateHandle.get<Int>("chatId")!!
         retrievedName=savedStateHandle.get<String>("name")!!
         retrievedImage=savedStateHandle.get<String>("image")!!

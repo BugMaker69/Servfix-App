@@ -45,6 +45,7 @@ class UserViewModel @Inject constructor(
     var verificationID by mutableStateOf("")
     var loginEnabled by mutableStateOf(true)
     var otpText by mutableStateOf("")
+    var otpEnabled by mutableStateOf(false)
     var sucsess by mutableStateOf(false)
     var failed by mutableStateOf(false)
     var mobileAnimation by mutableStateOf(true)
@@ -150,6 +151,8 @@ class UserViewModel @Inject constructor(
                     countdownTime.value--
                 }
                 resendEnabled.value = true
+               otpEnabled=true
+
             }
         }
     }
@@ -157,6 +160,11 @@ class UserViewModel @Inject constructor(
     fun updateOtpText(newText: String) {
         if (newText.length <= 6) {
             otpText = newText
+            otpEnabled = if(otpText.length==6){
+                true
+            }else{
+                false
+            }
         }
     }
 
@@ -192,7 +200,6 @@ class UserViewModel @Inject constructor(
                 }
             }
     }
-
     val phoneNumberregex = "^01[0|1|2|5]\\d{8}$".toRegex()
     val Emailregex = "^[a-zA-Z]{3,}.*@.*\\.[a-zA-Z]+".toRegex()
 

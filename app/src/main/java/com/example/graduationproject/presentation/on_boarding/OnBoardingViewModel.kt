@@ -11,9 +11,11 @@ class OnBoardingViewModel() : ViewModel() {
         R.raw.worker, R.raw.workers2, R.raw.location
     )
     val descriptin = listOf(
-        "blabla blala bla bla bla bla bla bla bla bla",
-        "go lopdsk rekokw Lorem polrism etoro lol bor bk",
-        "go test test fersha ramadan we el saadany to7yeekom test test test Al3aaaab \uD83D\uDD25\uD83D\uDD25\uD83D\uDE0E"
+        R.string.boarding1
+              ,
+        R.string.boarding2
+        ,
+        R.string.boarding3
     )
     var currentPage= mutableStateOf(0)
     fun onPageChange(page:Int){

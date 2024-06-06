@@ -846,16 +846,16 @@ fun ServixApp(
                 ChatContactScreen(
                     modifier = Modifier.padding(innerPadding),
                     vm = vm,
-                    userType = userTypeFlow.value, onChatClick = {chatId,name,image,terminate_id->
+                  onChatClick = {chatId,name,image,terminate_id,phone->
                         val uriEncode = Uri.encode(image)
-                        val route = "ChatScreen/$chatId/$name/$uriEncode/$terminate_id"
-                        Log.d("btx", "navigation problem url : ${ServixScreens.ChatScreen.name + "/$chatId"+"/$name"+"/$uriEncode"+"/$terminate_id"} ")
+                        val route = "ChatScreen/$chatId/$name/$uriEncode/$terminate_id/$phone"
+                        Log.d("btx", "navigation problem url : ${ServixScreens.ChatScreen.name + "/$chatId"+"/$name"+"/$uriEncode"+"/$terminate_id"} "+"/$phone")
                         navController.navigate(route)
 
                     }
                 )
             }
-            composable(ServixScreens.ChatScreen.name+ "/{chatId}"+"/{name}"+"/{image}"+"/{terminate_id}", arguments = listOf(
+            composable(ServixScreens.ChatScreen.name+ "/{chatId}"+"/{name}"+"/{image}"+"/{terminate_id}"+"/{phone}", arguments = listOf(
                 navArgument("chatId") {
                     type = NavType.IntType
                 }, navArgument("name"){type= NavType.StringType}, navArgument("image"){type=

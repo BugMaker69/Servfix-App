@@ -189,7 +189,7 @@ fun FavoriteItem(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
 
-                Text(text = state.phone, Modifier.padding(10.dp))
+                Text(text = state.fixed_salary+ stringResource(id = R.string.Egyptian_Currency), Modifier.padding(10.dp))
 
 
 
