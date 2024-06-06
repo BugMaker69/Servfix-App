@@ -55,7 +55,8 @@
     <string name="password_requirement_capital">One capital letter</string>
     <string name="password_requirement_special">One special character</string>
 
-    <string name="username_requirement_words">At least 2 words each with at least 4 characters</string>
+    <string name="username_requirement_words">Username must contain only letters, digits, underscores, and hyphens without spaces</string>
+<!--    <string name="username_requirement_words">At least 2 words each with at least 4 characters</string>-->
 
     <string name="phone_requirement_start">Must start with 010, 011, 012, or 015</string>
     <string name="phone_requirement_length">Must be exactly 11 digits</string>

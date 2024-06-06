@@ -275,8 +275,8 @@ fun SignupFirstScreen(
         }
         Divider(thickness = 3.dp, color = Color.Gray)
         Spacer(modifier = Modifier.height(16.dp))
-        Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.Center) {
-            CustomButtonAndText(text = R.string.have_account)
+        Row(modifier=Modifier.padding(bottom = 16.dp),verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.Center) {
+            CustomButtonAndText(text = R.string.have_account, contentColor = Color.Gray)
             CustomButtonAndText(
                 text = R.string.login,
                 onClick = onLoginClick,
@@ -369,13 +369,13 @@ fun SignupSecondScreen(
                         userViewModel.eyeIconPress = !userViewModel.eyeIconPress
                     }) {
                         Icon(
-                            imageVector = if (userViewModel.eyeIconPress) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
+                            imageVector = if (!userViewModel.eyeIconPress) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
                             contentDescription = "",
                             tint = Color.Black,
                         )
                     }
                 },
-                visualTransformation = if (userViewModel.eyeIconPress) PasswordVisualTransformation() else VisualTransformation.None
+                visualTransformation = if (!userViewModel.eyeIconPress) PasswordVisualTransformation() else VisualTransformation.None
             )
             DisplayRequirements(
                 isFieldFocused = userViewModel.isPasswordNFocused.value,
@@ -396,13 +396,13 @@ fun SignupSecondScreen(
                         userViewModel.eyeIconPressC = !userViewModel.eyeIconPressC
                     }) {
                         Icon(
-                            imageVector = if (userViewModel.eyeIconPressC) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
+                            imageVector = if (!userViewModel.eyeIconPressC) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
                             contentDescription = "",
                             tint = Color.Black,
                         )
                     }
                 },
-                visualTransformation = if (userViewModel.eyeIconPressC) PasswordVisualTransformation() else VisualTransformation.None
+                visualTransformation = if (!userViewModel.eyeIconPressC) PasswordVisualTransformation() else VisualTransformation.None
             )
 
         }
@@ -466,7 +466,7 @@ fun SignupSecondScreen(
         }
         Spacer(modifier = Modifier.height(16.dp))
         Divider(thickness = 3.dp, color = Color.Gray)
-        Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.Center) {
+        Row(modifier=Modifier.padding(bottom = 16.dp),verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.Center) {
             CustomButtonAndText(text = R.string.have_account, contentColor = Color.Gray)
             CustomButtonAndText(
                 text = R.string.login,
@@ -721,7 +721,7 @@ fun SignupThirdScreen(
             }
             Spacer(modifier = Modifier.height(16.dp))
             Divider(thickness = 3.dp, color = Color.Gray)
-            Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.Center) {
+            Row(modifier=Modifier.padding(bottom = 16.dp),verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.Center) {
                 CustomButtonAndText(text = R.string.have_account, contentColor = Color.Gray)
                 CustomButtonAndText(
                     text = R.string.login,

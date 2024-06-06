@@ -1,4 +1,4 @@
-package com.example.graduationproject
+package com.example.graduationproject.presentation.common.signup
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -32,6 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.graduationproject.R
 import com.example.graduationproject.presentation.common.CustomButtonAndText
 import com.example.graduationproject.presentation.common.UserType
 import com.example.graduationproject.presentation.common.UserTypeViewModel
@@ -176,14 +177,14 @@ fun BeforeSignup(
         }
 
         Column(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.weight(2f),
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Divider(thickness = 3.dp, color = Color.Gray)
             Spacer(modifier = Modifier.height(16.dp))
-            Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.Center) {
-                CustomButtonAndText(text = R.string.have_account)
+            Row(modifier=Modifier.padding(bottom = 16.dp),verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.Center) {
+                CustomButtonAndText(text = R.string.have_account,contentColor = Color.Gray)
                 CustomButtonAndText(
                     text = R.string.login,
                     onClick = onLoginClick,

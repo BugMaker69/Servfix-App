@@ -23,7 +23,7 @@ class PostDetailViewModel @Inject constructor(
     val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    var getPostById by mutableStateOf<GetPostsForProviderItem>(GetPostsForProviderItem("",1, "", false,"",1,1))
+    var getPostById by mutableStateOf<GetPostsForProviderItem>(GetPostsForProviderItem("",1, "", false,false,"",1,1))
 //    var getPostById by mutableStateOf<SpecificNotificationItemByIdItem>(SpecificNotificationItemByIdItem(1, "", ""))
 //    var getPostById by mutableStateOf<GetPostDataItem>(GetPostDataItem("", 1, "", "", ""))
 

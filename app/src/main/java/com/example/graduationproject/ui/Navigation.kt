@@ -31,7 +31,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.graduationproject.BeforeSignup
+import com.example.graduationproject.presentation.common.signup.BeforeSignup
 import com.example.graduationproject.data.NewOldPassword
 
 import com.example.graduationproject.presentation.AddNeWorkToProfileItems

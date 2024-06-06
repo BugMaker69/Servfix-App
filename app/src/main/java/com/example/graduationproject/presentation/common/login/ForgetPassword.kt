@@ -66,6 +66,7 @@ fun FirstScreenOnForgotPasswordChange(
     userViewModel: UserViewModel
 ) {
     val context = LocalContext.current
+    val emailFocusRequester = remember { FocusRequester() }
 
     Column(
         modifier = Modifier
@@ -98,7 +99,7 @@ fun FirstScreenOnForgotPasswordChange(
             contentColor = Color.Black
         )
 
-        CustomTextField(
+/*        CustomTextField(
             modifier = Modifier,
             fieldName = R.string.email,
             fieldValue = userViewModel.emailN,
@@ -109,6 +110,25 @@ fun FirstScreenOnForgotPasswordChange(
                             },
 //            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
 
+        )*/
+
+        CustomTextField(
+            modifier = Modifier
+                .focusRequester(emailFocusRequester)
+                .onFocusChanged { focusState ->
+                    userViewModel.isEmailNFocused.value = focusState.isFocused
+                },
+
+            fieldName = R.string.email,
+            fieldValue = userViewModel.emailN,
+            onValueChange = { userViewModel.onEmailChangedN(it) },
+            isError = userViewModel.emailNError,
+
+            )
+        DisplayRequirements(
+            isFieldFocused = userViewModel.isEmailNFocused.value,
+            requirements = userViewModel.emailRequirements,
+            fieldValue = userViewModel.emailN
         )
 
         CustomButtonAndText(
@@ -119,7 +139,14 @@ fun FirstScreenOnForgotPasswordChange(
             onClick = {
                 userViewModel.isPasswordForget = true
                 Log.d("FirstScreenOnForgotPasswordChange", "FirstScreenOnForgotPasswordChange: ${userViewModel.emailN}")
-                onSendClick()
+                userViewModel.onForgetPasswordSendClick()
+                if (userViewModel.emailNError) {
+                    Log.d("WHYYYYY", "SignupSecondScreen: ERRORR2")
+                    emailFocusRequester.requestFocus()
+                }
+                if (userViewModel.emailN.isNotEmpty() && !userViewModel.emailNError) {
+                    onSendClick()
+                }
 /*                userViewModel.onFinishSignupClick()
                 userViewModel.sendVerificationCode(
                     activity = context as Activity,
@@ -134,7 +161,7 @@ fun FirstScreenOnForgotPasswordChange(
         )
 
         Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.Center) {
-            CustomButtonAndText(text = R.string.remember_pass)
+            CustomButtonAndText(text = R.string.remember_pass,contentColor = Color.Gray)
             CustomButtonAndText(
                 text = R.string.login,
                 onClick = onLoginClick,

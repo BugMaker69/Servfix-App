@@ -197,7 +197,9 @@ class UserViewModel @Inject constructor(
     val Emailregex = "^[a-zA-Z]{3,}.*@.*\\.[a-zA-Z]+".toRegex()
 
     //    val fullnameregex = "^[a-zA-Z]{3,} [a-zA-Z]{3,}".toRegex()
-    val fullnameregex = "^[a-zA-Z]{3,}(\\s+[a-zA-Z]{3,})+".toRegex()
+//    val fullnameregex = "^[a-zA-Z]{3,}(\\s+[a-zA-Z]{3,})+".toRegex()
+//    val fullnameregex = "[^a-zA-Z0-9_-]+$".toRegex()
+    val fullnameregex = "^[a-zA-Z0-9_-]{3,}$".toRegex()
     val passwordregex = "^(?=.*[A-Z])(?=.*[^\\s\\w])[A-Za-z\\d[^\\s\\w]]{8,}$".toRegex()
 
 
@@ -227,11 +229,19 @@ class UserViewModel @Inject constructor(
     )
     // TODO Spaces
 
+    /*    val usernameRequirements = listOf(
+            R.string.username_requirement_words to { s: String ->
+                s.split(" ")
+                    .filter { it.all { c -> c.isLetter() || c.isWhitespace() } && it.length >= 3 }.size >= 2
+            })*/
     val usernameRequirements = listOf(
         R.string.username_requirement_words to { s: String ->
-            s.split(" ")
-                .filter { it.all { c -> c.isLetter() || c.isWhitespace() } && it.length >= 3 }.size >= 2
-        })
+            val regex = "^[a-zA-Z0-9_-]{3,}$".toRegex()
+//            val regex = "^[a-zA-Z0-9_-]+$".toRegex()
+            regex.matches(s) && !s.contains(" ")
+        }
+    )
+
 
     val phoneNumberRequirements = listOf(
         R.string.phone_requirement_start to { s: String -> s.matches("^01[0|1|2|5][0-9]*\$".toRegex()) },
@@ -244,8 +254,10 @@ class UserViewModel @Inject constructor(
 
 
     fun onUserNameChanged(userName1: String) {
-        userName = userName1
+        userName = userName1.trim()
         userNameError = !userName1.matches(fullnameregex)
+//        userNameError = userName1.isEmpty()
+//        userNameError = !userName1.matches(fullnameregex)
     }
 
     fun onFixedSalaryChanged(fixedSalary1: String) {
@@ -277,6 +289,7 @@ class UserViewModel @Inject constructor(
     fun onPasswordChangedN(password1: String) {
         passwordN = password1.trim()
         passwordNError = !password1.matches(passwordregex)
+        passwordConfError = (passwordConf.trim().isNotEmpty()) && (passwordConf != passwordN)
     }
 
     fun passwordConfChanged(passwordConf1: String) {
@@ -294,6 +307,15 @@ class UserViewModel @Inject constructor(
         if (!userName.matches(fullnameregex)) {
             userNameError = true
         }
+        if (userName.matches(fullnameregex)){
+            userNameError = false
+        }
+        /*        if (userName.isEmpty()) {
+                    userNameError = true
+                }*/
+        /*        if (!userName.matches(fullnameregex)) {
+                    userNameError = true
+                }*/
         if (selectedCityValue.isEmpty() && selectedCityIndex == -1) {
             cityError = true
         }
@@ -347,6 +369,15 @@ class UserViewModel @Inject constructor(
             passwordConfError = true
         }
 
+    }
+
+    fun onForgetPasswordSendClick(){
+        if (!emailN.matches(Emailregex)) {
+            emailNError = true
+        }
+        else{
+            emailNError = false
+        }
     }
 
     val isLoading = mutableStateOf(false)
@@ -572,7 +603,7 @@ class UserViewModel @Inject constructor(
                         error = null
                         addProviderRepository.dataStoreToken.saveToken(token!!.access.toString())
                         getData()
-                     //   addProviderRepository.dataStoreToken.saveLoginState(true)
+                        //   addProviderRepository.dataStoreToken.saveLoginState(true)
 
                     }
                 } catch (e: Exception) {
@@ -582,17 +613,20 @@ class UserViewModel @Inject constructor(
         }
     }
 
-var isDone = false
-    fun forgotPassword(){
+    var isDone = false
+    fun forgotPassword() {
         viewModelScope.launch {
-            val email= Email( emailN)
-           isDone = addProviderRepository.forgotPassword(email)
+            val email = Email(emailN)
+            isDone = addProviderRepository.forgotPassword(email)
         }
     }
 
-    fun resetPassword(id:String){
+    fun resetPassword(id: String) {
         viewModelScope.launch {
-            addProviderRepository.resetPassword(ForgetResetPassword(newPassword,newPasswordConf),id)
+            addProviderRepository.resetPassword(
+                ForgetResetPassword(newPassword, newPasswordConf),
+                id
+            )
         }
     }
 
@@ -642,7 +676,6 @@ var isDone = false
 //                delay(5000)
 //                getProviderData(token?.access ?: "")
 //                returnedProviderData= token?.let { getProviderData(it.access ) }
-
 
 
     fun clearAllData() {
@@ -755,20 +788,20 @@ var isDone = false
         }*/
 
 
-/*    fun updateProviderData() {
+    /*    fun updateProviderData() {
 
-        val updateProviderData = addProviderRepository.updateProviderData(
-            token = token!!.access,
-            address = address,
-            city = selectedCityValue,
-            email = emailN,
-            fixed_salary = fixedSalary,
-            image = imageUri!!,
-            password = passwordN,
-            phone = phone,
-            profession = selectedServiceValue,
-            username = userName,
-            *//*            ratings = "5",
+            val updateProviderData = addProviderRepository.updateProviderData(
+                token = token!!.access,
+                address = address,
+                city = selectedCityValue,
+                email = emailN,
+                fixed_salary = fixedSalary,
+                image = imageUri!!,
+                password = passwordN,
+                phone = phone,
+                profession = selectedServiceValue,
+                username = userName,
+                *//*            ratings = "5",
                         service_id = 1,
                         user = 1,*//*
         )
@@ -776,20 +809,20 @@ var isDone = false
 
     }*/
 
-/*    fun updateUserData() {
+    /*    fun updateUserData() {
 
-        val updateUserData = addProviderRepository.updateUserData(
-            token = token!!.access,
-            address = address,
-            city = selectedCityValue,
-            email = emailN,
-            image = imageUri!!,
-            phone = phone,
-            username = userName,
-        )
+            val updateUserData = addProviderRepository.updateUserData(
+                token = token!!.access,
+                address = address,
+                city = selectedCityValue,
+                email = emailN,
+                image = imageUri!!,
+                phone = phone,
+                username = userName,
+            )
 
 
-    }*/
+        }*/
 
 
     /*

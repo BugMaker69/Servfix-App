@@ -119,7 +119,7 @@ fun PostItemDetail(
         ) {
             var showToast by remember { mutableStateOf(false)}
             var isAccept by remember { mutableStateOf(false)}
-            if (!viewModel.getPostById.is_accepted) {
+            if (!viewModel.getPostById.is_accepted && !viewModel.getPostById.is_rejected) {
                 CustomButtonAndText(
                     text = R.string.reject,
                     onClick = {
@@ -151,6 +151,12 @@ fun PostItemDetail(
                     showToast = false
                     isAccept =false
                 }
+            }
+            else if(viewModel.getPostById.is_accepted && !viewModel.getPostById.is_rejected){
+                Text(text = "You Already Choose Accept")
+            }
+            else if(!viewModel.getPostById.is_accepted && viewModel.getPostById.is_rejected){
+                Text(text = "You Already Choose Reject")
             }
             else{
                 Text(text = "You Already Choose")

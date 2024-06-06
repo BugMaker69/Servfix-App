@@ -307,6 +307,7 @@ data class GetPostsForProviderItem(
     val id: Int,
     val image: String,
     val is_accepted: Boolean,
+    val is_rejected: Boolean,
     val message: String,
     val provider: Int,
     val user: Int
