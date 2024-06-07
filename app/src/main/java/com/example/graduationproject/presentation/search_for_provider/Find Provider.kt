@@ -32,6 +32,7 @@ import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarOutline
 import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -52,8 +53,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.DarkGray
 
 import androidx.compose.ui.graphics.Color.Companion.Gray
+import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.Color.Companion.Yellow
 import androidx.compose.ui.layout.ContentScale
@@ -98,7 +101,10 @@ fun FindProvider(
            findProviderViewModel.dismissDialog()
         }, onDismissButtonClick = {
             findProviderViewModel.dismissDialog()
-        }, confirmButtonText = "confirm", dismissButtonText = "dismiss"
+        }, confirmButtonText = "confirm", dismissButtonText = "dismiss", confirmButtonColors = ButtonDefaults.buttonColors(
+            containerColor = DarkGray,
+            contentColor = Transparent
+        )
         ) {
 
             FilterScreen(

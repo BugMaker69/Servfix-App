@@ -2,6 +2,7 @@
 
 package com.example.graduationproject.presentation.common
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Indication
 import androidx.compose.foundation.background
@@ -253,16 +254,17 @@ fun CustomDialog(
     modifier: Modifier = Modifier,
     confirmButtonColors: ButtonColors = ButtonDefaults.buttonColors(
         containerColor = Color.Transparent,
-        contentColor = Color.Red
+        contentColor = DarkBlue
     ),
     dismissButtonColors: ButtonColors = ButtonDefaults.buttonColors(
         containerColor = Color.Transparent,
-        contentColor = Color.Black
+        contentColor = Color.Gray
     ),
     confirmButtonText: String,
     dismissButtonText: String,
     onConfirmButtonClick: () -> Unit,
     onDismissButtonClick: () -> Unit,
+    border:BorderStroke = BorderStroke(width = 2.dp, DarkBlue),
     title: @Composable (() -> Unit)? = null,
     text: @Composable (() -> Unit)? = null,
 ) {
@@ -276,7 +278,7 @@ fun CustomDialog(
             }
         },
         dismissButton = {
-            Button(onClick = onDismissButtonClick, colors = dismissButtonColors) {
+            Button(onClick = onDismissButtonClick, colors = dismissButtonColors, border = border) {
                 Text(text = dismissButtonText)
             }
         },

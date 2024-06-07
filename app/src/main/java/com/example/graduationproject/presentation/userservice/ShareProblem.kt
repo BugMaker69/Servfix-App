@@ -397,7 +397,7 @@ fun ShareProblemScreen(
 
                 }
 
-                Text(
+/*                Text(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp),
@@ -408,7 +408,7 @@ fun ShareProblemScreen(
                         "Total Number Of Photos: ${serviceViewModel.imageMap.size}/ ${serviceViewModel.maxImages}"
                     },
                     color = if (serviceViewModel.imageMap.size == serviceViewModel.maxImages) Color.Green else Color.Black
-                )
+                )*/
             }
         }
 

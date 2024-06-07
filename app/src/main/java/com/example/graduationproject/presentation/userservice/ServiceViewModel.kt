@@ -92,7 +92,7 @@ class ServiceViewModel @Inject constructor(    val addProviderRepository :AddPro
     //  Share Problem   Handle Photos
 
     val isLoading = mutableStateOf(false)
-    val maxImages = 5
+    val maxImages = 1
     val launchCamera = mutableStateOf(false)
     var imageUri by mutableStateOf<Uri?>(null)
 
