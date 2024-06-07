@@ -1,6 +1,7 @@
 package com.example.graduationproject.presentation.notification
 
 import android.net.Uri
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -17,6 +18,7 @@ import com.example.graduationproject.data.SpecificNotificationItemByIdItem
 import com.example.graduationproject.data.repositories.AddProviderRepository
 import com.example.graduationproject.data.repositories.ProviderRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -78,7 +80,10 @@ class NotificationViewModel @Inject constructor(
     fun acceptPost(id: Int) {
         viewModelScope.launch {
             acceptPost = providerRepository.acceptPost(id)
+            delay(5000)
+            Log.d("acceptPost ViewModel", "acceptPost: ${acceptPost.details}")
         }
+            Log.d("after acceptPost ViewModel", "acceptPost: ${acceptPost.details}")
     }
 
 

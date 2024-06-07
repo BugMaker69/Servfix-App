@@ -11,6 +11,7 @@ import com.example.graduationproject.data.PostStatus
 import com.example.graduationproject.data.SpecificNotificationItemById
 import com.example.graduationproject.data.retrofit.ApiService
 import com.example.graduationproject.utils.DataStoreToken
+import kotlinx.coroutines.delay
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
@@ -53,15 +54,20 @@ class ProviderRepository @Inject constructor(
     }
 
     suspend fun acceptPost(id: Int):GeneralPostAccept{
-                var response1 = GeneralPostAccept("")
+                var response1 = GeneralPostAccept("This post has already been accepted")
         apiService.acceptPost("Bearer ${dataStoreToken.getToken()}", id)
             .enqueue(object : Callback<ResponseBody> {
                 override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                    response1 = GeneralPostAccept( response.message())
+//                    Log.d("first acceptPost Provider Repo", "acceptPost: ${response.body()}")
+
+                    response1 = response1.copy( response.message())
                     if (response.body() != null && response.isSuccessful) {
                         try {
 
-                            if (response.code() == 201) {
+                            if (response.code() == 200) {
+                                response1 = response1.copy( "The post accepted successfully")
+                    Log.d("first acceptPost Provider Repo", "acceptPost: ${response1}")
+
                                 Log.d(
                                     "Post Accepted Successfully",
                                     "onResponse: Post Accepted Successfully ${response} ||  ${response.code()} ||  ${response.body()} ||  ${response.errorBody()} ||  ${response.isSuccessful} ||  ||  ${response.message()} ||  ||  ${response.headers()} ||  ||  ${response.raw()} || "
@@ -82,26 +88,29 @@ class ProviderRepository @Inject constructor(
 
                         }
                     } else {
+                        response1 = response1.copy("This post has already been accepted")
                         Log.d("onFailure Error Post Accepted", "onResponse: Updated Nothing Happen Why ")
                         Log.d(
                             "onFailure Error Post Accepted",
-                            "onResponse: Post Accepted onFailure Error ${response} ||  ${response.isSuccessful} ||  ${response.message()} ||  ${response.code()} ||  ${response.errorBody()} ||  ${response.headers()} ||  ${response.raw()} || "
+                            "onResponse: Post Accepted onFailure Error $response1 |||| ${response} ||  ${response.isSuccessful} ||  ${response.message()} ||  ${response.code()} ||  ${response.errorBody()} ||  ${response.headers()} ||  ${response.raw()} || "
                         )
                     }
 
                 }
 
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                    response1 = GeneralPostAccept(t.message.toString())
+                    response1 = response1.copy("This post has already been accepted")
+//                    response1 = GeneralPostAccept("This post has already been accepted")
                     Log.d(
                         "onFailure Error Updated",
-                        "onResponse: Post Accepted onFailure Error ${t} ||  ${t.message} ||  ${t.cause} ||  ${t.localizedMessage} ||  ${t.stackTrace} ||  ${t.suppressed} || "
+                        "onResponse: Post Accepted onFailure Error $response1 ||| ${t} ||  ${t.message} ||  ${t.cause} ||  ${t.localizedMessage} ||  ${t.stackTrace} ||  ${t.suppressed} || "
                     )
 
                 }
             })
 /*        val response = apiService.acceptPost(token = "Bearer ${dataStoreToken.getToken()}", id = id)
         return response*/
+        Log.d("acceptPost Provider Repo", "acceptPost: ${response1}")
         return response1
     }
 

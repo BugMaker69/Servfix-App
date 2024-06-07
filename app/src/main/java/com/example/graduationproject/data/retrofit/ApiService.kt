@@ -178,7 +178,7 @@ interface ApiService {
         @Part("address") address: RequestBody,
         @Part("phone") phone: RequestBody,
         @Part("city") city: RequestBody,
-        @Part image: MultipartBody.Part
+        @Part image: MultipartBody.Part?
     ): Call<ResponseBody>
 
     @Multipart

@@ -31,6 +31,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.graduationproject.MyApplication
+import com.example.graduationproject.data.GeneralPostAccept
 import com.example.graduationproject.presentation.common.signup.BeforeSignup
 import com.example.graduationproject.data.NewOldPassword
 
@@ -691,6 +693,8 @@ fun ServixApp(
                 val itemId = backStackEntry.arguments?.getInt("id")
                 val item = notificationViewModel.getPostById.find { it.id == itemId }
                 Log.d("PostDetails", "ServixApp: itemId:  ${itemId} || item: ${item}||")
+                var detials = GeneralPostAccept("")
+                var show by remember { mutableStateOf(false) }
                 if (item != null) {
                     NotificationDetails(
                         onNotifiPostItemDetailToOpenIt = { /*TODO*/ },
@@ -699,9 +703,14 @@ fun ServixApp(
                         onAcceptButtonClick = {
                             if (itemId != null) {
                                 notificationViewModel.acceptPost(itemId)
+                                Log.d("acceptPost", "acceptPost: ${notificationViewModel.acceptPost.details}")
+                                show = true
+                                navController.navigate(ServixScreens.Notification.name)
                             }
                         }
                     )
+                    if (show)
+                    Toast.makeText(MyApplication.getApplicationContext().applicationContext,notificationViewModel.acceptPost.details,Toast.LENGTH_SHORT).show()
                 }
             }
 
@@ -721,6 +730,12 @@ fun ServixApp(
                                 settingsViewModel.newPassword
                             )
                         )
+                        Log.d("userTypeFlow.value ", "ServixApp: ${userTypeFlow.value} ")
+                        if (userTypeFlow.value == UserType.OwnerPerson.name) {
+                            navController.navigate(ServixScreens.HomeUser.name)
+                        } else {
+                            navController.navigate(ServixScreens.HomeProvider.name)
+                        }
 //                        navController.navigate(ServixScreens.Home.name)
                     },
                     vm = settingsViewModel
@@ -779,26 +794,6 @@ fun ServixApp(
                 )
             }
 
-            composable(ServixScreens.NewPasswordScreen.name) {
-                val settingsViewModel: SettingsViewModel = hiltViewModel()
-
-                NewPasswordScreen(
-                    onSavePasswordChangeClick = {
-                        Log.d(
-                            "changePassword",
-                            "ServixApp:  || ${settingsViewModel.oldPassword} || ${settingsViewModel.newPassword}  ||"
-                        )
-                        settingsViewModel.changePassword(
-                            NewOldPassword(
-                                settingsViewModel.oldPassword,
-                                settingsViewModel.newPassword
-                            )
-                        )
-//                        navController.navigate(ServixScreens.Home.name)
-                    },
-                    vm = settingsViewModel
-                )
-            }
 
 
             composable(ServixScreens.HomeProvider.name) {

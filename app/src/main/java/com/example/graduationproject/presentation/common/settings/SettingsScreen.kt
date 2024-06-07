@@ -439,13 +439,13 @@ fun NewPasswordScreen(
                     eyeIconPress = !eyeIconPress
                 }) {
                     Icon(
-                        imageVector = if (eyeIconPress) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
+                        imageVector = if (!eyeIconPress) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
                         contentDescription = "",
                         tint = Color.Black,
                     )
                 }
             },
-            visualTransformation = if (eyeIconPress) PasswordVisualTransformation() else VisualTransformation.None
+            visualTransformation = if (!eyeIconPress) PasswordVisualTransformation() else VisualTransformation.None
         )
 
         Text(
@@ -469,13 +469,13 @@ fun NewPasswordScreen(
                     eyeIconPressConf = !eyeIconPressConf
                 }) {
                     Icon(
-                        imageVector = if (eyeIconPressConf) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
+                        imageVector = if (!eyeIconPressConf) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
                         contentDescription = "",
                         tint = Color.Black,
                     )
                 }
             },
-            visualTransformation = if (eyeIconPressConf) PasswordVisualTransformation() else VisualTransformation.None
+            visualTransformation = if (!eyeIconPressConf) PasswordVisualTransformation() else VisualTransformation.None
         )
 
         CustomButtonAndText(

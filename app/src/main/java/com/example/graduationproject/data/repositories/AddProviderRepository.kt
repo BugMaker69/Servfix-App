@@ -26,6 +26,7 @@ import com.example.graduationproject.utils.FileUtils
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
@@ -348,13 +349,18 @@ class AddProviderRepository @Inject constructor(
         address: String,
         city: String,
         email: String,
-        image: Uri,
+        image: Uri?,
         phone: String,
         username: String,
     ) {
         Log.d("updateUserData Repoo", "updateProviderData: $image")
 
-        val fileToSend = prepareFilePart("image", image)
+//        val fileToSend = image.toString().startsWith("https").let { if (!it) prepareFilePart("image", image!!) } as MultipartBody.Part
+        val fileToSend: MultipartBody.Part? = if (!image.toString().startsWith("https")) {
+            prepareFilePart("image", image!!)
+        } else {
+            null
+        }
         val addressRequestBody: RequestBody = RequestBody.create(
             "text/plain".toMediaTypeOrNull(),
             address
@@ -375,6 +381,9 @@ class AddProviderRepository @Inject constructor(
             "text/plain".toMediaTypeOrNull(),
             username
         )
+
+        Log.d("fileTosend updateUserData Repoo", "updateProviderData: $fileToSend")
+
 
         apiService.updateUserData(
             token = "Bearer ${dataStoreToken.getToken()}",
@@ -450,13 +459,31 @@ class AddProviderRepository @Inject constructor(
         val photoParts = mutableListOf<MultipartBody.Part>()
 
         image.forEachIndexed { index, photoUri ->
-            val fileToSend = prepareFilePart("image", photoUri)
-//            val fileToSend = prepareFilePart("image",fileRealPath[index] ,photoUri)
-//            val file = File(photoUri.path)
-//            val requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), file)
-//            val photoPart = MultipartBody.Part.createFormData("photo$index", file.name, requestFile)
-            photoParts.add(fileToSend)
+            val contentResolver = MyApplication.getApplicationContext().contentResolver
+            val file = File(MyApplication.getApplicationContext().cacheDir, "${System.currentTimeMillis()}.jpg")
+            contentResolver.openInputStream(photoUri)?.use { inputStream ->
+                file.outputStream().use { outputStream ->
+                    inputStream.copyTo(outputStream)
+                }
+            }
+
+            val requestFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
+            val body = MultipartBody.Part.createFormData("image", file.name, requestFile)
+
+            photoParts.add(body)
+//            File(image[0].path!!).delete()
+//            File(file.path!!).delete()
+
         }
+
+//        image.forEachIndexed { index, photoUri ->
+//            val fileToSend = prepareFilePart("image", photoUri)
+////            val fileToSend = prepareFilePart("image",fileRealPath[index] ,photoUri)
+////            val file = File(photoUri.path)
+////            val requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), file)
+////            val photoPart = MultipartBody.Part.createFormData("photo$index", file.name, requestFile)
+//            photoParts.add(fileToSend)
+//        }
 
 //        val fileToSend = prepareFilePart("image", image)
 

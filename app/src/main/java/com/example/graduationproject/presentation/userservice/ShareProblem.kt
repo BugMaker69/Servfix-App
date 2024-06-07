@@ -1,6 +1,8 @@
 package com.example.graduationproject.presentation.userservice
 
 import android.Manifest
+import android.net.Uri
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -42,16 +44,20 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.core.content.FileProvider
 import coil.compose.rememberImagePainter
 import com.example.graduationproject.R
 import com.example.graduationproject.presentation.common.CustomButtonAndText
 import com.example.graduationproject.ui.theme.DarkBlue
+import java.io.File
 
 
 @Composable
@@ -67,6 +73,7 @@ fun ShareProblemScreen(
 
     val services = context.resources.getStringArray(R.array.services).toList()
     val locations = context.resources.getStringArray(R.array.egypt_governorates).toList()
+    val imageUri = remember { mutableStateOf<Uri?>(null) }
 
 
     val galleryLauncher =
@@ -74,6 +81,37 @@ fun ShareProblemScreen(
             serviceViewModel.handleGalleryResult(context, uris)
         }
 
+/*
+    val cacheDir = context.cacheDir
+    val tempImageFile = File(cacheDir, "${System.currentTimeMillis()}.jpg")
+*/
+
+    val tempImageUri = remember {
+        val tempFile = File(context.externalCacheDir, "temp_image.jpg")
+        FileProvider.getUriForFile(context, "${context.packageName}.provider", tempFile)
+    }
+
+    val captureImageLauncher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+        if (success) {
+            imageUri.value = tempImageUri
+            serviceViewModel.handleGalleryResult(context, listOf(imageUri.value!!))
+            Log.d("ShareProblemScreen555", "ShareProblemScreen: ${imageUri.value}")
+
+        }
+    }
+
+    val requestPermissionLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+        if (isGranted) {
+            captureImageLauncher.launch(tempImageUri)
+        }
+    }
+
+    // Request camera permission function
+    val requestCameraPermission: () -> Unit = {
+        requestPermissionLauncher.launch(android.Manifest.permission.CAMERA)
+    }
+
+/*
     val cameraLauncher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.TakePicture()) {
 
@@ -102,6 +140,7 @@ fun ShareProblemScreen(
             serviceViewModel.permissionDenied.value = false
         }
     }
+*/
 
 
 
@@ -318,7 +357,8 @@ fun ShareProblemScreen(
                     IconButton(
                         onClick = {
                             if (serviceViewModel.imageMap.size != serviceViewModel.maxImages)
-                                permissionLauncher.launch(Manifest.permission.CAMERA)
+                                requestCameraPermission()
+//                                permissionLauncher.launch(Manifest.permission.CAMERA)
                         },
                         enabled = !serviceViewModel.isLoading.value,
                         modifier = Modifier
@@ -381,7 +421,11 @@ fun ShareProblemScreen(
                 .padding(vertical = 16.dp, horizontal = 4.dp),
             backgroundColor = DarkBlue,
             contentColor = Color.White,
-            onClick = onShareClick
+            onClick = {
+//                serviceViewModel.handleGalleryResult(context, listOf(imageUri.value!!))
+//                serviceViewModel.imageUri = imageUri.value
+                onShareClick()
+            }
         )
 
     }
