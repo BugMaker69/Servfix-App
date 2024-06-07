@@ -3,21 +3,6 @@ package com.example.graduationproject.data
 import com.google.gson.annotations.SerializedName
 
 
-//"phone": "01210437593",
-//"username": "ahmed3",
-//"password": "pbkdf2_sha256$720000$hl4aP6I59Zbn2hXOoL2Bn9$Hym+ki7gkES5pmAz34YWCTl3Sn90qJMv4S9/DSl56jw=",
-//"email": "ahmed3@gmail.com",
-//"fixed_salary": "200",
-//"image": null,
-//"ratings": "4.00",
-//"city": "alex",
-//"address": "alex",
-//"id": 4,
-//"user": 5,
-//"profession": "carpenter",
-//"service_id": 2
-//data class (val phone:String,val userName:String,val fixed_salary: String,val image: Any,val ratings: String,val city: String,val address: String,val profession: String)
-
 
 data class Register(
     @SerializedName("username") val userName: String = "",
@@ -38,9 +23,10 @@ data class LoginResponse(
     val refresh: String,
     val access: String
 )
-data class MoreTokn(
-    val access: String
-)
+
+//data class MoreTokn(
+//    val access: String
+//)
 
 data class ChatListItem(
     val terminate_id: Int,
@@ -49,32 +35,34 @@ data class ChatListItem(
     val image: String? = null,
     val content: String? = null,
     val unseenMessages: String? = null,
-    val phone:String?=null
+    val phone: String? = null
 )
 
 
-data class ChatDetails (
+data class ChatDetails(
 
-    @SerializedName("content"         ) var content        : String? = null,
-    @SerializedName("name"            ) var name           : String? = null,
-    @SerializedName("unseen_messages" ) var unseenMessages : String? = null
+    @SerializedName("content") var content: String? = null,
+    @SerializedName("name") var name: String? = null,
+    @SerializedName("unseen_messages") var unseenMessages: String? = null
 
-
-)
-data class  TerminateMessage(  @SerializedName("message"         ) var message        : String)
-data class SendChatMessage(  @SerializedName("content" ) var content : String)
-data class Chat (
-
-    @SerializedName("id"        ) var id        : Int,
-    @SerializedName("content"   ) var content   : String,
-    @SerializedName("timestamp" ) var timestamp : String,
-    @SerializedName("is_seen"   ) var isSeen    : Boolean,
-    @SerializedName("sender"    ) var sender    : Int,
-    @SerializedName("recipient" ) var recipient : Int
 
 )
-data class  SearchProviders(@SerializedName("providers" ) var providers:List<ReturnedProviderData>)
-data class ViewProfileData (
+
+data class TerminateMessage(@SerializedName("message") var message: String)
+data class SendChatMessage(@SerializedName("content") var content: String)
+data class Chat(
+
+    @SerializedName("id") var id: Int,
+    @SerializedName("content") var content: String,
+    @SerializedName("timestamp") var timestamp: String,
+    @SerializedName("is_seen") var isSeen: Boolean,
+    @SerializedName("sender") var sender: Int,
+    @SerializedName("recipient") var recipient: Int
+
+)
+
+data class SearchProviders(@SerializedName("providers") var providers: List<ReturnedProviderData>)
+data class ViewProfileData(
 
     @SerializedName("provider") var provider: Provider? = Provider(),
     @SerializedName("works") var works: ArrayList<Works> = arrayListOf(),
@@ -115,7 +103,7 @@ data class Provider(
 
 )
 
-data class LogOutResponse(val detail: String)
+//data class LogOutResponse(val detail: String)
 data class ReturnedUserData(
     val address: String,
     val city: String,
@@ -128,33 +116,33 @@ data class ReturnedUserData(
     val username: String
 )
 
-data class RequsetUpdateData(
-    val address: String,
-    val city: String,
-    val email: String,
-    val image: Any,
-    val phone: String,
-)
-
-data class UserData(
-    val email: String,
-    val image: Any,
-    val password: String,
-    val phone: String,
-    val username: String
-)
-
-data class ProviderData(
-    val address: String,
-    val city: String,
-    val email: String,
-    val fixed_salary: String,
-    val id_image: String,
-    val password: String,
-    val phone: String,
-    val profession: String,
-    val username: String
-)
+//data class RequsetUpdateData(
+//    val address: String,
+//    val city: String,
+//    val email: String,
+//    val image: Any,
+//    val phone: String,
+//)
+//
+//data class UserData(
+//    val email: String,
+//    val image: Any,
+//    val password: String,
+//    val phone: String,
+//    val username: String
+//)
+//
+//data class ProviderData(
+//    val address: String,
+//    val city: String,
+//    val email: String,
+//    val fixed_salary: String,
+//    val id_image: String,
+//    val password: String,
+//    val phone: String,
+//    val profession: String,
+//    val username: String
+//)
 
 data class Test(val details: String)
 data class Test2(val detail: String)
@@ -225,8 +213,8 @@ data class AllNotificationItemSpecific(
 class AllNotificationSpecific : ArrayList<AllNotificationItemSpecific>()
 
 class AllNotifications(
-    val allNotificationItem:  List<AllNotificationItem>,
-    val allNotificationItemSpecific:  List<AllNotificationItemSpecific>,
+    val allNotificationItem: List<AllNotificationItem>,
+    val allNotificationItemSpecific: List<AllNotificationItemSpecific>,
 )
 
 data class Email(
@@ -257,7 +245,7 @@ data class SpecificNotificationItemByIdItem(
 )
 
 
-class SpecificNotificationItemById : ArrayList<SpecificNotificationItemByIdItem>()
+//class SpecificNotificationItemById : ArrayList<SpecificNotificationItemByIdItem>()
 
 
 /*data class GetWorksItem(
@@ -280,31 +268,38 @@ data class Rate(
 class GetWorks : ArrayList<GetWorksItem>()
 
 
-
 sealed class ChatContactList {
     data class UserResponse(val accepted_users: List<AcceptedUsers>) : ChatContactList()
     data class ProviderResponse(val accepted_providers: List<AcceptedProviders>) : ChatContactList()
 }
 
 
-data class GetChatListForUsers(
+//data class GetChatListForUsers(
+//
+//    @SerializedName("accepted_providers") var acceptedProviderUsers: ArrayList<AcceptedProviders> = arrayListOf()
+//
+//)
 
-    @SerializedName("accepted_providers") var acceptedProviderUsers: ArrayList<AcceptedProviders> = arrayListOf()
+data class AcceptedProviders(
+
+    @SerializedName("provider_id") var terminate_id: Int,
+
+
+    @SerializedName("id") var id: Int,
+    @SerializedName("name") var name: String,
+    @SerializedName("image") var image: String? = null,
+    @SerializedName("phone") var phone: String
+
 
 )
-data class AcceptedProviders (
 
-    @SerializedName("provider_id" ) var terminate_id : Int,
-
-
-    @SerializedName("id" ) var id : Int,
-    @SerializedName("name"        ) var name       : String,
-    @SerializedName("image"       ) var image      : String?=null,
-    @SerializedName("phone"       ) var phone      : String
-
-
+data class AcceptedUsers(
+    @SerializedName("user_id") var terminate_id: Int,
+    @SerializedName("id") var id: Int,
+    @SerializedName("username") var name: String,
+    @SerializedName("image") var image: String? = null
 )
-data class AcceptedUsers( @SerializedName("user_id" ) var terminate_id:Int,@SerializedName("id" )var id:Int, @SerializedName("username")var name:String   ,@SerializedName("image") var image:String?=null)
+
 data class GetPostsForProviderItem(
     val created_at: String,
     val id: Int,

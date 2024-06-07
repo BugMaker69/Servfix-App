@@ -49,7 +49,6 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
@@ -63,10 +62,10 @@ import androidx.compose.ui.unit.toSize
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberImagePainter
 import com.example.graduationproject.R
-import com.example.graduationproject.presentation.common.UserType
-import com.example.graduationproject.presentation.common.UserTypeViewModel
 import com.example.graduationproject.presentation.common.CustomButtonAndText
 import com.example.graduationproject.presentation.common.CustomTextField
+import com.example.graduationproject.presentation.common.UserType
+import com.example.graduationproject.presentation.common.UserTypeViewModel
 import com.example.graduationproject.ui.theme.DarkBlue
 
 @Composable

@@ -1,6 +1,5 @@
 package com.example.graduationproject.presentation.viewprofile
 
-import android.content.Intent
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -25,7 +24,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Chat
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -49,7 +47,6 @@ import com.example.graduationproject.data.ViewProfileData
 import com.example.graduationproject.data.Works
 import com.example.graduationproject.presentation.LoadingScreen
 import com.example.graduationproject.ui.theme.DarkBlue
-import com.example.graduationproject.ui.theme.White
 
 
 @Composable

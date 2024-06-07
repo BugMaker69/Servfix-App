@@ -9,7 +9,6 @@ import com.example.graduationproject.data.Email
 import com.example.graduationproject.data.FavouritesList
 import com.example.graduationproject.data.ForgetResetPassword
 import com.example.graduationproject.data.GeneralPostAccept
-import com.example.graduationproject.data.GetChatListForUsers
 import com.example.graduationproject.data.GetPostData
 import com.example.graduationproject.data.GetPostsForProvider
 import com.example.graduationproject.data.GetPostsForProviderItem
@@ -27,7 +26,6 @@ import com.example.graduationproject.data.ReturnedUserData
 import com.example.graduationproject.data.SearchProviders
 import com.example.graduationproject.data.SendChatMessage
 import com.example.graduationproject.data.ServicesCategories
-import com.example.graduationproject.data.SpecificNotificationItemById
 import com.example.graduationproject.data.TerminateMessage
 import com.example.graduationproject.data.Test
 import com.example.graduationproject.data.Test2

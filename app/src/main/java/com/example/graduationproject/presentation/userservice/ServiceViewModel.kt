@@ -17,8 +17,6 @@ import com.example.graduationproject.data.Services
 import com.example.graduationproject.data.constants.Constant
 import com.example.graduationproject.data.repositories.AddProviderRepository
 import com.example.graduationproject.data.repositories.UserServicesRepository
-import com.example.graduationproject.data.retrofit.InternetObserver
-import com.example.graduationproject.data.retrofit.NetworkConnectivityObserver
 import com.example.graduationproject.utils.FileUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

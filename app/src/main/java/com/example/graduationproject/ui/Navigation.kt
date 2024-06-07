@@ -33,9 +33,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.graduationproject.MyApplication
 import com.example.graduationproject.data.GeneralPostAccept
-import com.example.graduationproject.presentation.common.signup.BeforeSignup
 import com.example.graduationproject.data.NewOldPassword
-
 import com.example.graduationproject.presentation.AddNeWorkToProfileItems
 import com.example.graduationproject.presentation.LoadingScreen
 import com.example.graduationproject.presentation.SeeWork
@@ -60,6 +58,7 @@ import com.example.graduationproject.presentation.common.settings.NewPasswordScr
 import com.example.graduationproject.presentation.common.settings.SettingsScreen
 import com.example.graduationproject.presentation.common.settings.SettingsTopBar
 import com.example.graduationproject.presentation.common.settings.SettingsViewModel
+import com.example.graduationproject.presentation.common.signup.BeforeSignup
 import com.example.graduationproject.presentation.common.signup.SignupFirstScreen
 import com.example.graduationproject.presentation.common.signup.SignupSecondScreen
 import com.example.graduationproject.presentation.common.signup.SignupThirdScreen
@@ -344,7 +343,6 @@ fun ServixApp(
 
                     Login(
                         onLoginClick = {
-
                             coroutineScope.launch {
                                 userViewModel.loginEnabled=false
                                 userViewModel.login()
@@ -369,8 +367,6 @@ fun ServixApp(
 
                             }
                                 userViewModel.loginEnabled=true
-
-
 
 
                             }

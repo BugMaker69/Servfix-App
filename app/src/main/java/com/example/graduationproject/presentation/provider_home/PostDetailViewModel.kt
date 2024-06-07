@@ -7,9 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.graduationproject.data.GetPostDataItem
 import com.example.graduationproject.data.GetPostsForProviderItem
-import com.example.graduationproject.data.SpecificNotificationItemByIdItem
 import com.example.graduationproject.data.repositories.ProviderRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

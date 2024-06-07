@@ -1,6 +1,5 @@
 package com.example.graduationproject.presentation.notification
 
-import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -9,16 +8,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.graduationproject.data.AllNotificationItem
 import com.example.graduationproject.data.AllNotificationItemSpecific
-import com.example.graduationproject.data.AllNotifications
-import com.example.graduationproject.data.GeneralPostAccept
 import com.example.graduationproject.data.GetPostDataItem
 import com.example.graduationproject.data.GetWorksItem
-import com.example.graduationproject.data.NewOldPassword
 import com.example.graduationproject.data.SpecificNotificationItemByIdItem
 import com.example.graduationproject.data.repositories.AddProviderRepository
 import com.example.graduationproject.data.repositories.ProviderRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject

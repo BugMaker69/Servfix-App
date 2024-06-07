@@ -1,11 +1,8 @@
 package com.example.graduationproject.presentation.chat
 
-import android.util.Log
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.graduationproject.data.ChatContactList
-
 import com.example.graduationproject.data.ChatListItem
 import com.example.graduationproject.data.constants.Constant
 import com.example.graduationproject.data.repositories.ChatRepository

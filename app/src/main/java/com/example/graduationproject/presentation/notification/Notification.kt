@@ -39,7 +39,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.SubcomposeAsyncImage
-import coil.compose.rememberImagePainter
 import com.example.graduationproject.R
 import com.example.graduationproject.data.AllNotificationItem
 import com.example.graduationproject.data.GetPostDataItem

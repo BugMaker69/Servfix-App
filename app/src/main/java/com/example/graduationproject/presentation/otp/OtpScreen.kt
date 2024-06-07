@@ -1,7 +1,6 @@
 package com.example.graduationproject.presentation.otp
 
 import android.app.Activity
-
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
@@ -24,7 +23,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -41,15 +39,14 @@ import androidx.compose.ui.unit.sp
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
-import com.example.graduationproject.presentation.common.CustomButtonAndText
 import com.example.graduationproject.R
+import com.example.graduationproject.presentation.common.CustomButtonAndText
 import com.example.graduationproject.presentation.common.signup.UserViewModel
 import com.example.graduationproject.ui.theme.DarkBlue
 import com.example.graduationproject.ui.theme.GrayBlue
 import com.example.graduationproject.ui.theme.LightBlue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -137,7 +134,7 @@ Button(
                     )
 
             }
-            delay(2000)
+            delay(3000)
             if(userViewModel.sucsess){
                     userViewModel.otpEnabled=false
                     delay(3000)

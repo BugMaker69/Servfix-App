@@ -18,17 +18,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowRight
 import androidx.compose.material.icons.filled.Cancel
-import androidx.compose.material.icons.filled.Handshake
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarOutline
 import androidx.compose.material.icons.outlined.Search
@@ -48,13 +44,11 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.DarkGray
-
 import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.graphics.Color.Companion.White
@@ -67,17 +61,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-
 import coil.compose.SubcomposeAsyncImage
 import com.example.graduationproject.R
 import com.example.graduationproject.data.ReturnedProviderData
 import com.example.graduationproject.presentation.LoadingScreen
 import com.example.graduationproject.presentation.common.CustomDialog
 import com.example.graduationproject.ui.theme.DarkBlue
-import com.example.graduationproject.ui.theme.OrangeRate
-
 
 
 @Composable
@@ -102,8 +92,8 @@ fun FindProvider(
         }, onDismissButtonClick = {
             findProviderViewModel.dismissDialog()
         }, confirmButtonText = "confirm", dismissButtonText = "dismiss", confirmButtonColors = ButtonDefaults.buttonColors(
-            containerColor = DarkGray,
-            contentColor = Transparent
+            containerColor = DarkBlue,
+            contentColor = White
         )
         ) {
 

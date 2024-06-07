@@ -8,14 +8,8 @@ import com.example.graduationproject.data.GetPostData
 import com.example.graduationproject.data.GetPostsForProvider
 import com.example.graduationproject.data.GetPostsForProviderItem
 import com.example.graduationproject.data.PostStatus
-import com.example.graduationproject.data.SpecificNotificationItemById
 import com.example.graduationproject.data.retrofit.ApiService
 import com.example.graduationproject.utils.DataStoreToken
-import kotlinx.coroutines.delay
-import okhttp3.ResponseBody
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -37,10 +31,10 @@ class ProviderRepository @Inject constructor(
     }
 
     suspend fun getSpecificNotificationById(id: Int): GetPostsForProviderItem {
-        val response = apiService.getSpecificNotificationById("Bearer ${dataStoreToken.getToken()}",id)
+        val response =
+            apiService.getSpecificNotificationById("Bearer ${dataStoreToken.getToken()}", id)
         return response
     }
-
 
 
     suspend fun getPostById(id: Int): GetPostData {
@@ -53,20 +47,21 @@ class ProviderRepository @Inject constructor(
         return response
     }
 
-    suspend fun acceptPost(id: Int):GeneralPostAccept{
-                var response1 = GeneralPostAccept("")
-        val response =  apiService.acceptPost("Bearer ${dataStoreToken.getToken()}", id)
-                    Log.d("first acceptPost Provider Repo", "acceptPost: ${response}")
-                    Log.d("first acceptPost Provider Repo1", "acceptPost: ${response.body()}")
-                    Log.d("first acceptPost Provider Repo11", "acceptPost: ${response.isSuccessful}")
-                    Log.d("first acceptPost Provider Repo12", "acceptPost: ${response.code()}")
-                    Log.d("first acceptPost Provider Repo55", "acceptPost: ${response.body()?.details.toString()}")
-                    Log.d("first acceptPost Provider Repo2", "acceptPost: ${response.message()}")
-                    Log.d("first acceptPost Provider Repo3", "acceptPost: ${response.errorBody()}")
-        if (response.code()==200){
+    suspend fun acceptPost(id: Int): GeneralPostAccept {
+        var response1 = GeneralPostAccept("")
+        val response = apiService.acceptPost("Bearer ${dataStoreToken.getToken()}", id)
+        Log.d("first acceptPost Provider Repo", "acceptPost: ${response}")
+        Log.d("first acceptPost Provider Repo1", "acceptPost: ${response.body()}")
+        Log.d("first acceptPost Provider Repo11", "acceptPost: ${response.isSuccessful}")
+        Log.d("first acceptPost Provider Repo12", "acceptPost: ${response.code()}")
+        Log.d(
+            "first acceptPost Provider Repo55", "acceptPost: ${response.body()?.details.toString()}"
+        )
+        Log.d("first acceptPost Provider Repo2", "acceptPost: ${response.message()}")
+        Log.d("first acceptPost Provider Repo3", "acceptPost: ${response.errorBody()}")
+        if (response.code() == 200) {
             response1.details = "The post accepted successfully"
-        }
-        else if (response.code()==400){
+        } else if (response.code() == 400) {
             response1.details = "This post has already been accepted"
         }
         Log.d("first acceptPost Provider Repo3", "acceptPost: ${response1.details}")
@@ -140,8 +135,7 @@ class ProviderRepository @Inject constructor(
 
     suspend fun acceptPostForSpecificProvider(id: Int): PostStatus {
         val response = apiService.acceptPostForSpecificProvider(
-            token = "Bearer ${dataStoreToken.getToken()}",
-            post_id = id
+            token = "Bearer ${dataStoreToken.getToken()}", post_id = id
         )
         Log.d("acceptPostForSpecificProvider", "acceptPostForSpecificProvider: $response")
         return response
@@ -149,8 +143,7 @@ class ProviderRepository @Inject constructor(
 
     suspend fun rejectPostForSpecificProvider(id: Int): PostStatus {
         val response = apiService.rejectPostForSpecificProvider(
-            token = "Bearer ${dataStoreToken.getToken()}",
-            post_id = id
+            token = "Bearer ${dataStoreToken.getToken()}", post_id = id
         )
         Log.d("rejectPostForSpecificProvider", "rejectPostForSpecificProvider: $response")
         return response
