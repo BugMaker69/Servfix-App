@@ -19,6 +19,7 @@ import com.example.graduationproject.data.repositories.AddProviderRepository
 import com.example.graduationproject.data.repositories.ProviderRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -41,7 +42,8 @@ class NotificationViewModel @Inject constructor(
 
     var getAllWorks by mutableStateOf(emptyList<GetWorksItem>())
 
-    var acceptPost= GeneralPostAccept("")
+    var acceptPost = MutableStateFlow("")
+//    var acceptPost by mutableStateOf("")
 
 
 
@@ -79,11 +81,11 @@ class NotificationViewModel @Inject constructor(
 
     fun acceptPost(id: Int) {
         viewModelScope.launch {
-            acceptPost = providerRepository.acceptPost(id)
-            delay(5000)
-            Log.d("acceptPost ViewModel", "acceptPost: ${acceptPost.details}")
+            acceptPost.value = providerRepository.acceptPost(id).details
+//            delay(5000)
+            Log.d("acceptPost ViewModel", "acceptPost: ${acceptPost}")
         }
-            Log.d("after acceptPost ViewModel", "acceptPost: ${acceptPost.details}")
+            Log.d("after acceptPost ViewModel", "acceptPost: ${acceptPost}")
     }
 
 

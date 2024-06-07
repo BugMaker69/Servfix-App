@@ -329,7 +329,7 @@ class GetPostsForProvider : ArrayList<GetPostsForProviderItem>()
 
 
 data class GeneralPostAccept(
-    val details: String
+    var details: String
 )
 
 /*data class GeneralPostAccept(

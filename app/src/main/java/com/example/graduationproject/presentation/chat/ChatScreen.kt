@@ -71,7 +71,7 @@ import com.example.graduationproject.ui.theme.LightBlue
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChatScreen(vm: ChatViewModel, modifier: Modifier, userType: String) {
+fun ChatScreen(vm: ChatViewModel, modifier: Modifier, userType: String,onConfirmClick: () -> Unit) {
     var textState by remember { mutableStateOf("") }
     val lista = vm.chat.collectAsState()
     val context = LocalContext.current
@@ -149,6 +149,7 @@ fun ChatScreen(vm: ChatViewModel, modifier: Modifier, userType: String) {
                         onConfirmClick = {
                             vm.addReview()
                             vm.terminateChat()
+                            onConfirmClick()
                         },
                         textId = R.string.terminate_chat
                     )

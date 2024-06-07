@@ -72,6 +72,7 @@ import com.example.graduationproject.R
 import com.example.graduationproject.data.ReturnedProviderData
 import com.example.graduationproject.presentation.LoadingScreen
 import com.example.graduationproject.presentation.common.CustomDialog
+import com.example.graduationproject.ui.theme.DarkBlue
 import com.example.graduationproject.ui.theme.OrangeRate
 
 
@@ -455,7 +456,7 @@ fun RatingBar(rating: Int, modifier: Modifier = Modifier, onRateClick: (Int) -> 
                     else -> Icons.Filled.StarOutline
                 },
                 contentDescription = null,
-                tint = if (starRating <= rating) OrangeRate else Color.LightGray,
+                tint = if (starRating <= rating) DarkBlue else Color.LightGray,
                 modifier = Modifier
                     .size(40.dp)
                     .clickable {

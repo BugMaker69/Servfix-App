@@ -2,6 +2,7 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -44,23 +45,38 @@ import com.example.graduationproject.ui.theme.DarkBlue
 @Composable
 fun ChatContactScreen(modifier: Modifier, vm: ChatContactViewModel,onChatClick: (Int,String,String,Int,String) -> Unit) {
 
-   val list= vm.chatListItems.collectAsState()
+    val list = vm.chatListItems.collectAsState()
     Log.d("donee", "ChatContactScreen: ${list.value.size}")
+
+    Log.d("ChatScreen999", "ChatScreen: ${list.value.isEmpty()}")
+    Log.d("ChatScreen444", "ChatScreen: ${list.value.isNotEmpty()}")
+    Log.d("ChatScreen555", "ChatScreen: ${list.value}")
+    if (list.value.isEmpty()) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(text = "There is no Contacts Yet", color = Color.Black)
+        }
+    } else {
         LazyColumn(modifier.fillMaxSize()) {
             items(list.value) { item ->
-                    ChatContactItem(
-                        terminateId= item.terminate_id,
-                        id = item.id,
-                        name = item.name,
-                        image = item.image ?: "empty",
-                        lastMessage = item.content ?: "",
-                        unseenCount = item.unseenMessages?.toIntOrNull() ?: 0,
-                        onChatClick = onChatClick,
-                        phone=item.phone.toString()
-                    )
+                ChatContactItem(
+                    terminateId = item.terminate_id,
+                    id = item.id,
+                    name = item.name,
+                    image = item.image ?: "empty",
+                    lastMessage = item.content ?: "",
+                    unseenCount = item.unseenMessages?.toIntOrNull() ?: 0,
+                    onChatClick = onChatClick,
+                    phone = item.phone.toString()
+                )
 
             }
-        }    }
+        }
+    }
+}
 
 
 

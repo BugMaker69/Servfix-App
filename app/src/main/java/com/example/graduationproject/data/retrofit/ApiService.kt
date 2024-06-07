@@ -247,10 +247,10 @@ interface ApiService {
     ): GetPostsForProvider
 
     @POST("/notification/post_accept/{id}")
-    fun acceptPost(
+    suspend fun acceptPost(
         @Header("Authorization") token: String,
         @Path("id") id: Int
-    ): Call<ResponseBody>
+    ): Response<GeneralPostAccept>
 
     @POST("/notification/post/accept/{post_id}/")
     suspend fun acceptPostForSpecificProvider(
