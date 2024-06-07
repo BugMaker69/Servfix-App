@@ -70,6 +70,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.SubcomposeAsyncImage
 import com.example.graduationproject.R
 import com.example.graduationproject.data.ReturnedProviderData
+import com.example.graduationproject.presentation.LoadingScreen
 import com.example.graduationproject.presentation.common.CustomDialog
 import com.example.graduationproject.ui.theme.OrangeRate
 
@@ -82,6 +83,9 @@ fun FindProvider(
      findProviderViewModel:FindProviderViewModel
 
     ) {
+    if (findProviderViewModel.loading){
+        LoadingScreen()
+    }
 
     val searchText by findProviderViewModel.searchText.collectAsState()
     val lista= findProviderViewModel.lista.collectAsLazyPagingItems()

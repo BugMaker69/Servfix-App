@@ -15,7 +15,7 @@
     <string name="boarding1">Welcome to ServFix ! Your one-stop solution for all home services. Let\'s get started !</string>
     <string name="boarding2">From plumbing to cleaning, we\'ve got you covered. Reliable help is now at your fingertips</string>
     <string name="boarding3">Ready to explore? Let\'s make your home maintenance hassle-free. Dive in!</string>
-
+<string name="notifications">Notifications</string>
     <string name="TypeMessage">Type a message </string>
 
     <string name="delete_message">Do you want to delete this message ?</string>
@@ -25,7 +25,9 @@
 <string name="No_Internet">Ops ! No Internet Connection , Please connect to the internet .</string>
     <string name="congratulations">Congratulations!</string>
     <string name="redirected">You\'ll be redirected to the login screen now</string>
-
+<string name="today">today</string>
+    <string name="yesterday">yesterday</string>
+    <string name="later">later</string>
 
     <string name="login">Log in</string>
     <string name="signup">Sign up</string>

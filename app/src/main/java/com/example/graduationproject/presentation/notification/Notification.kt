@@ -33,6 +33,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -95,7 +96,7 @@ fun NotificationTopBar(
     onBackButtonOnTopNavBar: () -> Unit
 ) {
     CustomTopAppBar(
-        title = "Notification",
+        title = stringResource(id = R.string.notifications),
         navigationIcon = {
             IconButton(onClick = onBackButtonOnTopNavBar) {
                 Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Back Arrow")

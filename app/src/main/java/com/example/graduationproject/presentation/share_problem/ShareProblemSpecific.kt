@@ -1,6 +1,7 @@
 package com.example.graduationproject.presentation.share_problem
 
 import android.Manifest
+import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -75,10 +76,10 @@ fun ShareProblemSpecific(
         }
 
 
-    if (serviceViewModel.launchCamera.value) {
-        cameraLauncher.launch(null)
-        serviceViewModel.launchCamera.value = false
-    }
+//    if (serviceViewModel.launchCamera.value) {
+//        cameraLauncher.launch(Uri.EMPTY)
+//        serviceViewModel.launchCamera.value = false
+//    }
 
     if (serviceViewModel.permissionDenied.value) {
         Toast.makeText(context, "Permission denied", Toast.LENGTH_SHORT).show()

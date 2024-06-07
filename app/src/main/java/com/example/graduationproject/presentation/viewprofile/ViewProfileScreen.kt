@@ -47,6 +47,7 @@ import coil.compose.SubcomposeAsyncImage
 import com.example.graduationproject.R
 import com.example.graduationproject.data.ViewProfileData
 import com.example.graduationproject.data.Works
+import com.example.graduationproject.presentation.LoadingScreen
 import com.example.graduationproject.ui.theme.DarkBlue
 import com.example.graduationproject.ui.theme.White
 
@@ -58,101 +59,104 @@ fun ViewProfileScreen(
     onChatClick: (Int, String) -> Unit
 ) {
     val context= LocalContext.current
-
 val profile=viewProfileViewModel.profile.collectAsState()
-    Box(modifier = Modifier.fillMaxSize()) {
-        Column(
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-                .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-
-
-            Row(
-                Modifier
-                    .padding(20.dp)
-                    .fillMaxSize(), horizontalArrangement = Arrangement.Center
+    if(viewProfileViewModel.loading){
+        LoadingScreen()
+    }
+    else {
+        Box(modifier = Modifier.fillMaxSize()) {
+            Column(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+                    .verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                UpperScreen(profile)
 
-            }
-            Text(
-                text = profile.value.provider!!.username.toString(),
-                fontSize = 30.sp
-            )
 
-            Text(
-                text = profile.value.provider!!.profession.toString(),
-                fontSize = 20.sp
-            )
-            Row {
-                Icon(
-                    imageVector = Icons.Filled.LocationOn,
-                    contentDescription = "location",
-                    modifier = Modifier.size(20.dp)
-                )
+                Row(
+                    Modifier
+                        .padding(20.dp)
+                        .fillMaxSize(), horizontalArrangement = Arrangement.Center
+                ) {
+                    UpperScreen(profile)
+
+                }
                 Text(
-                    text = profile.value.provider!!.city.toString(),
-                    fontSize = 13.sp
+                    text = profile.value.provider!!.username.toString(),
+                    fontSize = 30.sp
                 )
-            }
-            Spacer(modifier = Modifier.padding(5.dp))
 
-
-            Row(Modifier.fillMaxSize(), Arrangement.Center) {
-
-                Spacer(modifier = Modifier.padding(horizontal = 20.dp))
-                Button(modifier = Modifier.wrapContentSize(), onClick = {
-                    onChatClick(
-                        viewProfileViewModel.profile.value.provider!!.id!!,
-                        viewProfileViewModel.profile.value.provider!!.username!!,
+                Text(
+                    text = profile.value.provider!!.profession.toString(),
+                    fontSize = 20.sp
+                )
+                Row {
+                    Icon(
+                        imageVector = Icons.Filled.LocationOn,
+                        contentDescription = "location",
+                        modifier = Modifier.size(20.dp)
                     )
-                }) {
-                    Text(text = stringResource(id = R.string.chat), fontSize = 20.sp)
-                    Spacer(modifier = Modifier.padding(5.dp))
-
-                    Icon(imageVector = Icons.Filled.Chat, contentDescription = "chat")
-                }
-                Spacer(modifier = Modifier.padding(horizontal =10.dp))
-
-
-                when (profile.value.isFavourite) {
-                    true -> Icon(
-                        imageVector = Icons.Filled.Favorite,
-                        contentDescription = "favourite",
-                        tint = DarkBlue,
-                        modifier = Modifier.size(30.dp).align(Alignment.CenterVertically)
+                    Text(
+                        text = profile.value.provider!!.city.toString(),
+                        fontSize = 13.sp
                     )
+                }
+                Spacer(modifier = Modifier.padding(5.dp))
 
-                    false -> Icon(
-                        imageVector = Icons.Outlined.FavoriteBorder,
-                        contentDescription = "favourite",
-                        tint = DarkBlue,
-                        modifier = Modifier
-                            .size(30.dp)
-                            .clickable {
-                                viewProfileViewModel.addToFavourite()
-                                Toast
-                                    .makeText(context, "Added to favourite", Toast.LENGTH_SHORT)
-                                    .show()
-                            })
+
+                Row(Modifier.fillMaxSize(), Arrangement.Center) {
+
+                    Spacer(modifier = Modifier.padding(horizontal = 20.dp))
+                    Button(modifier = Modifier.wrapContentSize(), onClick = {
+                        onChatClick(
+                            viewProfileViewModel.profile.value.provider!!.id!!,
+                            viewProfileViewModel.profile.value.provider!!.username!!,
+                        )
+                    }) {
+                        Text(text = stringResource(id = R.string.chat), fontSize = 20.sp)
+                        Spacer(modifier = Modifier.padding(5.dp))
+
+                        Icon(imageVector = Icons.Filled.Chat, contentDescription = "chat")
+                    }
+                    Spacer(modifier = Modifier.padding(horizontal = 10.dp))
+
+
+                    when (profile.value.isFavourite) {
+                        true -> Icon(
+                            imageVector = Icons.Filled.Favorite,
+                            contentDescription = "favourite",
+                            tint = DarkBlue,
+                            modifier = Modifier.size(30.dp).align(Alignment.CenterVertically)
+                        )
+
+                        false -> Icon(
+                            imageVector = Icons.Outlined.FavoriteBorder,
+                            contentDescription = "favourite",
+                            tint = DarkBlue,
+                            modifier = Modifier
+                                .size(30.dp)
+                                .clickable {
+                                    viewProfileViewModel.addToFavourite()
+                                    Toast
+                                        .makeText(context, "Added to favourite", Toast.LENGTH_SHORT)
+                                        .show()
+                                })
+
+                    }
+                    Spacer(modifier = Modifier.padding(horizontal = 15.dp))
+
 
                 }
-                Spacer(modifier = Modifier.padding(horizontal = 15.dp))
 
+
+
+                WorkList(profile.value.works)
 
 
             }
-
-
-
-            WorkList(profile.value.works)
-
 
         }
-
     }
 
 

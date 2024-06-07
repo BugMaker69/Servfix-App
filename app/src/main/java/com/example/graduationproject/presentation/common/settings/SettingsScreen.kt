@@ -60,7 +60,7 @@ import com.example.graduationproject.ui.theme.DarkBlue
 @Composable
 fun SettingsScreen(
     innerPadding: PaddingValues,
-    modifier: Modifier = Modifier,
+    modifier: Modifier ,
     onAccountInfoClick: () -> Unit,
     onDeleteMyAccountClick: (String) -> Unit,
     onSecurityClick: () -> Unit,
@@ -532,7 +532,7 @@ fun SettingsTopBar(
     onBackButtonOnTopNavBar: () -> Unit
 ) {
     CustomTopAppBar(
-        title = "Settings",
+        title = stringResource(id = R.string.settings),
         navigationIcon = {
             if (showBack) {
                 IconButton(onClick = onBackButtonOnTopNavBar) {

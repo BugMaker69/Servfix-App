@@ -1,6 +1,5 @@
 package com.example.graduationproject.data.retrofit
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,7 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -22,20 +20,6 @@ import androidx.compose.ui.unit.sp
 import com.example.graduationproject.R
 
 
-//@Composable
-//fun x() {
-//    val context = LocalContext.current
-//    Button(onClick = {
-//        val dialIntent = Intent(Intent.ACTION_DIAL).apply {
-//            data = Uri.parse("tel:01025659292")
-//        }
-//            context.startActivity(dialIntent)
-//            Log.d("data", "x: ")
-//
-//    }) {
-//        Text("Open Dialer")
-//    }
-//}
 @Composable
 fun NoInternetScreen(){
 

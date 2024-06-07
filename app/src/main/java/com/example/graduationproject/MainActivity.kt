@@ -70,28 +70,14 @@ class MainActivity : ComponentActivity() {
 
         var d by mutableStateOf(Uri.EMPTY)
 
-        // Handle deep link intent
         intent?.data?.let { uri ->
             d  = uri
-/*            Log.d("DeepLink", "Received deep link: ${d}")
-            Log.d("DeepLink", "Received deep link: $uri")
-            Log.d("DeepLink", "Received deep link: $uri")
-            val resetToken = uri.lastPathSegment
-            Log.d("DeepLink", "Reset token: $resetToken")
-            val resetToken1 = uri.path
-            Log.d("DeepLink", "Reset token: $resetToken1")
-            val resetToken2 = uri.pathSegments
-            Log.d("DeepLink", "Reset token: $resetToken2")
-            val resetToken3 = uri.host
-            Log.d("DeepLink", "Reset token: $resetToken3")
-            // Handle resetToken, navigate to appropriate screen, etc.*/
-        }
 
+        }
 
         installSplashScreen()
         setContent {
             GraduationProjectTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
@@ -100,67 +86,15 @@ class MainActivity : ComponentActivity() {
                         Modifier
                             .fillMaxSize()
                     ) {
-/*                        val data = intent.data
-                        if (data != null){
-                            val host = data.host
-                            val scheme = data.scheme
-                            val path = data.path
-                            val url = "$scheme://$host$path"
-                            Log.d("URL", "onCreate: $url")
-                            Toast.makeText(this@MainActivity,"$url",Toast.LENGTH_SHORT).show()
-                        }*/
-                       // FavoriteScreen(Modifier.padding(PaddingValues(start=0.0.dp, top=64.0.dp, end=0.0.dp, bottom=80.0.dp)))
-//                        AnimatedTextField()
-//                        SignupThirdScreen(Modifier,{},{})
-//                        ShareProblem(Modifier,{},{})
-//                        BeforeSignup(onBecomeClick = { /*TODO*/ }, onHireClick = { /*TODO*/ }) {}
-                     //   TestScreenForApi()
-                        MainScreen(d)                   //     x()
-                //        ChatContactScreen()
-//                        val sampleMessages = listOf(
-//                            Message(1, "Hello!", false),
-//                            Message(2, "Hi! How are you?", true),
-//                            Message(3, "I'm good, thanks for asking.", false)
-//                        )
-//                       ChatScreen(messages =sampleMessages )
 
-                     //   ViewProfileScreen(modifier = Modifier.padding(20.dp
-                      //  ), viewProfileViewModel = ViewProfileViewModel() )
-                //        FavoriteScreen(modifier = Modifier)
+                        ServixApp(d)
 
-                     //   FavoriteScreen(modifier = )
-                  //      ImagePickerScreen()
-//                        UserHomeScreen(
-//                            onNotificationClick = { /*TODO*/ },
-//                            onMessageClick = { /*TODO*/ },
-//                            onTextFieldClick = { /*TODO*/ },
-//                            onServiceItemClick = { /*TODO*/ },
-//                            onBottomNavigationItemClick = {}
-//                        )
-                 //  FindProvider(Modifier)
-                        //OnBoardingScreen(){
-//                        ServicesHomePage()
-//                        ExpandableOutlinedTextField(
-//                            placeholderText = "Search",
-//                            fontSize = 14.sp
-//                        )
                     }
-                    //   OtpScreen(LocalContext.current)
-                    //    OtpTextField()
 
                 }
             }
         }
     }
-/*    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-        intent?.data?.let { uri ->
-            Log.d("DeepLink", "Received new intent with deep link: $uri")
-            val resetToken = uri.lastPathSegment
-            Log.d("DeepLink", "Reset token: $resetToken")
-            // Handle resetToken, navigate to appropriate screen, etc.
-        }
-    }*/
 }
 
 

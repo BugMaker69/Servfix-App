@@ -19,9 +19,13 @@
 <string name="TypeMessage">اكتب رسالتك</string>
     <string name="AccountInfo"> تفاصيل الحساب</string>
     <string name="security">الحماية</string>
+    <string name="notifications">الإشعارات</string>
+
     <string name="deleteAccount">حذف حسابى</string>
 <string name="signOut">تسجيل الخروج</string>
-
+    <string name="today">اليوم</string>
+    <string name="yesterday">امس</string>
+    <string name="later">لاحقا</string>
 
 
     <string name="enter_email">لا تقلق! يحدث ذلك. الرجاء إدخال البريد الالكتروني المرتبط بحسابك.</string>

@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,6 +17,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.net.SocketTimeoutException
 import javax.inject.Inject
 
 @SuppressLint("SuspiciousIndentation")
@@ -27,63 +29,60 @@ class ViewProfileViewModel @Inject constructor(
 
     val profile = MutableStateFlow(ViewProfileData())
     var toastMessage = mutableStateOf("")
-   // val profile = MutableStateFlow(ViewProfileData())
+    var loading by mutableStateOf(true)
 
 
     init {
         val id = savedStateHandle.get<Int>("pid")
-            if (id != null) {
-                getData(id)
-
-
+        if (id != null) {
+            getData(id)
 
         }
     }
 
     fun addToFavourite() {
-        viewModelScope.launch(Dispatchers.IO) {
-            profile.value.provider?.id?.let {
-                Log.d("wow", "addToFavourite: $it")
-                repo.addToFavorite(it.toInt())
-                toastMessage.value=repo.addToFavorite(it)
-                withContext(Dispatchers.Main){
-                    profile.value = profile.value.copy(isFavourite = true)
-                }
-            }
+        try {
+            viewModelScope.launch(Dispatchers.IO) {
 
+                profile.value.provider?.id?.let {
+                    Log.d("wow", "addToFavourite: $it")
+                    repo.addToFavorite(it.toInt())
+                    profile.value = profile.value.copy(isFavourite = true)
+                    toastMessage.value = repo.addToFavorite(it)
+
+                }
+
+            }
+        } catch (ex: Exception) {
+            Log.d("dddddd", "addToFavourite: ${ex.message.toString()}")
         }
 
+
     }
+
 
     fun getData(id: Int) {
+        loading = true
         viewModelScope.launch(Dispatchers.IO) {
-            val providerProfile = repo.getProviderProfile(id)
-            //    val fav =repo.showAllFavourites()
+            try {
+                val providerProfile = repo.getProviderProfile(id)
+                providerProfile.provider?.image =
+                    Constant.BASE_URL + providerProfile.provider?.image
+                providerProfile.works.forEach { work ->
+                    work.image = Constant.BASE_URL + work.image
+                }
+                withContext(Dispatchers.Main) {
+                    profile.value = providerProfile
+                    loading = false
+                }
+            } catch (e: SocketTimeoutException) {
+                withContext(Dispatchers.Main) {
+                    Log.d("wwwwww", "viewProfile: ${e.message.toString()}")
 
-            //    fav.providerFavourite.contains(providerProfile)
-
-            providerProfile.provider?.image = Constant.BASE_URL + providerProfile.provider?.image
-//            providerProfile.works = providerProfile.works.filter { it.images.isNotEmpty() } as ArrayList<Works>
-//                        providerProfile.works.forEach { work ->
-//                work.images.f+orEach{
-//                   it.image =  BASE_URL+it.image
-//
-//                }
-//            }
-            providerProfile.works.forEach { work ->
-                work.image = Constant.BASE_URL + work.image
-
+                    toastMessage.value = "Network request timed out. Please try again."
+                    loading = false
+                }
             }
-//            providerProfile.works.forEach { work ->
-//                work.images.forEach{
-//                   it.image =  BASE_URL+it.image
-//
-//                }
-//            }
-            withContext(Dispatchers.IO) { profile.value = providerProfile }
-
-
         }
     }
-
 }

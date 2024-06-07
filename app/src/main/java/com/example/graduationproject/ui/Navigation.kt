@@ -91,7 +91,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlin.system.exitProcess
 
-@SuppressLint("CoroutineCreationDuringComposition", "UnrememberedMutableState")
+@SuppressLint("CoroutineCreationDuringComposition", "UnrememberedMutableState",
+    "SuspiciousIndentation"
+)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ServixApp(
@@ -113,10 +115,12 @@ fun ServixApp(
 
 
         LaunchedEffect(isLoggedIn,userTypeFlow) {
+            Log.d("problem", "ServixApp: entered launchedeffect1")
         val loginResult = dataStoreToken.getLogin()
         isLoggedIn = loginResult
 
             if (intentUriData.host=="p2kjdbr8-8000.uks1.devtunnels.ms"){
+
                 navController.navigate(ServixScreens.ResetPassword.name)
             }
 
@@ -234,7 +238,9 @@ fun ServixApp(
             navController = navController,
             startDestination =
             if (isFirstLaunch) ServixScreens.OnBoarding.name
-            else if (intentUriData.host=="p2kjdbr8-8000.uks1.devtunnels.ms") ServixScreens.ResetPassword.name
+            else if (intentUriData.host=="p2kjdbr8-8000.uks1.devtunnels.ms"){
+
+                ServixScreens.ResetPassword.name}
             else {
                 if (isLoggedIn && userTypeFlow.value.isNotBlank()) {
                     Log.d("mmmm1", "ServixApp: ${userTypeFlow.value}")
@@ -338,9 +344,9 @@ fun ServixApp(
 
                     Login(
                         onLoginClick = {
-                            runBlocking {
-                                userViewModel.loginEnabled=false
 
+                            coroutineScope.launch {
+                                userViewModel.loginEnabled=false
                                 userViewModel.login()
                                 delay(4000)
                                 if (dataStoreToken.getToken() != "") {
@@ -361,10 +367,13 @@ fun ServixApp(
                                         }
                                     }
 
-
-                                }
                             }
-                            userViewModel.loginEnabled=true
+                                userViewModel.loginEnabled=true
+
+
+
+
+                            }
 
 
                         },
@@ -440,7 +449,7 @@ fun ServixApp(
 
                     onSecurityClick = {
                         navController.navigate(ServixScreens.NewPasswordScreen.name)
-                    },
+                    }, modifier = Modifier.padding(innerPadding)
                 )
             }
             //  Todo How To Handle UserInfo And ProviderInfo ?!

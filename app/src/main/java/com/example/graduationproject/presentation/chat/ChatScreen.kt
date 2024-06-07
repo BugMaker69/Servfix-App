@@ -63,7 +63,6 @@ import coil.compose.SubcomposeAsyncImage
 import com.example.graduationproject.R
 import com.example.graduationproject.data.Chat
 import com.example.graduationproject.presentation.common.UserType
-import com.example.graduationproject.presentation.favourite.FavouriteAlertDialog
 import com.example.graduationproject.presentation.search_for_provider.RatingBar
 import com.example.graduationproject.ui.theme.DarkBlue
 import com.example.graduationproject.ui.theme.DarkWhite

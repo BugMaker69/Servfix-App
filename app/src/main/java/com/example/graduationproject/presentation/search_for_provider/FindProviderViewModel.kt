@@ -30,7 +30,7 @@ class FindProviderViewModel @Inject constructor(
     private val findProviderRepo: FindProviderSearchReopsitory,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-
+    var loading by mutableStateOf(true)
     private val _searchText = MutableStateFlow("")
     val searchText = _searchText.asStateFlow()
     private var _lista = MutableStateFlow<PagingData<ReturnedProviderData>>(PagingData.empty())
@@ -53,7 +53,7 @@ searchProvider()
 
     }
     fun searchProvider(){
-
+loading=true
         viewModelScope.launch(Dispatchers.IO) {
 
             searchText.collectLatest { query ->
@@ -61,6 +61,7 @@ searchProvider()
                     pagingSourceFactory = { ProviderPagingSource(findProviderRepo, itemId, query,selectedCity.value,rating.toInt()) },
                     config = PagingConfig(pageSize = 12)
                 ).flow.cachedIn(viewModelScope).first()
+                loading=false
             }
         }
     }
