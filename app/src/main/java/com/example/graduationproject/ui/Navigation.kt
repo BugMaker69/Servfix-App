@@ -854,7 +854,7 @@ fun ServixApp(
                 val viewModel: PostDetailViewModel = hiltViewModel()
                 val itemId = backStackEntry.arguments?.getInt("id")
                 PostItemDetail(
-                    onNotifiPostItemDetailToOpenIt = { /*TODO*/ },
+                    onNotifiPostItemDetailToOpenIt = { navController.popBackStack() },
                     viewModel = viewModel,
                     onAcceptButtonClickForSpecificProvider = {
                         viewModel.acceptPostForSpecificProvider(itemId!!)
