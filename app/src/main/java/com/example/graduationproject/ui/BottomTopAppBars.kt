@@ -101,7 +101,7 @@ fun BottomAppBar(
 
 
     NavigationBar(
-        modifier=Modifier.fillMaxWidth() .border(BorderStroke(1.dp, Color.DarkGray)),
+        modifier=Modifier.fillMaxWidth() ,
         containerColor = Color.Transparent,
         contentColor = DarkBlue,
     ) {
