@@ -119,12 +119,14 @@ class UserViewModel @Inject constructor(
     //  Third SignUp Page
 
     var fixedSalary by mutableStateOf("")
+    var fixedSalaryError by mutableStateOf(false)
 
     //  DropdownMenu Of Service Inside SignUp
     var expandedService by mutableStateOf(false)
     var selectedServiceIndex by mutableStateOf(-1)
     var selectedServiceValue by mutableStateOf("")
     var textfieldServiceSize by mutableStateOf(Size.Zero)
+    var serviceError by mutableStateOf(false)
 
 
     //  Forget Password
@@ -421,6 +423,19 @@ class UserViewModel @Inject constructor(
         if (imageUri == null) {
             idImageFileError = true
             showText = true
+        }else{
+            idImageFileError = false
+            showText = false
+        }
+        if (selectedServiceValue.isEmpty() && selectedServiceIndex == -1){
+            serviceError = true
+        }else{
+            serviceError = false
+        }
+        if (fixedSalary ==""){
+            fixedSalaryError = true
+        }else{
+            fixedSalaryError = false
         }
     }
 

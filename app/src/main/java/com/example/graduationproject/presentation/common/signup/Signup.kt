@@ -56,6 +56,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
@@ -241,6 +242,9 @@ fun SignupFirstScreen(
                     )
                 }
             }
+            if (userViewModel.cityError){
+                Text(text = "Choose City First", color = Color.Red,modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp), textAlign = TextAlign.Start)
+            }
 
             CustomButtonAndText(
                 Modifier
@@ -254,7 +258,7 @@ fun SignupFirstScreen(
                     if (userViewModel.userNameError) {
                         usernameFocusRequester.requestFocus()
                     } else if (userViewModel.cityError) {
-                        cityFocusRequester.requestFocus()
+//                        cityFocusRequester.requestFocus()
                     } else if (userViewModel.addressError) {
                         addressFocusRequester.requestFocus()
                     } else if (userViewModel.phoneError) {
@@ -395,13 +399,13 @@ fun SignupSecondScreen(
                         userViewModel.eyeIconPressC = !userViewModel.eyeIconPressC
                     }) {
                         Icon(
-                            imageVector = if (userViewModel.eyeIconPressC) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
+                            imageVector = if (!userViewModel.eyeIconPressC) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
                             contentDescription = "",
                             tint = Color.Black,
                         )
                     }
                 },
-                visualTransformation = if (userViewModel.eyeIconPressC) PasswordVisualTransformation() else VisualTransformation.None
+                visualTransformation = if (!userViewModel.eyeIconPressC) PasswordVisualTransformation() else VisualTransformation.None
             )
 
         }
@@ -582,12 +586,16 @@ fun SignupThirdScreen(
                             userViewModel.selectedServiceIndex = index
                             userViewModel.selectedServiceValue = service
                             userViewModel.expandedService = false
+                            userViewModel.serviceError = false
                         },
                         text = {
                             Text(text = service)
                         }
                     )
                 }
+            }
+            if (userViewModel.serviceError){
+                Text(text = "Choose Service First", color = Color.Red,modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp), textAlign = TextAlign.Start)
             }
 
 
@@ -599,6 +607,9 @@ fun SignupThirdScreen(
                 fieldValue = userViewModel.fixedSalary,
                 onValueChange = { userViewModel.onFixedSalaryChanged(it) },
             )
+            if (userViewModel.fixedSalaryError){
+                Text(text = "Type Salary First", color = Color.Red,modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp), textAlign = TextAlign.Start)
+            }
 
 // National ID
             val launcher =
@@ -652,6 +663,7 @@ fun SignupThirdScreen(
                             .weight(7f)
                     )
                 } else {
+                    userViewModel.showText = false
                     Image(
                         painter = rememberImagePainter(data = userViewModel.imageUri)!!,
                         contentDescription = "",
@@ -670,7 +682,7 @@ fun SignupThirdScreen(
             }
 
             if (userViewModel.showText) {
-                Text(text = "Error Its Required", color = Color.Red)
+                Text(text = "Error Its Required", color = Color.Red,modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp), textAlign = TextAlign.Start)
             }
 
         }
@@ -701,17 +713,18 @@ fun SignupThirdScreen(
                     indication = rememberRipple(),
                     onClick = {
                         userViewModel.thirdSignUpFinish()
-                        userViewModel.providerRegister()
                         if (userViewModel.idImageFileError) {
                             userViewModel.showText = true
                         }
-
-                        userViewModel.onFinishSignupClick()
-                        userViewModel.sendVerificationCode(
-                           activity = context as Activity,
-                        callbacks = userViewModel.callbacks
-                  )
-                        onFinishClick()
+                        else {
+                            userViewModel.providerRegister()
+                            userViewModel.onFinishSignupClick()
+                            userViewModel.sendVerificationCode(
+                                activity = context as Activity,
+                                callbacks = userViewModel.callbacks
+                            )
+                            onFinishClick()
+                        }
                     },
                     backgroundColor = DarkBlue,
                     contentColor = Color.White,

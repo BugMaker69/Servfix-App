@@ -399,7 +399,7 @@ class AddProviderRepository @Inject constructor(
                 if (response.body() != null && response.isSuccessful) {
                     try {
 
-                        if (response.code() == 201) {
+                        if (response.code() == 200) {
                             serverResponse.value = "Updated"
                             Log.d(
                                 "Updated",
