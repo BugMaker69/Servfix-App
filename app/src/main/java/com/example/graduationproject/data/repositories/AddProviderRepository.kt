@@ -112,21 +112,43 @@ class AddProviderRepository @Inject constructor(
                     try {
 
                         if (response.code() == 201) {
-                            serverResponse.value = "uploaded"
-
+                            serverResponse.value = "Updated"
+                            Log.d(
+                                "Updated",
+                                "onResponse: Updated ${response} ||  ${response.code()} ||  ${response.body()} ||  ${response.errorBody()} ||  ${response.isSuccessful} ||  ||  ${response.message()} ||  ||  ${response.headers()} ||  ||  ${response.raw()} || "
+                            )
 
                         } else {
+                            Log.d(
+                                "Error",
+                                "onResponse: Updated Error ${response} ||  ${response.code()} ||  ${response.body()} ||  ${response.errorBody()} ||  ${response.isSuccessful} ||  ||  ${response.message()} ||  ||  ${response.headers()} ||  ||  ${response.raw()} || "
+                            )
 
                             connectionError.value = response.errorBody().toString()
                         }
                     } catch (e: Exception) {
+                        Log.d(
+                            "Catched Error Updated",
+                            "onResponse: Updated Catched Error  ${response} ||  ${response.code()} ||  ${response.body()} ||  ${response.errorBody()} ||  ${response.isSuccessful} ||  ||  ${response.message()} ||  ||  ${response.headers()} ||  ||  ${response.raw()} || "
+                        )
+
                         connectionError.value = e.message.toString()
                     }
                 }
-
+                else {
+                    Log.d("onFailure Error Updated", "onResponse: Updated Nothing Happen Why ")
+                    Log.d(
+                        "onFailure Error Updated",
+                        "onResponse: Updated onFailure Error ${response} ||  ${response.isSuccessful} ||  ${response.message()} ||  ${response.code()} ||  ${response.errorBody()} ||  ${response.headers()} ||  ${response.raw()} || "
+                    )
+                }
             }
 
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                Log.d(
+                    "onFailure Error Updated",
+                    "onResponse: Updated onFailure Error ${t} ||  ${t.message} ||  ${t.cause} ||  ${t.localizedMessage} ||  ${t.stackTrace} ||  ${t.suppressed} || "
+                )
                 connectionError.value = t.message.toString()
             }
         })

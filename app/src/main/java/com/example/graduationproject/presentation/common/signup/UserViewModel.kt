@@ -462,7 +462,7 @@ class UserViewModel @Inject constructor(
             profession = profession,
             username = username,
         )
-
+        Log.d("register", "prepareProvideRegister:  done")
     }
 
 

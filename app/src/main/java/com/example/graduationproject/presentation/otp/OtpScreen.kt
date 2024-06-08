@@ -135,10 +135,14 @@ Button(
 
             }
             delay(3000)
+            Log.d("ha?", "OtpScreen: ${userViewModel.sucsess}")
+            Log.d("ha?", "OtpScreen: ${userViewModel.failed}")
+
             if(userViewModel.sucsess){
                     userViewModel.otpEnabled=false
                     delay(3000)
                     onLoginClick()
+
                 }
 
             else if (userViewModel.failed){
