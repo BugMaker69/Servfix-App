@@ -48,6 +48,7 @@ class ViewProfileViewModel @Inject constructor(
                     Log.d("wow", "addToFavourite: $it")
                     repo.addToFavorite(it.toInt())
                     profile.value = profile.value.copy(isFavourite = true)
+
                     toastMessage.value = repo.addToFavorite(it)
 
                 }
@@ -66,10 +67,12 @@ class ViewProfileViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val providerProfile = repo.getProviderProfile(id)
-                providerProfile.provider?.image =
-                    Constant.BASE_URL + providerProfile.provider?.image
-                providerProfile.works.forEach { work ->
-                    work.image = Constant.BASE_URL + work.image
+                withContext(Dispatchers.IO) {
+                    providerProfile.provider?.image =
+                        Constant.BASE_URL + providerProfile.provider?.image
+                    providerProfile.works.forEach { work ->
+                        work.image = Constant.BASE_URL + work.image
+                    }
                 }
                 withContext(Dispatchers.Main) {
                     profile.value = providerProfile

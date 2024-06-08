@@ -177,7 +177,7 @@ fun WorkList(works: ArrayList<Works>) {
                     modifier = Modifier
                         .padding(3.dp)
                         .size(200.dp),
-                    contentScale = ContentScale.Crop, // crop the image to fit the size
+                    contentScale = ContentScale.Crop,
                     loading = { CircularProgressIndicator(Modifier.wrapContentSize()) },
                     error = {
                         Image(

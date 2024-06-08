@@ -45,16 +45,16 @@ class ChatRepository @Inject constructor(
 
     suspend fun addReview(id: Int, rate: Rate) {
         apiService.addReview(token = "Bearer ${dataStoreToken.getToken()}", id = id, rate = rate)
-        Log.d(
-            "ool", "addReview: ${
-                apiService.addReview(
-                    token = "Bearer ${dataStoreToken.getToken()}",
-                    id = id,
-                    rate = rate
-                ).body()?.detail.toString()
-
-            }"
-        )
+//        Log.d(
+//            "ool", "addReview: ${
+//                apiService.addReview(
+//                    token = "Bearer ${dataStoreToken.getToken()}",
+//                    id = id,
+//                    rate = rate
+//                ).body()?.detail.toString()
+//
+//            }"
+//        )
     }
 
     suspend fun deleteMessage(id: Int) {

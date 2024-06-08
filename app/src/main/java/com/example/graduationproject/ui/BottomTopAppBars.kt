@@ -1,5 +1,8 @@
 package com.example.graduationproject.ui
 
+import android.util.Log
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
@@ -21,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -97,7 +101,7 @@ fun BottomAppBar(
 
 
     NavigationBar(
-        modifier=Modifier.fillMaxWidth(),
+        modifier=Modifier.fillMaxWidth() .border(BorderStroke(1.dp, Color.DarkGray)),
         containerColor = Color.Transparent,
         contentColor = DarkBlue,
     ) {

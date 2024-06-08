@@ -20,6 +20,7 @@ class ProviderHomeViewModel @Inject constructor(
 ) : ViewModel() {
 private val _isLoading=MutableStateFlow(false)
     val isLoading=_isLoading.asStateFlow()
+    var dataLoaded by mutableStateOf(false)
 init {
     loadStuff()
 }
@@ -33,8 +34,10 @@ init {
     var getPostsForProvider by mutableStateOf(emptyList<GetPostsForProviderItem>())
 
     fun getPostsForProvider() {
+        dataLoaded=false
         viewModelScope.launch {
             getPostsForProvider = providerRepository.getPostsForProvider()
+            dataLoaded=true
         }
     }
 

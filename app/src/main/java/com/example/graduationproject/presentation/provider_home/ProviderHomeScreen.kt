@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.sp
 import com.example.graduationproject.PullToRefreshLazyColumn
 import com.example.graduationproject.R
 import com.example.graduationproject.data.GetPostsForProviderItem
+import com.example.graduationproject.presentation.common.BlankScreen
 
 
 @Composable
@@ -62,14 +63,19 @@ fun ProviderPostScreen(
     viewModel: ProviderHomeViewModel
 ) {
     val isLoading by viewModel.isLoading.collectAsState()
+    if (viewModel.getPostsForProvider.isEmpty()&&viewModel.dataLoaded==false){
+        BlankScreen(stringResource(id = R.string.nopostslist))
+    }
+        PullToRefreshLazyColumn(modifier=modifier.fillMaxSize(),items =viewModel.getPostsForProvider , content = {item->
 
-    PullToRefreshLazyColumn(modifier=modifier.fillMaxSize(),items =viewModel.getPostsForProvider , content = {item->
+            PostItem(
+                onPostClick = { onNotifiPostItemClick(item.id) },
+                getPostsForProviderItem = item
+            )
+        }, isRefreshing = isLoading, onRefresh = {viewModel.loadStuff() })
 
-        PostItem(
-            onPostClick = { onNotifiPostItemClick(item.id) },
-            getPostsForProviderItem = item
-        )
-    }, isRefreshing = isLoading, onRefresh = {viewModel.loadStuff() })
+
+
 
 
     }

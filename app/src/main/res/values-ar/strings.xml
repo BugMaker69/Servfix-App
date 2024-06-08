@@ -20,7 +20,9 @@
     <string name="AccountInfo"> تفاصيل الحساب</string>
     <string name="security">الحماية</string>
     <string name="notifications">الإشعارات</string>
-
+    <string name="nocontactlist">لا يوجد جهات اتصال</string>
+    <string name="nopostslist">لا يوجد منشورات حتى الان</string>
+    <string name="nofavouritelist">لا يوجد مقدم خدمة تفضله </string>
     <string name="deleteAccount">حذف حسابى</string>
 <string name="signOut">تسجيل الخروج</string>
     <string name="today">اليوم</string>

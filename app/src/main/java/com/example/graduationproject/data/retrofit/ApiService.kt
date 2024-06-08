@@ -233,7 +233,6 @@ interface ApiService {
     @POST("/notification/post/create/{id}/")
     fun shareSpecificPost(
         @Header("Authorization") token: String,
-
         @Part("message") message: RequestBody,
         @Path("id") id: Int,
         @Part image: List<MultipartBody.Part>

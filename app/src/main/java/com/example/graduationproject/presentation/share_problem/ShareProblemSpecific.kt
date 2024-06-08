@@ -64,10 +64,10 @@ fun ShareProblemSpecific(
             serviceViewModel.handleGalleryResult(context, uris)
         }
 
-    val cameraLauncher =
-        rememberLauncherForActivityResult(contract = ActivityResultContracts.TakePicture()) {
-
-        }
+//    val cameraLauncher =
+//        rememberLauncherForActivityResult(contract = ActivityResultContracts.TakePicture()) {
+//
+//        }
 
     val permissionLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->

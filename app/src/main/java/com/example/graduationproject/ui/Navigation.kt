@@ -313,17 +313,29 @@ fun ServixApp(
                     }
                 )) {
                 val serviceViewmodel: ShareProblemSpecificViewModel = hiltViewModel()
+                var show by remember { mutableStateOf(false) }
 
                 ShareProblemSpecific(
                     modifier = Modifier.padding(innerPadding),
                     onCancelClick = { navController.popBackStack() },
                     onShareClick = {
-                        serviceViewmodel.shareSpecificPost()
-                        navController.navigate(ServixScreens.HomeUser.name)
+                        coroutineScope.launch {
+                            serviceViewmodel.shareSpecificPost()
+                            show=true
+                            navController.navigate(ServixScreens.HomeUser.name)
+                        }
+
+
                     },
                     serviceViewModel = serviceViewmodel
 
                 )
+                LaunchedEffect(key1 = show) {
+
+                    Toast.makeText(MyApplication.getApplicationContext().applicationContext, "done", Toast.LENGTH_SHORT).show()
+                    // Reset the show flag to prevent re-displaying the Toast
+
+                }
 
             }
 
@@ -713,17 +725,17 @@ fun ServixApp(
                                         "acceptPost",
                                         "acceptPost: ${notificationViewModel.acceptPost}"
                                     )
-                                    delay(500)
+                                    delay(1000)
                                     show = true
                                     navController.navigate(ServixScreens.Notification.name)
                                 }
                             }
                         }
                     )
-                    val x = notificationViewModel.acceptPost.collectAsState()
+                    val message = notificationViewModel.acceptPost.collectAsState()
                     LaunchedEffect(key1 = show) {
                         if (show) {
-                            Toast.makeText(MyApplication.getApplicationContext().applicationContext, x.value, Toast.LENGTH_SHORT).show()
+                            Toast.makeText(MyApplication.getApplicationContext().applicationContext, message.value, Toast.LENGTH_SHORT).show()
                             show = false // Reset the show flag to prevent re-displaying the Toast
                         }
                     }
@@ -876,8 +888,24 @@ fun ServixApp(
             )
             ) {
                 val vm:ChatViewModel= hiltViewModel()
-                ChatScreen(vm,modifier=Modifier.padding(innerPadding),userType=userTypeFlow.value,
-                    { navController.navigate(ServixScreens.ChatContactScreen.name) })
+                var show by remember { mutableStateOf(false) }
+
+                ChatScreen(vm,modifier=Modifier.padding(innerPadding),userType=userTypeFlow.value, onConfirmClick =
+                    {
+                        coroutineScope.launch{
+                            show=true
+                            delay(500)
+
+                            navController.navigate(ServixScreens.ChatContactScreen.name)
+                        }
+
+                    })
+                LaunchedEffect(key1 = show) {
+                    if (show) {
+                        Toast.makeText(MyApplication.getApplicationContext().applicationContext, "Done", Toast.LENGTH_SHORT).show()
+                        show = false
+                    }
+                }
             }
             composable(ServixScreens.LoadingScreen.name){
                 LoadingScreen()

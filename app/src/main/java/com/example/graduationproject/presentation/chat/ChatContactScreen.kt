@@ -31,6 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -39,6 +40,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.SubcomposeAsyncImage
 import com.example.graduationproject.R
 import com.example.graduationproject.presentation.chat.ChatContactViewModel
+import com.example.graduationproject.presentation.common.BlankScreen
 import com.example.graduationproject.ui.theme.DarkBlue
 
 
@@ -52,13 +54,7 @@ fun ChatContactScreen(modifier: Modifier, vm: ChatContactViewModel,onChatClick: 
     Log.d("ChatScreen444", "ChatScreen: ${list.value.isNotEmpty()}")
     Log.d("ChatScreen555", "ChatScreen: ${list.value}")
     if (list.value.isEmpty()) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(text = "There is no Contacts Yet", color = Color.Black)
-        }
+       BlankScreen(text = stringResource(id = R.string.nocontactlist))
     } else {
         LazyColumn(modifier.fillMaxSize()) {
             items(list.value) { item ->
@@ -90,7 +86,7 @@ fun ChatContactItem(phone:String, terminateId:Int, id: Int, name: String, image:
                 Log.d("popo", "ChatContactItem:$id ")
                 Log.d("btx", "ChatContactItem: $image ")
 
-                onChatClick(id, name, image, terminateId,phone)
+                onChatClick(id, name, image, terminateId, phone)
             },
         elevation = CardDefaults.cardElevation(20.dp),
         shape = RectangleShape

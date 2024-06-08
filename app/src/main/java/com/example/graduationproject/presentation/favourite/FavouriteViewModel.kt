@@ -22,6 +22,7 @@ import javax.inject.Inject
 class FavouriteViewModel @Inject constructor(val repo:FavouriteRepository): ViewModel() {
     var id by mutableIntStateOf(0)
     var loading by mutableStateOf(true)
+    var showDialog = mutableStateOf(false)
 
     var providersFavList = MutableStateFlow(listOf<ReturnedProviderData>())
     init {
